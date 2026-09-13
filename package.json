@@ -1,0 +1,30 @@
+{
+  "name": "literary-rpg-engine",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@drincs/pixi-vn": "^1.9.3",
+    "@pixi/devtools": "^2.0.0",
+    "motion": "^12.38.0",
+    "pixi.js": "^8.17.0",
+    "tone": "^15.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.9",
+    "vitest": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

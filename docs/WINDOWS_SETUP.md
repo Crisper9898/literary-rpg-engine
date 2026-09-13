@@ -1,11 +1,9 @@
 # Windows setup
 
-Install only these tools first:
-
 ## Required
 1. Codex for Windows
 2. Git for Windows
-3. Node.js LTS
+3. Node.js 20.19+ recommended
 
 ## Recommended
 4. Visual Studio Code
@@ -17,9 +15,9 @@ Install only these tools first:
 - Unity
 - Godot
 
-Phaser, Vite, TypeScript, Vitest and Playwright will be installed inside the project with npm when implementation begins.
+Pixi'VN, PixiJS, Vite, TypeScript, Vitest and Playwright are project dependencies and are installed with npm.
 
-## Verify later
+## Verify
 Run in PowerShell:
 
 ```powershell
@@ -28,4 +26,19 @@ node --version
 npm --version
 ```
 
-If all three return versions, the local machine is ready for the project.
+Then, from the repository:
+
+```powershell
+npm install
+npm run dev
+```
+
+For validation:
+
+```powershell
+npm test
+npm run build
+npm run test:e2e
+```
+
+Do not install Pixi'VN or PixiJS globally.

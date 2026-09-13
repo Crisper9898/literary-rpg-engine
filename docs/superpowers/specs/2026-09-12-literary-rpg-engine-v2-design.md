@@ -1,47 +1,59 @@
-# Literary RPG Engine V2 — Design Specification
+# Literary RPG Engine V2 — Pixi'VN Foundation Specification
 
 ## Purpose
 Create a reusable browser-based 2D engine for literary narrative games that feel like real indie games rather than interactive worksheets.
 
-The engine will first prove itself through a polished vertical slice of *Heart of Darkness* focused on "The Journey".
+The engine first proves itself through a polished vertical slice of *Heart of Darkness* focused on **The Journey**.
+
+## Architecture decision
+Pixi'VN is the foundation for narrative flow and serializable game state. PixiJS is the rendering layer beneath it and the extension point for RPG-specific world systems.
+
+The project must not reproduce systems Pixi'VN already provides. Custom code should concentrate on the parts that make this project distinctive: movement, world simulation, camera, environmental interaction, atmospheric rendering and meaningful puzzles.
 
 ## Product principles
 - Narrative and world simulation coexist.
 - Dialogue does not automatically freeze gameplay.
-- Interactions must serve story, atmosphere, characterization or player agency.
-- The engine is reusable across different literary genres and visual themes.
-- Final visual presentation must support illustrated characters, expressive portraits and atmospheric environments.
-- Game-specific data should not require editing core engine code.
+- Interactions serve story, atmosphere, characterization or player agency.
+- The engine is reusable across literary genres and visual themes.
+- Game-specific data should not require edits to reusable engine code.
+- Prefer framework composition to custom engine reinvention.
 
-## Architecture
+## Responsibility map
 
-### Engine layer
-Reusable systems:
-- scene lifecycle
-- player controller
+### Pixi'VN foundation
+Use Pixi'VN for:
+- game initialization/lifecycle
+- labels and narrative progression
+- dialogue state and choices
+- registered characters
+- storage and world-state flags
+- history/backtracking
+- save/export/restore state
+- sound/music state
+- canvas element lifecycle
+- browser/agent testing bridge
+- typed content registration through the Vite plugin
+
+### Custom RPG/world layer
+Build thin reusable systems for:
+- player movement
 - collision/navigation
 - camera director
-- dialogue runtime
-- portrait/expression runtime
-- interaction system
-- event/trigger system
-- inventory and evidence
-- world-state flags
-- NPC state/routine system
-- cinematic timeline
-- lighting/fog/weather
-- audio mixer
-- save/checkpoint
-- input rebinding
-- accessibility hooks
+- NPC routines and world activity
+- environmental interactions
+- cinematic timelines when Pixi'VN animation primitives are insufficient
+- layered parallax orchestration
+- fog, weather, lighting and particles
+- spatial/zone audio orchestration on top of Pixi'VN sound
+- puzzles/minigames
 
 ### Content layer
 Game-specific:
-- chapters
-- maps
-- dialogue JSON
+- chapters and scene data
+- literary adaptation text
+- maps/layout data
 - NPC definitions
-- event graphs
+- event/trigger data
 - art assets
 - music/SFX
 - theme configuration
@@ -57,23 +69,33 @@ Game-specific:
 - pause/settings
 - accessibility options
 
-## Dialogue model
-Dialogue entries must support:
-- speaker
-- portrait id
-- expression
-- text
-- movement allowed boolean
-- optional camera instruction
-- optional audio cue
-- optional world-state requirement
-- optional choice list
-- optional trigger on completion
+## Repository layout
+```text
+src/
+  content/        Pixi'VN registration: labels and characters
+  story/          chapter/story data
+  puzzles/        puzzle/minigame modules
+  ui/             HTML/PixiJS UI layers
+  engine/         RPG-specific reusable systems only
+public/
+  assets/
+```
 
-The runtime must permit walk-and-talk sequences.
+## Dialogue model
+Pixi'VN owns narrative progression and dialogue/choice state.
+
+Project-level dialogue metadata may additionally describe:
+- portrait/expression
+- whether player movement is allowed
+- camera direction
+- audio cue
+- world-state requirement
+- completion trigger
+
+Walk-and-talk is a project behavior layered around Pixi'VN narration; it must not require a second dialogue runtime.
 
 ## Camera model
-Support:
+Custom camera director should support:
 - follow target
 - dead zone
 - pan
@@ -93,7 +115,7 @@ Important characters are integrated from a canonical character sheet:
 - portrait set
 - expression ids
 
-Assets must pass a consistency review before integration.
+Pixi'VN character registration is the canonical identity layer. World sprites/portraits should reference the same character ids.
 
 ## Environmental rendering
 Use layered scene composition:
@@ -104,18 +126,10 @@ Use layered scene composition:
 5. atmosphere/post effects
 6. UI
 
-Support:
-- parallax
-- light masks
-- fog
-- smoke
-- rain
-- water motion
-- particles
-- color grading approximation
+Support parallax, light masks, fog, smoke, rain, water motion, particles and restrained color grading.
 
 ## Interaction vocabulary
-The engine should support these without assuming every game uses all of them:
+The engine may support:
 - observation
 - walk-and-talk
 - eavesdropping
@@ -131,30 +145,35 @@ The engine should support these without assuming every game uses all of them:
 - reconstruction/sequencing
 - optional exploration discoveries
 
-Avoid arbitrary "collect three objects" structures unless narratively justified.
+Avoid arbitrary “collect three objects” structures unless narratively justified.
 
 ## Audio
-Use an audio bus model:
+Pixi'VN/Tone provides the sound-state foundation. The project adds a higher-level zone mixer for:
 - music
 - ambience
 - SFX
 - dialogue/voice-ready
 - UI
-
-Support crossfade and ducking.
+- crossfade
+- ducking
+- interior/exterior transitions
+- weather layers
 
 ## Save model
-At minimum:
-- current chapter/scene
-- checkpoint
-- player position when safe
+Use `Game.exportGameState()` / `Game.restoreGameState()` as the canonical game-state mechanism.
+
+Project state stored through Pixi'VN should include:
+- current narrative position
 - world-state flags
 - dialogue choices
 - discovered evidence/interactions
-- settings
+- RPG-world checkpoint data
+- settings needed by the game
+
+Do not create a parallel save engine.
 
 ## First vertical slice: The Journey
-The first slice must demonstrate a continuous voyage sequence where:
+The slice must demonstrate a continuous voyage where:
 - the ship moves through a layered environment
 - Marlow can move on deck
 - NPCs animate independently
@@ -164,29 +183,31 @@ The first slice must demonstrate a continuous voyage sequence where:
 - camera occasionally leaves player-follow mode
 - environmental interactions add narrative context
 - audio mix changes by zone
-- at least one interaction changes a later dialogue/state
+- at least one interaction changes later dialogue/state
 - the sequence ends in a cinematic transition
 
 ## Quality gate
 Do not expand into multiple chapters until the slice passes:
-- functional tests
+- unit tests
 - browser smoke tests
 - no progression blockers
 - no text clipping at 1366x768
 - stable camera handoffs
 - stable dialogue state
+- save/restore smoke test
 - acceptable frame pacing on a typical school laptop
 - visual review for character/style consistency
 - audio review for abrupt loops/cuts
 
 ## Tech stack
-- Phaser 3
+- `@drincs/pixi-vn` 1.9.x
+- PixiJS 8.17+
 - TypeScript
-- Vite
+- Vite + `@drincs/pixi-vn/vite`
 - Vitest
 - Playwright
-- Web Audio API
-- JSON content data
+- Tone/Pixi'VN sound
+- data-driven content
 
 ## Out of scope for foundation
 - full RPG battle system
