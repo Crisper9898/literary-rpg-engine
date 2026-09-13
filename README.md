@@ -7,6 +7,17 @@ The project uses **Pixi'VN** as the narrative/game-state foundation and **PixiJS
 
 The first vertical slice is **Heart of Darkness — “The Journey”**.
 
+## Codex startup
+For a fresh Codex session, the repository already contains the context it needs.
+
+Codex should follow:
+1. `AGENTS.md`
+2. `docs/START_HERE.md`
+3. `ARCHITECTURE.md`
+4. the active plan in `docs/exec-plans/active/`
+
+A ready-to-paste prompt is available in `docs/CODEX_PROMPTS.md`.
+
 ## Local setup
 Requirements:
 - Node.js 20.19+ recommended
@@ -40,9 +51,8 @@ src/
 public/
   assets/      art, audio and other game assets
 docs/
+  START_HERE.md
+  CODEX_PROMPTS.md
   PIXIVN_GUIDE.md
-  ART_DIRECTION.md
-  AUDIO_DESIGN.md
+  exec-plans/
 ```
-
-Start with `AGENTS.md` and `docs/PIXIVN_GUIDE.md` before implementing features.
