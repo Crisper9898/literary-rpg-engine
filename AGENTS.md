@@ -1,62 +1,95 @@
-# Literary RPG Engine V2 — Agent Instructions
+# Literary RPG Engine — Codex Instructions
 
 ## Mission
-Build a reusable 2D literary RPG engine for browser-based educational narrative games with indie-game production quality.
+Build a reusable browser-based 2D literary game framework with indie-game production quality. The first production target remains *Heart of Darkness — The Journey*.
 
 ## Core stack
-- Phaser 3
+- Pixi'VN (`@drincs/pixi-vn`) as the narrative/game-state foundation
+- PixiJS for custom world rendering and RPG-specific systems
 - TypeScript
-- Vite
+- Vite + `@drincs/pixi-vn/vite`
 - Vitest
 - Playwright
-- Web Audio API
-- JSON-driven narrative/content data
+- Tone/Pixi'VN sound
+- Data-driven story/content
 
-## Non-negotiable principles
+## Rule zero: reuse Pixi'VN first
+Before implementing a system, check whether Pixi'VN already owns it.
+
+DO NOT rebuild these from scratch:
+- narration labels, dialogue flow and choices
+- character registration
+- save/load game state
+- history/backtracking
+- persistent storage/flags
+- canvas lifecycle and asset registration
+- sound/music state management
+- AI/browser testing bridge
+
+Use the APIs already provided by Pixi'VN. Custom engine code is justified only for capabilities the project genuinely needs beyond Pixi'VN, especially:
+- player movement
+- collision/navigation
+- camera direction
+- NPC routines/world simulation
+- weather/lighting/parallax orchestration
+- environmental interaction
+- bespoke puzzles/minigames
+
+Do not fork or edit Pixi'VN internals to solve game-specific problems.
+
+## Project boundaries
+- `src/content/`: Pixi'VN registration layer (labels, characters).
+- `src/story/`: reusable literary story data and chapter-specific content.
+- `src/puzzles/`: puzzle/minigame implementations.
+- `src/ui/`: game UI and overlays.
+- `src/engine/`: thin reusable adapters and RPG-only systems not supplied by Pixi'VN.
+- `public/assets/`: art, audio and other game assets.
+- `docs/`: local architecture and production guidance.
+
+Keep game-specific data out of reusable engine systems.
+
+## Context/token discipline
+1. Read this file first.
+2. Read `docs/PIXIVN_GUIDE.md` before searching external docs.
+3. Read only the relevant section of the design spec for the task.
+4. Never scan `node_modules`, build output, or Pixi'VN source unless the local guide and public API are insufficient.
+5. Prefer targeted repository search over reading many files.
+6. Reuse existing abstractions instead of generating parallel systems.
+7. Keep files focused; avoid monoliths.
+8. When a Pixi'VN API is uncertain, verify the current public API rather than guessing.
+
+## Product principles
 1. Do not build educational worksheets disguised as games.
 2. Reading must coexist with a living world: movement, animation, camera, weather, audio and NPC activity continue when appropriate.
 3. Prefer meaningful interaction over arbitrary puzzles.
 4. Visual quality must support stylized illustrated characters, expressive portraits, organic UI, lighting, parallax and atmospheric effects.
-5. Separate engine systems from game-specific content.
-6. Keep files focused and modular; avoid monolithic game files.
-7. Use data-driven dialogue, events and scenes whenever practical.
-8. Every system must be testable independently.
-9. Do not modify core engine behavior to solve one game's content problem unless the feature is reusable.
-10. Build one polished vertical slice before expanding scope.
+5. Dialogue does not automatically freeze gameplay; walk-and-talk remains a target capability.
+6. Build one polished vertical slice before expanding scope.
 
-## Initial target
-The first production target is:
-Heart of Darkness — "The Journey" vertical slice.
-
-It must prove:
-- player movement
-- illustrated character pipeline
-- portrait dialogue
-- walk-and-talk dialogue
+## First vertical slice
+*Heart of Darkness — The Journey* must prove:
+- moving ship/environment
+- player movement on deck
+- independent NPC animation
+- portrait and walk-and-talk dialogue
 - cinematic camera
 - layered parallax
-- dynamic weather/fog
+- dynamic fog/weather
 - environmental interaction
-- dynamic audio
-- narrative triggers
+- dynamic audio zones
+- narrative flags/triggers
 - save/checkpoint foundation
 - browser QA
 
-## Documentation
-Read before implementation:
-- docs/superpowers/specs/2026-09-12-literary-rpg-engine-v2-design.md
-- docs/ART_DIRECTION.md
-- docs/AUDIO_DESIGN.md
-- docs/WINDOWS_SETUP.md
-
 ## Workflow
-Before implementing a feature:
-1. Read the relevant spec.
-2. Write/adjust tests first.
-3. Implement the smallest working version.
-4. Run unit tests.
-5. Run browser smoke tests when visual/gameplay behavior changes.
-6. Capture screenshots for visual regressions when appropriate.
-7. Commit focused changes.
+For each feature:
+1. Identify what Pixi'VN already provides.
+2. Read the smallest relevant local documentation.
+3. Write/adjust tests where practical.
+4. Implement the smallest reusable version.
+5. Run unit tests.
+6. Run browser smoke tests for gameplay/visual changes.
+7. Capture screenshots when visual regression review matters.
+8. Keep commits focused.
 
-Do not start large-scale implementation until the design spec has been approved.
+The architecture is approved for implementation with Pixi'VN as the foundation.
