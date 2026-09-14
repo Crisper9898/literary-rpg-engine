@@ -14,9 +14,10 @@ A continuous atmospheric ship journey with Marlow, active NPCs, movement, dialog
 - generic engine features that the current slice does not need
 
 ## Current status
-Pixi'VN foundation, deck composition and keyboard movement are working. Marlow
-moves within the visible playable corridor; the NPC and camera markers remain
-static placeholders. Camera direction is the next task and is not implemented.
+Pixi'VN foundation, deck composition, keyboard movement and camera direction are
+working. The camera follows Marlow smoothly within the world bounds. Scripted
+focus, zoom, lock and return to follow are available. NPC markers remain static;
+NPC routines and dialogue have not been started.
 
 ## Ordered tasks
 
@@ -25,7 +26,7 @@ static placeholders. Camera direction is the next task and is not implemented.
 - [x] Define repository boundaries and Codex instructions.
 - [x] Create the first playable deck scene using simple placeholder geometry/assets.
 - [x] Add Marlow player movement constrained to the deck.
-- [ ] Add a reusable camera director with player follow and scripted focus.
+- [x] Add a reusable camera director with player follow and scripted focus.
 - [ ] Add one independently animated/routined NPC.
 - [ ] Add a walk-and-talk dialogue sequence using Pixi'VN.
 - [ ] Add layered scrolling river/background parallax.
@@ -37,13 +38,61 @@ static placeholders. Camera direction is the next task and is not implemented.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add a reusable camera director with player follow and scripted focus.
+Add one independently animated/routined NPC when the user resumes the plan.
+Keep reusable routines in `src/engine/` and Journey-specific routes/behavior in
+`src/story/`. Use the existing actors container and Pixi'VN character registration.
+Do not automatically pause player movement or camera follow during narration.
+The camera task ends at its stable commit; no NPC work is included here.
 
-Use the existing world container and moving player in its actors layer. Keep
-camera behavior in `src/engine/` and Journey-specific framing in `src/story/`.
-The movement controller exposes position, velocity, facing and isMoving, plus an
-explicit setEnabled gate. Dialogue must not automatically disable movement.
-Do not advance to NPC routines until the camera task has passed its validation.
+## Completed camera task — 2026-09-14
+
+The user authorized this task through a separate stable commit, without push,
+stash changes, NPC behavior or dialogue. Baseline: `c68401c`.
+
+- [x] Test then implement `src/engine/camera/CameraDirector.ts`: logical viewport,
+  world bounds, exponential follow, focus on a point/target, smooth zoom, lock,
+  and return to the remembered player. Validate finite input and cover zoom so
+  even viewports larger than the world cannot reveal empty space.
+- [x] Connect `attachWorldCamera.ts` to the existing ticker after movement and
+  before render. Transform only the world; clean up on destruction. Keep framing
+  (initial zoom 1.5, follow offset y=-160) in Journey data. Pixi'VN retains its
+  1920x1080 logical canvas and contain resize policy. UI stays outside the world.
+- [x] Browser-test horizontal/vertical/diagonal movement, world edges, resizing,
+  scripted focus/zoom/lock/resume, and scene restart. Inspect screenshots.
+- [x] Run `npm test`, `npm run build`, `npm run test:e2e`; review code, update this
+  plan and commit the stable camera separately. Stop before NPC implementation.
+
+- `showJourneyDeck()` returns the mounted camera director for later scene code.
+  `follow(provider, offset)` remembers the player; `focus(point | provider)` pans
+  toward a fixed or moving target; `setZoom(value)` eases toward a covering zoom;
+  `lock()` holds position and zoom without stopping gameplay; `resumeFollow()`
+  returns to the player's current position and offset without snapping.
+- `resumeFollow()` retains the requested zoom. Scene authors can call `setZoom`
+  to restore their chosen framing. No automatic cinematic sequence is installed.
+- The world, actor and movement coordinates stay unchanged by camera transforms.
+  Only the world container's pivot, position and scale change. Titles/instructions
+  stay fixed, while the walkable-area caption now belongs to the moving ground.
+- Validation: `npm test` 37 passed; `npm run build` passed; `npm run test:e2e`
+  7 passed. Unit tests cover 30/60/120 fps easing, monotonic settling, bounds,
+  intermediate zoom coverage, invalid data, modes, update order and disposal.
+  Chromium covers direction changes, four edges, focus/zoom/lock/resume, scene
+  re-entry, fixed UI, viewport resizing and existing movement regressions.
+- Inspected screenshots of start, horizontal/diagonal movement, world edges,
+  800x600 viewport, scripted focus/zoom and return to Marlow.
+- Playwright runs one browser worker: parallel software-rendered scenes caused
+  traversal timeouts under load. The full suite passes serially with the same
+  movement assertions and deadlines. No gameplay timing workaround was added.
+- Reviewed implementation, integration and tests directly. The requested review
+  subagent could not run because of its usage limit; no independent review is claimed.
+- Limitations: axis-aligned world starting at (0,0), fixed logical viewport for
+  the scene lifetime (browser resizing remains Pixi'VN's contain scaling), and
+  exponential eased pans rather than timed cinematic timelines. Camera state is
+  transient; save/restore remains a later task through Pixi'VN.
+- Frame advances remain capped at 50 ms, matching movement's stall protection;
+  very low frame rates slow the response instead of producing jumps.
+- Existing main-bundle size warning remains (about 533 kB minified). Geometry,
+  occlusion and labels remain provisional art, without new NPC or dialogue logic.
+- No push; the previous Phaser stash remains unchanged.
 
 ## Completed movement task — 2026-09-13
 

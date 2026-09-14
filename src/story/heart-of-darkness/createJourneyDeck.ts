@@ -43,9 +43,10 @@ export function createJourneyDeck() {
   text("chapter-kicker", "I  /  THE JOURNEY", 160, 135, 20, 0xb6b996);
   text("deck-title", "Heart of Darkness", 155, 175, 68, 0xeee5cf, true);
   text("deck-subtitle", "La cubierta · primera composición del mundo", 160, 270, 24, 0xa3b4aa);
-  text("walkable-caption", "ÁREA TRANSITABLE", 600, 632, 15, 0xd1d2b0);
+  layers.ground.addChild(new Text({ label: "walkable-caption", text: "ÁREA TRANSITABLE", x: 600, y: 632,
+    style: { fontFamily: "Arial", fontSize: 15, fill: 0xd1d2b0 } }));
   text("blockout-note", "WASD / FLECHAS  ·  Mueve a Marlow por la cubierta.  |  Haz clic en el juego para recuperar el control.", 160, 1000, 18, 0x9cb3ad);
   const player = layers.actors.getChildByLabel("playerSpawn");
   if (!player) throw new Error("Journey deck is missing its player marker.");
-  return { presentation, player };
+  return { presentation, player, world: layers.root };
 }

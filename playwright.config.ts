@@ -2,6 +2,9 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  // Canvas tests share the GPU/software renderer. Run one browser at a time so
+  // resource contention does not turn movement's stall cap into travel timeouts.
+  workers: 1,
   use: {
     baseURL: "http://127.0.0.1:5173",
   },

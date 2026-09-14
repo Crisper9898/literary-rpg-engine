@@ -1,18 +1,19 @@
 import { canvas } from "@drincs/pixi-vn";
 import { createJourneyDeck } from "../../story/heart-of-darkness/createJourneyDeck";
-import { journeyDeck, marlowMovement } from "../../story/heart-of-darkness/deck";
+import { journeyCamera, journeyDeck, marlowMovement } from "../../story/heart-of-darkness/deck";
 import { attachPlayerMovement } from "../../engine/movement/attachPlayerMovement";
+import { attachWorldCamera } from "../../engine/camera/attachWorldCamera";
 
 const DECK_LAYER = "journey-deck";
 
 /** Rebuild transient scenery on label entry; Pixi'VN remains the canvas owner. */
-export function showJourneyDeck(): void {
+export function showJourneyDeck() {
   const previous = canvas.layers.get(DECK_LAYER);
   if (previous) {
     canvas.layers.remove(DECK_LAYER);
     previous.destroy({ children: true });
   }
-  const { presentation, player } = createJourneyDeck();
+  const { presentation, player, world } = createJourneyDeck();
   canvas.layers.add(DECK_LAYER, presentation);
   const surface = canvas.app.canvas as HTMLCanvasElement;
   surface.tabIndex = 0;
@@ -22,5 +23,14 @@ export function showJourneyDeck(): void {
     bounds: journeyDeck.walkableArea,
     ...marlowMovement,
   });
+  const camera = attachWorldCamera(world, canvas.app.ticker, {
+    world: journeyDeck.size,
+    viewport: journeyDeck.size,
+    position: { x: player.x + journeyCamera.offset.x, y: player.y + journeyCamera.offset.y },
+    zoom: journeyCamera.zoom,
+    smoothing: journeyCamera.smoothing,
+  });
+  camera.follow(() => player.position, journeyCamera.offset);
   surface.focus({ preventScroll: true });
+  return camera;
 }
