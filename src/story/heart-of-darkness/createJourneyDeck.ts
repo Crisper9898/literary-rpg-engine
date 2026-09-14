@@ -4,7 +4,7 @@ import { validateWorldLayout } from "../../engine/world/worldLayout";
 import { journeyDeck } from "./deck";
 import { drawDeckScenery } from "./deckScenery";
 
-export function createJourneyDeck(): Container {
+export function createJourneyDeck() {
   validateWorldLayout(journeyDeck);
   const presentation = new Container({ label: "journey-deck" });
   const layers = createWorldLayers();
@@ -12,7 +12,7 @@ export function createJourneyDeck(): Container {
   presentation.addChild(layers.root);
 
   const captions = {
-    playerSpawn: { text: "Marlow · inicio", color: 0xdfc495 },
+    playerSpawn: { text: "Marlow", color: 0xdfc495 },
     npcStation: { text: "NPC · puesto", color: 0xa0bdb2 },
     cameraFocus: { text: "Foco de cámara", color: 0x93b2bd },
   };
@@ -44,6 +44,8 @@ export function createJourneyDeck(): Container {
   text("deck-title", "Heart of Darkness", 155, 175, 68, 0xeee5cf, true);
   text("deck-subtitle", "La cubierta · primera composición del mundo", 160, 270, 24, 0xa3b4aa);
   text("walkable-caption", "ÁREA TRANSITABLE", 600, 632, 15, 0xd1d2b0);
-  text("blockout-note", "GEOMETRÍA PROVISIONAL  /  Los marcadores reservan posiciones; el movimiento llega en la próxima tarea.", 160, 1000, 18, 0x9cb3ad);
-  return presentation;
+  text("blockout-note", "WASD / FLECHAS  ·  Mueve a Marlow por la cubierta.  |  Haz clic en el juego para recuperar el control.", 160, 1000, 18, 0x9cb3ad);
+  const player = layers.actors.getChildByLabel("playerSpawn");
+  if (!player) throw new Error("Journey deck is missing its player marker.");
+  return { presentation, player };
 }

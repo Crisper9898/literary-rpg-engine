@@ -9,3 +9,6 @@ export const journeyDeck = {
     cameraFocus: { x: 960, y: 760 },
   },
 } as const satisfies WorldLayout;
+
+// Collision footprint around the feet, independent of portrait/sprite artwork.
+export const marlowMovement = { speed: 240, footprintRadius: 20 } as const;
