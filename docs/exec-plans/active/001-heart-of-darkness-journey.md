@@ -43,7 +43,36 @@ Add a walk-and-talk dialogue sequence using Pixi'VN when the user resumes the pl
 Use the registered `journey-deckhand` character and the scene's `{ camera, npc,
 player }` handle. Narrative code may explicitly pause/face/resume the NPC and
 focus/resume the camera, without implicitly freezing Marlow or the world.
-This task stops at the NPC checkpoint; no dialogue, parallax, fog or audio is added.
+The intervening agent infrastructure task does not start dialogue or change gameplay.
+
+## Completed agent infrastructure task — 2026-09-15
+
+Baseline: `d2bf60f`. User scope: compact context and standard validation commands,
+no gameplay changes; separate commit, no push or changes to the Phaser stash.
+
+- [x] Add `scripts/agent-context.mjs` using only Node built-ins and Git: branch,
+  commit, porcelain status, up to 20 changed paths, staged/unstaged short statistics,
+  active plans and first unchecked task outside fenced examples. No full diff.
+- [x] Add npm aliases for context, deterministic checks and existing Playwright.
+  Share typecheck and bundle steps so the quality gate checks TypeScript once;
+  stop immediately if a step fails. Preserve typechecking in `npm run build`.
+- [x] Update AGENTS and START_HERE with the standard startup/validation workflow.
+- [x] Validate all three commands and review the final diff for the independent
+  infrastructure commit.
+
+Context reports missing/multiple plans explicitly and never executes the next task.
+Integration tests use temporary Git repositories to check clean/dirty state,
+status columns, renames, untracked output limits, detached HEAD and plan selection.
+No dependencies, game systems or architecture changes are needed.
+
+- `agent:context` verified against the working tree and temporary repositories;
+  distinguishes index/worktree columns, caps output and does not print diff bodies.
+- `agent:check`: TypeScript passed, 51 tests passed, Vite build passed. The gate
+  also stopped correctly on a typecheck failure during development. Node-script
+  tests use JavaScript so no Node type dependency or browser tsconfig change is needed.
+- `agent:e2e`: all 9 Playwright tests passed in 2.6 minutes via the existing suite.
+- Existing bundle-size warning remains (main chunk about 539 kB). No push,
+  no stash changes, and no dialogue/walk-and-talk implementation.
 
 ## Completed NPC task — 2026-09-14
 
@@ -212,12 +241,22 @@ stash changes, NPC behavior or dialogue. Baseline: `c68401c`.
   `Preserve unfinished Phaser foundation before approved PixiVN migration`.
 
 ## Validation
-For code changes:
+Before working:
 
 ```bash
-npm test
-npm run build
-npm run test:e2e
+npm run agent:context
+```
+
+After code changes (typecheck, unit tests, build):
+
+```bash
+npm run agent:check
+```
+
+For gameplay, rendering or browser changes:
+
+```bash
+npm run agent:e2e
 ```
 
 ## Decisions

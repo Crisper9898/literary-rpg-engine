@@ -5,7 +5,7 @@ This file defines the default startup path for Codex when working in this reposi
 ## Session startup
 At the beginning of a new coding session:
 
-1. Read the root `AGENTS.md`.
+1. Read the root `AGENTS.md` and run `npm run agent:context`.
 2. Read `ARCHITECTURE.md`.
 3. Read `docs/PIXIVN_GUIDE.md` only if the task touches Pixi'VN APIs.
 4. Read the active execution plan in `docs/exec-plans/active/`.
@@ -52,14 +52,30 @@ The first slice should feel like a real atmospheric indie game, not a worksheet 
 Before considering a coding task complete, use the narrowest useful checks and then the repository quality gate:
 
 ```bash
-npm test
-npm run build
+npm run agent:check
 ```
+
+This runs TypeScript, unit tests and the Vite build in order, stopping on the
+first failure. The shared `typecheck` and `build:bundle` steps avoid checking
+TypeScript twice; the normal `npm run build` still includes typechecking.
 
 For gameplay, rendering or browser behavior:
 
 ```bash
-npm run test:e2e
+npm run agent:e2e
 ```
 
 Keep the active execution plan updated so another Codex session can resume without reconstructing context.
+
+## Compact context command
+
+`npm run agent:context` is read-only: current branch, last commit, Git status,
+up to 20 changed files, staged/unstaged short statistics and untracked count.
+It queries Git and reads Markdown plans directly in `docs/exec-plans/active/`,
+without scanning source directories or dependencies.
+It prints the first unchecked task outside fenced code examples, not the whole plan.
+Missing plans and multiple plans are reported explicitly; it never chooses among
+multiple plans or runs the next task. User instructions still define current scope.
+
+`npm run agent:e2e -- tests/e2e/npc.spec.ts` forwards a targeted selection to the
+existing Playwright command. Use the full `agent:e2e` for the final browser gate.

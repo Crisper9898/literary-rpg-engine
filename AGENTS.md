@@ -4,7 +4,7 @@
 Build a reusable browser-based 2D literary game framework with indie-game production quality. The current target is *Heart of Darkness — The Journey*.
 
 ## Start every session here
-1. Read this file.
+1. Read this file and run `npm run agent:context` before working.
 2. Read `docs/START_HERE.md`.
 3. Read `ARCHITECTURE.md`.
 4. Read the active execution plan in `docs/exec-plans/active/`.
@@ -68,10 +68,14 @@ For each feature:
 2. Identify what Pixi'VN already provides.
 3. Implement the smallest reusable version.
 4. Write/adjust tests where practical.
-5. Run `npm test`.
-6. Run `npm run build`.
-7. Run `npm run test:e2e` for gameplay/rendering/browser changes.
-8. Update the active execution plan.
-9. Summarize what changed and what comes next.
+5. Run `npm run agent:check` after code changes (typecheck, unit tests, build; stops on failure).
+6. Run `npm run agent:e2e` for gameplay/rendering/browser changes.
+7. Update the active execution plan.
+8. Summarize what changed and what comes next.
+
+`agent:context` reports Git state, compact change statistics, active plans and
+their first unchecked task. It does not print full diffs or read gameplay files.
+Read the relevant instructions and plan after this summary; explicit user scope
+takes precedence over the next task printed by the command.
 
 The architecture is approved for implementation with Pixi'VN as the foundation.

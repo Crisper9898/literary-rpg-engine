@@ -5,11 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "build:bundle": "vite build",
+    "build": "npm run typecheck && npm run build:bundle",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "agent:context": "node scripts/agent-context.mjs",
+    "agent:check": "npm run typecheck && npm test && npm run build:bundle",
+    "agent:e2e": "npm run test:e2e --"
   },
   "dependencies": {
     "@drincs/pixi-vn": "^1.9.3",
