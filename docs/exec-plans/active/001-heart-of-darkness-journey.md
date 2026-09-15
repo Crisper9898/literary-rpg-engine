@@ -16,8 +16,9 @@ A continuous atmospheric ship journey with Marlow, active NPCs, movement, dialog
 ## Current status
 Pixi'VN foundation, deck composition, keyboard movement and camera direction are
 working. The camera follows Marlow smoothly within the world bounds. Scripted
-focus, zoom, lock and return to follow are available. NPC markers remain static;
-NPC routines and dialogue have not been started.
+focus, zoom, lock and return to follow are available. One registered deckhand
+independently works a three-stop route while Marlow moves. The NPC can pause,
+face a target and resume, and the camera can focus it. Dialogue is not implemented.
 
 ## Ordered tasks
 
@@ -27,7 +28,7 @@ NPC routines and dialogue have not been started.
 - [x] Create the first playable deck scene using simple placeholder geometry/assets.
 - [x] Add Marlow player movement constrained to the deck.
 - [x] Add a reusable camera director with player follow and scripted focus.
-- [ ] Add one independently animated/routined NPC.
+- [x] Add one independently animated/routined NPC.
 - [ ] Add a walk-and-talk dialogue sequence using Pixi'VN.
 - [ ] Add layered scrolling river/background parallax.
 - [ ] Add a simple fog/weather progression.
@@ -38,11 +39,70 @@ NPC routines and dialogue have not been started.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add one independently animated/routined NPC when the user resumes the plan.
-Keep reusable routines in `src/engine/` and Journey-specific routes/behavior in
-`src/story/`. Use the existing actors container and Pixi'VN character registration.
-Do not automatically pause player movement or camera follow during narration.
-The camera task ends at its stable commit; no NPC work is included here.
+Add a walk-and-talk dialogue sequence using Pixi'VN when the user resumes the plan.
+Use the registered `journey-deckhand` character and the scene's `{ camera, npc,
+player }` handle. Narrative code may explicitly pause/face/resume the NPC and
+focus/resume the camera, without implicitly freezing Marlow or the world.
+This task stops at the NPC checkpoint; no dialogue, parallax, fog or audio is added.
+
+## Completed NPC task — 2026-09-14
+
+Baseline: `c36e6e2`. Scope approved: one autonomous deckhand, no dialogue,
+parallax, weather or audio; separate stable commit, no push or stash changes.
+
+- [x] Test and implement `src/engine/npc/NpcRoutineController.ts`, composing the
+  existing MovementController for footprint bounds and motion. A cyclic list
+  of stops defines positions, dwell times, facing and opaque activity ids.
+  Expose idle/walking/paused state, pause/resume, face(point), and cameraTarget.
+- [x] Add `attachNpcRoutine.ts` on the existing ticker with destruction cleanup.
+  Register one canonical Pixi'VN character in `src/content/characters.ts`.
+- [x] Author a triangular rope/cargo/lookout routine and animated sailor
+  placeholder in `src/story/heart-of-darkness/`. Show feet, head orientation,
+  walking stride and task gestures. Keep UI labels readable and scenery static.
+- [x] Integrate the scene handle with the existing camera's focus(provider),
+  preserving player follow. No conversation system is added; future scene code
+  can pause, face the player, focus, then resume both routine and camera.
+- [x] Test multiple cycles, dwell timing, arrival without overshoot, facing,
+  interruptions, invalid routes, bounds, real-ticker cleanup and camera targeting.
+  Observe at least two full live cycles in Chromium, including simultaneous
+  Marlow movement and camera focus/return. Run all project validations, review,
+  update this plan and commit. Stop before dialogue.
+
+- `NpcRoutineController` composes `MovementController`; cyclic stops carry opaque
+  activity ids, dwell times and optional facing. It exposes `idle`, `walking`
+  and `paused` modes with position/velocity/facing, action time and remaining dwell.
+  Frame remainder is carried across arrivals and pauses to preserve timing at
+  30/60/120 fps. Invalid/unreachable stops are rejected; close/identical stops work.
+- `pause()` preserves the current leg or remaining dwell; `face(point)` turns
+  toward a target without moving; `resume()` restores the interrupted action.
+  `cameraTarget` is a provider directly accepted by `CameraDirector.focus()`.
+  There is no new camera, input, narrative, identity or persistence subsystem.
+- The scene returns `{ camera, npc, player }`. The existing camera test helper
+  now uses `.camera`; CameraDirector itself is unchanged. NPC callbacks detach
+  on actor destruction, including Pixi'VN label re-entry.
+- Pixi'VN canonically registers `journey-deckhand` (Marinero). Its initial station
+  moved to (1080,740) so the working sailor is visible in Marlow's initial frame.
+  Route: coil rope (2600 ms), check cargo at (1420,690) (2400 ms), survey the river
+  at (1260,815) (1700 ms), return. Speed: 95 units/s; footprint: 20 units.
+- Provisional art includes a cap, collar, arms, legs, foot shadow, head direction,
+  walking stride and three work gestures. The rope provides task context. Cargo
+  is drawn behind the sailor, and hands above the torso, keeping actions visible.
+- Validation: `npm test` 47 passed; `npm run build` passed; `npm run test:e2e`
+  9 passed. Chromium observed two full live cycles (over 25 seconds of simulation,
+  about a minute of browser observation), checking every observed frame for
+  footprint escapes and positional jumps, plus simultaneous Marlow/NPC movement.
+  Coverage also includes pause/face/resume, camera targeting/return, registration,
+  initial visibility, destruction, and all existing movement/camera regressions.
+- Visually reviewed initial framing, simultaneous movement, each work station,
+  corrected hands/cargo layering, and facing Marlow. Read-only code review found
+  no remaining blocking issues; added exact duplicate-stop coverage from review.
+- Limitations: deterministic authored route in a rectangular corridor; no path
+  finding, obstacle/actor avoidance, interaction trigger or dialogue yet. Routine
+  state is transient and resets on label re-entry; persistence remains a later
+  Pixi'VN save/restore task. Rendering is provisional geometry, not final sprites.
+  The inherited 50 ms stall cap slows simulation below 20 fps. The existing
+  bundle-size warning remains (main chunk about 539 kB minified).
+- No push and no changes to the preserved Phaser stash.
 
 ## Completed camera task — 2026-09-14
 
@@ -62,7 +122,7 @@ stash changes, NPC behavior or dialogue. Baseline: `c68401c`.
 - [x] Run `npm test`, `npm run build`, `npm run test:e2e`; review code, update this
   plan and commit the stable camera separately. Stop before NPC implementation.
 
-- `showJourneyDeck()` returns the mounted camera director for later scene code.
+- Scene setup exposes the mounted camera director for later scene code.
   `follow(provider, offset)` remembers the player; `focus(point | provider)` pans
   toward a fixed or moving target; `setZoom(value)` eases toward a covering zoom;
   `lock()` holds position and zoom without stopping gameplay; `resumeFollow()`

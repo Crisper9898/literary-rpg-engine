@@ -30,13 +30,21 @@ export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>): v
     .fill({ color: 0xb8c4a2, alpha: 0.08 })
     .stroke({ color: 0xbbc6a0, width: 2, alpha: 0.6 });
   layers.ground.addChild(deck);
+  // The deckhand's work stations: a coiled line and the existing cargo crate.
+  const rope = new Graphics({ label: "working-rope", x: journeyDeck.anchors.npcStation.x, y: 765 });
+  for (const radius of [9, 15, 21]) {
+    rope.ellipse(0, 0, radius, radius * 0.42).stroke({ color: 0xb29a70, width: 3 });
+  }
+  rope.moveTo(21, 0).lineTo(34, -14).stroke({ color: 0xb29a70, width: 3 });
+  layers.ground.addChild(rope);
+  layers.ground.addChild(new Graphics({ label: "cargo-crate" })
+    .rect(1400, 540, 85, 95).fill(0x4b4839).stroke({ color: 0x97805a, width: 3 }));
 
   const fittings = new Graphics({ label: "deck-fittings" })
     .rect(350, 490, 205, 150).fill(0x333d39).stroke({ color: 0x839086, width: 3 })
     .rect(335, 475, 235, 25).fill(0x171f21)
     .rect(385, 520, 50, 45).fill(0x182e31)
-    .rect(465, 520, 50, 45).fill(0x182e31)
-    .rect(1400, 540, 85, 95).fill(0x4b4839).stroke({ color: 0x97805a, width: 3 });
+    .rect(465, 520, 50, 45).fill(0x182e31);
   for (let x = 590; x < 1600; x += 95) {
     fittings.moveTo(x, 555).lineTo(x, 610).stroke({ color: 0xa69b7e, width: 5 });
   }

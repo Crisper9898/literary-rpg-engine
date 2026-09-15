@@ -5,7 +5,7 @@ export const journeyDeck = {
   walkableArea: { x: 400, y: 660, width: 1120, height: 200 },
   anchors: {
     playerSpawn: { x: 650, y: 760 },
-    npcStation: { x: 1300, y: 710 },
+    npcStation: { x: 1080, y: 740 },
     cameraFocus: { x: 960, y: 760 },
   },
 } as const satisfies WorldLayout;

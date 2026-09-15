@@ -2,10 +2,10 @@ import { canvas } from "@drincs/pixi-vn";
 import { type Container } from "pixi.js";
 import { showJourneyDeck } from "../../src/content/scenes/journeyDeck";
 
-let directedCamera: ReturnType<typeof showJourneyDeck>;
+let directedCamera: ReturnType<typeof showJourneyDeck>["camera"];
 
 export function cameraCommand(command: "create" | "focus" | "zoom" | "lock" | "resume") {
-  if (command === "create") directedCamera = showJourneyDeck();
+  if (command === "create") directedCamera = showJourneyDeck().camera;
   if (command === "focus") directedCamera.focus({ x: 1200, y: 600 });
   if (command === "zoom") directedCamera.setZoom(1.8);
   if (command === "lock") directedCamera.lock();

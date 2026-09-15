@@ -3,6 +3,8 @@ import { createJourneyDeck } from "../../story/heart-of-darkness/createJourneyDe
 import { journeyCamera, journeyDeck, marlowMovement } from "../../story/heart-of-darkness/deck";
 import { attachPlayerMovement } from "../../engine/movement/attachPlayerMovement";
 import { attachWorldCamera } from "../../engine/camera/attachWorldCamera";
+import { attachNpcRoutine } from "../../engine/npc/attachNpcRoutine";
+import { deckhandRoutine } from "../../story/heart-of-darkness/deckhand";
 
 const DECK_LAYER = "journey-deck";
 
@@ -13,7 +15,7 @@ export function showJourneyDeck() {
     canvas.layers.remove(DECK_LAYER);
     previous.destroy({ children: true });
   }
-  const { presentation, player, world } = createJourneyDeck();
+  const { presentation, player, world, deckhand } = createJourneyDeck();
   canvas.layers.add(DECK_LAYER, presentation);
   const surface = canvas.app.canvas as HTMLCanvasElement;
   surface.tabIndex = 0;
@@ -23,6 +25,7 @@ export function showJourneyDeck() {
     bounds: journeyDeck.walkableArea,
     ...marlowMovement,
   });
+  const npc = attachNpcRoutine(deckhand.actor, canvas.app.ticker, deckhandRoutine, deckhand.pose);
   const camera = attachWorldCamera(world, canvas.app.ticker, {
     world: journeyDeck.size,
     viewport: journeyDeck.size,
@@ -32,5 +35,6 @@ export function showJourneyDeck() {
   });
   camera.follow(() => player.position, journeyCamera.offset);
   surface.focus({ preventScroll: true });
-  return camera;
+  // Future interaction code can pause/face the NPC and pass npc.cameraTarget to focus.
+  return { camera, npc, player };
 }

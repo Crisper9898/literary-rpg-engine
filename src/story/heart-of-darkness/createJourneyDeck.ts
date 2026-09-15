@@ -3,6 +3,7 @@ import { createWorldLayers } from "../../engine/world/createWorldLayers";
 import { validateWorldLayout } from "../../engine/world/worldLayout";
 import { journeyDeck } from "./deck";
 import { drawDeckScenery } from "./deckScenery";
+import { createDeckhand } from "./createDeckhand";
 
 export function createJourneyDeck() {
   validateWorldLayout(journeyDeck);
@@ -13,10 +14,10 @@ export function createJourneyDeck() {
 
   const captions = {
     playerSpawn: { text: "Marlow", color: 0xdfc495 },
-    npcStation: { text: "NPC · puesto", color: 0xa0bdb2 },
     cameraFocus: { text: "Foco de cámara", color: 0x93b2bd },
   };
   for (const [id, point] of Object.entries(journeyDeck.anchors)) {
+    if (id === "npcStation") continue;
     const caption = captions[id as keyof typeof captions];
     const marker = new Container({ label: id, x: point.x, y: point.y });
     const shape = new Graphics().ellipse(0, 8, 20, 7).fill({ color: 0x101e21, alpha: 0.5 });
@@ -34,6 +35,8 @@ export function createJourneyDeck() {
     marker.addChild(shape, name);
     layers.actors.addChild(marker);
   }
+  const deckhand = createDeckhand();
+  layers.actors.addChild(deckhand.actor);
 
   const text = (label: string, content: string, x: number, y: number, fontSize: number, fill: number, serif = false) => {
     const item = new Text({ label, text: content, x, y,
@@ -48,5 +51,5 @@ export function createJourneyDeck() {
   text("blockout-note", "WASD / FLECHAS  ·  Mueve a Marlow por la cubierta.  |  Haz clic en el juego para recuperar el control.", 160, 1000, 18, 0x9cb3ad);
   const player = layers.actors.getChildByLabel("playerSpawn");
   if (!player) throw new Error("Journey deck is missing its player marker.");
-  return { presentation, player, world: layers.root };
+  return { presentation, player, world: layers.root, deckhand };
 }
