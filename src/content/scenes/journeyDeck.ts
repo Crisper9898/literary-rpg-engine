@@ -5,6 +5,7 @@ import { attachPlayerMovement } from "../../engine/movement/attachPlayerMovement
 import { attachWorldCamera } from "../../engine/camera/attachWorldCamera";
 import { attachNpcRoutine } from "../../engine/npc/attachNpcRoutine";
 import { deckhandRoutine } from "../../story/heart-of-darkness/deckhand";
+import { attachJourneyConversation } from "./attachJourneyConversation";
 
 const DECK_LAYER = "journey-deck";
 
@@ -34,7 +35,7 @@ export function showJourneyDeck() {
     smoothing: journeyCamera.smoothing,
   });
   camera.follow(() => player.position, journeyCamera.offset);
+  attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface);
   surface.focus({ preventScroll: true });
-  // Future interaction code can pause/face the NPC and pass npc.cameraTarget to focus.
   return { camera, npc, player };
 }

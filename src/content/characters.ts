@@ -11,3 +11,6 @@ export const journeyDeckhand = new CharacterBaseModel(deckhandIdentity.id, {
   name: deckhandIdentity.name, color: deckhandIdentity.color,
 });
 RegisteredCharacters.add(journeyDeckhand);
+
+export const marlow = new CharacterBaseModel("marlow", { name: "Marlow", color: "#dfc495" });
+RegisteredCharacters.add(marlow);

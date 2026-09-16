@@ -19,7 +19,6 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
     layers: ["environment", "ground", "actors", "foreground"],
     actors: [
       { id: "playerSpawn", x: 650, y: 760 },
-      { id: "cameraFocus", x: 960, y: 760 },
       { id: "journey-deckhand", x: expect.any(Number), y: expect.any(Number) },
     ],
     title: "deck-title",

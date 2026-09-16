@@ -1,0 +1,57 @@
+.journey-conversation {
+  position: absolute;
+  width: min(100vw, 177.7778vh);
+  height: min(100vh, 56.25vw);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  container-type: inline-size;
+}
+.journey-conversation [hidden] { display: none; }
+.journey-dialogue-panel, .journey-talk-prompt {
+  position: absolute;
+  right: 5%;
+  top: 10%;
+  width: 40%;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+.journey-dialogue-panel {
+  padding: clamp(12px, 1.8cqw, 28px);
+  color: #eee5cf;
+  background: linear-gradient(115deg, #182726f7, #101b1eeb);
+  border: 1px solid #b9af7b66;
+  border-left: 3px solid #c3ac79;
+  border-radius: 2px 22px 3px 14px;
+  box-shadow: 0 12px 35px #050b0d66;
+}
+.journey-dialogue-panel h2 {
+  margin: 0 0 .65em;
+  color: #cfc093;
+  font: 600 clamp(12px, 1.25cqw, 18px) Arial, sans-serif;
+  letter-spacing: .1em;
+}
+.journey-dialogue-text {
+  margin: 0 0 1em;
+  font: clamp(14px, 1.55cqw, 22px)/1.5 Georgia, serif;
+}
+.journey-dialogue-controls { display: grid; gap: 7px; }
+.journey-conversation button {
+  padding: .65em .85em;
+  text-align: left;
+  color: #eee5cf;
+  font: clamp(12px, 1.15cqw, 16px)/1.35 Arial, sans-serif;
+  background: #243834e8;
+  border: 1px solid #9baa8355;
+  border-radius: 3px 9px 3px 7px;
+  cursor: pointer;
+}
+.journey-conversation button:enabled:hover { background: #3c5043; border-color: #c3ac79; }
+.journey-conversation button:focus-visible { outline: 2px solid #dfc495; outline-offset: 3px; }
+.journey-conversation button:disabled { color: #aab6af; cursor: default; }
+.journey-dialogue-status {
+  margin: 1em 0 0;
+  color: #b4c1b4;
+  font: clamp(11px, .95cqw, 14px)/1.4 Arial, sans-serif;
+}

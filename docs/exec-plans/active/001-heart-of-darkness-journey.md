@@ -18,7 +18,9 @@ Pixi'VN foundation, deck composition, keyboard movement and camera direction are
 working. The camera follows Marlow smoothly within the world bounds. Scripted
 focus, zoom, lock and return to follow are available. One registered deckhand
 independently works a three-stop route while Marlow moves. The NPC can pause,
-face a target and resume, and the camera can focus it. Dialogue is not implemented.
+face a target and resume, and the camera can focus it. Marlow can now approach the
+deckhand and hold a branching Pixi'VN conversation while both continue moving.
+Reading and choices leave the world running; distance gates conversation input.
 
 ## Ordered tasks
 
@@ -29,7 +31,7 @@ face a target and resume, and the camera can focus it. Dialogue is not implement
 - [x] Add Marlow player movement constrained to the deck.
 - [x] Add a reusable camera director with player follow and scripted focus.
 - [x] Add one independently animated/routined NPC.
-- [ ] Add a walk-and-talk dialogue sequence using Pixi'VN.
+- [x] Add a walk-and-talk dialogue sequence using Pixi'VN.
 - [ ] Add layered scrolling river/background parallax.
 - [ ] Add a simple fog/weather progression.
 - [ ] Add one meaningful environmental interaction that changes a later dialogue line.
@@ -39,11 +41,62 @@ face a target and resume, and the camera can focus it. Dialogue is not implement
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add a walk-and-talk dialogue sequence using Pixi'VN when the user resumes the plan.
-Use the registered `journey-deckhand` character and the scene's `{ camera, npc,
-player }` handle. Narrative code may explicitly pause/face/resume the NPC and
-focus/resume the camera, without implicitly freezing Marlow or the world.
-The intervening agent infrastructure task does not start dialogue or change gameplay.
+Add layered scrolling river/background parallax when the user resumes the plan.
+Keep the working movement, NPC routine, camera and walk-and-talk interaction intact.
+This checkpoint implements dialogue only; no parallax, fog, audio or environmental
+consequence task has been started.
+
+## Completed walk-and-talk task — 2026-09-15
+
+Baseline: `6385a50` on `journey-vertical-slice`. Implement only the first pending
+task; validate, make a separate commit, no push and no Phaser stash changes.
+
+- [x] Author a short original Spanish exchange about the river and the cargo in
+  `src/story/heart-of-darkness/conversation.ts`. Register Marlow alongside the
+  existing deckhand; use Pixi'VN labels and choice branches in `src/content/`.
+- [x] Attach proximity and input to the existing scene/ticker. E starts within
+  180 world units, then advances; 1/2 or mouse chooses a response. Keep Marlow's
+  movement, the NPC route and camera follow independent of dialogue.
+- [x] Add a nonmodal HTML dialogue panel in `src/ui/`, aligned to the contained
+  canvas. Keep speakers, text and choices projected from canonical Pixi'VN state.
+  Preserve canvas focus when clicking, allow Tab/Enter and ignore held-key repeats.
+- [x] Keep the current line visible beyond 440 world units, with a return prompt;
+  block only dialogue progression until within earshot again. End cleanly and
+  allow another conversation. Destroy HUD, ticker callback and listeners on re-entry.
+- [x] Browser-test both branches, simultaneous real-frame movement, range gates,
+  held-key repeats, mouse focus, completion/repeat and restart during choices.
+  Review screenshots at 1366x768 and 800x600, run all checks and review the diff.
+
+Decisions and verification:
+- Narration, character identity, choice history and branching stay in Pixi'VN.
+  No parallel dialogue cursor/state machine, save format, input system or render
+  loop. Transient UI busy/error state is local; UI reads narration on the existing
+  ticker after movement. Narrative text and ranges stay outside reusable engine code.
+- The sailor acknowledges nearby Marlow when idle and continues his authored work
+  route. The player sets reading pace; neither reading nor choosing freezes movement.
+  The existing CameraDirector remains unchanged and follows Marlow throughout.
+- Branches return through Pixi'VN call semantics; closing the conversation clears
+  its dialogue/choices and closes that label without rebuilding the deck. Regression
+  coverage ensures no empty extra press between a branch answer and the final line.
+- Replaced the technical deck subtitle/control legend and removed the visible
+  camera target and walkable-area caption. Character and scenery art remain provisional.
+- `npm run agent:check`: TypeScript passed, 51 unit tests passed, production build
+  passed. `npm run agent:e2e`: all 12 tests passed in 3.5 minutes with a fresh server.
+  An earlier run lost its first camera test to a page reload while reusing the dev
+  server; rerunning from a clean server passed without changing the camera/test.
+- Visually reviewed the opening deck, river response and both responsive choice
+  layouts. Read-only code review found no blocking issues. The movement sample's
+  precondition observes NPC displacement; a future timing flake should be resolved
+  by sampling a walking interval, without weakening movement assertions.
+- Limitations: one repeatable authored conversation, no voice/typewriter/portraits
+  yet, and no implemented save/restore of transient world positions. Full world
+  persistence remains its later plan task. The existing large-bundle warning
+  remains (main chunk about 543.5 kB minified).
+
+Manual check: run `npm run dev`, walk right with WASD/arrows toward the sailor,
+press E when the prompt enables, keep walking while reading, use E to advance and
+1/2 (or the buttons) to choose. Walk out of earshot and back to verify resumption.
+Finish the exchange and approach again to replay the other branch.
 
 ## Completed agent infrastructure task — 2026-09-15
 

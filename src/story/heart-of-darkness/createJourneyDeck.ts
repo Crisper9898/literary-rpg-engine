@@ -14,21 +14,14 @@ export function createJourneyDeck() {
 
   const captions = {
     playerSpawn: { text: "Marlow", color: 0xdfc495 },
-    cameraFocus: { text: "Foco de cámara", color: 0x93b2bd },
   };
   for (const [id, point] of Object.entries(journeyDeck.anchors)) {
-    if (id === "npcStation") continue;
+    if (id !== "playerSpawn") continue;
     const caption = captions[id as keyof typeof captions];
     const marker = new Container({ label: id, x: point.x, y: point.y });
     const shape = new Graphics().ellipse(0, 8, 20, 7).fill({ color: 0x101e21, alpha: 0.5 });
-    if (id === "cameraFocus") {
-      shape.circle(0, 0, 17).stroke({ color: caption.color, width: 2 });
-      shape.moveTo(-24, 0).lineTo(24, 0).moveTo(0, -24).lineTo(0, 24)
-        .stroke({ color: caption.color, width: 2 });
-    } else {
-      shape.roundRect(-12, -32, 24, 37, 6).fill(caption.color)
-        .circle(0, -44, 11).fill(caption.color);
-    }
+    shape.roundRect(-12, -32, 24, 37, 6).fill(caption.color)
+      .circle(0, -44, 11).fill(caption.color);
     const name = new Text({ text: caption.text, style: { fontFamily: "Arial", fontSize: 18, fill: caption.color } });
     name.anchor.set(0.5, 0);
     name.y = 32;
@@ -45,10 +38,8 @@ export function createJourneyDeck() {
   };
   text("chapter-kicker", "I  /  THE JOURNEY", 160, 135, 20, 0xb6b996);
   text("deck-title", "Heart of Darkness", 155, 175, 68, 0xeee5cf, true);
-  text("deck-subtitle", "La cubierta · primera composición del mundo", 160, 270, 24, 0xa3b4aa);
-  layers.ground.addChild(new Text({ label: "walkable-caption", text: "ÁREA TRANSITABLE", x: 600, y: 632,
-    style: { fontFamily: "Arial", fontSize: 15, fill: 0xd1d2b0 } }));
-  text("blockout-note", "WASD / FLECHAS  ·  Mueve a Marlow por la cubierta.  |  Haz clic en el juego para recuperar el control.", 160, 1000, 18, 0x9cb3ad);
+  text("deck-subtitle", "La cubierta · Un viaje río arriba", 160, 270, 24, 0xa3b4aa);
+  text("blockout-note", "WASD / FLECHAS · Camina    E · Habla y continúa    1 / 2 · Responde    |    Haz clic en la cubierta para volver.", 160, 1000, 18, 0x9cb3ad);
   const player = layers.actors.getChildByLabel("playerSpawn");
   if (!player) throw new Error("Journey deck is missing its player marker.");
   return { presentation, player, world: layers.root, deckhand };
