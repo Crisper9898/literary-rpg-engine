@@ -42,5 +42,5 @@ export function createJourneyDeck() {
   text("blockout-note", "WASD / FLECHAS · Camina    E · Habla y continúa    1 / 2 · Responde    |    Haz clic en la cubierta para volver.", 160, 1000, 18, 0x9cb3ad);
   const player = layers.actors.getChildByLabel("playerSpawn");
   if (!player) throw new Error("Journey deck is missing its player marker.");
-  return { presentation, player, world: layers.root, deckhand };
+  return { presentation, player, world: layers.root, deckhand, layers };
 }

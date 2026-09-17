@@ -2,19 +2,12 @@ import { Graphics } from "pixi.js";
 import type { createWorldLayers } from "../../engine/world/createWorldLayers";
 import { journeyDeck } from "./deck";
 
-/** Temporary blockout; no weather, parallax or collision runtime is introduced. */
+/** Fixed vessel and opaque sky/water base; traveling scenery is composed separately. */
 export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>): void {
   const { width, height } = journeyDeck.size;
-  const background = new Graphics({ label: "river-blockout" })
+  const background = new Graphics({ label: "river-base" })
     .rect(0, 0, width, height).fill(0x162c30)
-    .circle(1490, 230, 72).fill({ color: 0xc1b78d, alpha: 0.35 })
-    .poly([0, 420, 120, 370, 245, 403, 430, 356, 570, 402, 790, 367,
-      960, 413, 1210, 377, 1410, 411, 1670, 360, 1920, 401, 1920, 530, 0, 530]).fill(0x203c3c)
     .rect(0, 455, width, height - 455).fill(0x234548);
-  for (let row = 0; row < 9; row++) {
-    const y = 490 + row * 65;
-    background.moveTo(0, y).lineTo(width, y + 12).stroke({ color: 0x66847d, width: 2, alpha: 0.13 });
-  }
   layers.environment.addChild(background);
 
   const deck = new Graphics({ label: "deck-surface" })

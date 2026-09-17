@@ -21,6 +21,8 @@ independently works a three-stop route while Marlow moves. The NPC can pause,
 face a target and resume, and the camera can focus it. Marlow can now approach the
 deckhand and hold a branching Pixi'VN conversation while both continue moving.
 Reading and choices leave the world running; distance gates conversation input.
+Five scenery layers now travel continuously past the fixed vessel at distinct
+speeds and camera depths, including while Marlow stands still or reads dialogue.
 
 ## Ordered tasks
 
@@ -32,7 +34,7 @@ Reading and choices leave the world running; distance gates conversation input.
 - [x] Add a reusable camera director with player follow and scripted focus.
 - [x] Add one independently animated/routined NPC.
 - [x] Add a walk-and-talk dialogue sequence using Pixi'VN.
-- [ ] Add layered scrolling river/background parallax.
+- [x] Add layered scrolling river/background parallax.
 - [ ] Add a simple fog/weather progression.
 - [ ] Add one meaningful environmental interaction that changes a later dialogue line.
 - [ ] Add basic zone-aware ambience/audio transition.
@@ -41,10 +43,64 @@ Reading and choices leave the world running; distance gates conversation input.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add layered scrolling river/background parallax when the user resumes the plan.
+Add a simple fog/weather progression when the user resumes the plan.
 Keep the working movement, NPC routine, camera and walk-and-talk interaction intact.
-This checkpoint implements dialogue only; no parallax, fog, audio or environmental
-consequence task has been started.
+Parallax is complete. Fog/weather, audio and environmental consequences have not
+been started in this task.
+
+## Completed parallax task — 2026-09-17
+
+Baseline: `f120132` on `journey-vertical-slice`. Reuse the existing world layers,
+CameraDirector and Pixi'VN ticker/lifecycle; no final art or new dependencies.
+
+- [x] Test and implement reusable periodic layer motion and camera depth offsets
+  under `src/engine/`. Maintain bounded phase and pooled seamless horizontal tiles,
+  including camera pans/zoom. Detach from the shared ticker on scene destruction.
+- [x] Author provisional background, far vegetation, near bank, river surface and
+  sparse foreground graphics in Journey data, using the existing palette. Give
+  each distinct speed/depth; keep deck, fittings, actors and HUD outside scrolling.
+- [x] Integrate continuous travel independently of Marlow's direction and dialogue.
+  Observe idle travel, simultaneous movement/conversation and camera coverage at
+  1366x768 and 800x600; test repeat seams, frame rates, bounds and cleanup.
+- [x] Run `npm run agent:check` and `npm run agent:e2e`, review, update this plan and
+  commit. No push or Phaser stash changes. Stop before fog/weather progression.
+
+Decisions and verification:
+- `ParallaxLayerController` owns bounded periodic travel and camera compensation;
+  `attachParallaxLayer` reuses the existing ticker after camera updates and before
+  rendering. Tile instances are pooled, only intersecting tiles are visible, and
+  destruction removes the ticker listener. No new render loop or persistence system.
+- Journey supplies five provisional tiles: distant ridge (5 units/s), far
+  vegetation (14), near bank (30), river currents (58), foreground reeds/debris
+  (90). Their horizontal camera depths are 0.08, 0.25, 0.5, 0.8 and 1.15.
+  Vertical depth stays at 1 to keep banks aligned with the river. Scenery travels
+  toward the stern even while idle; deck, fittings, actors and HUD do not scroll.
+- Eight added unit tests cover authored speed at 30/60/120 simulated fps, reverse
+  travel, bounded phase, seam continuity, camera compensation, viewport coverage,
+  exact tile edges, pool reuse, update order and disposal.
+- Two added browser tests measure actual layer transforms during idle, reading
+  and choices, check coverage during pans/zoom at 1366x768 and 800x600, and verify
+  old layers are destroyed on re-entry. Existing movement, NPC, camera and dialogue
+  regression tests also run. Final screenshots reviewed at both resolutions.
+- `npm run agent:check`: TypeScript passed, 59 unit tests passed, production build
+  passed. `npm run agent:e2e`: the complete 14-test run passed; its persisted
+  Playwright result reports `passed` with no failed tests. Read-only review found
+  no blocking issues. Existing bundle warning remains (main chunk about 547.7 kB).
+- The browser environment measured about 9 fps with the new layers and 11 with
+  them hidden. A 12-second full-deck camera-test crossing timed out near the edge
+  because movement caps simulation ticks at 50 ms. Only that test's wait increased
+  to 20 seconds; exact bounds and frame-based velocity assertions remain intact.
+  This validates behavior, not a 60 fps performance target. GPU-accelerated
+  performance remains part of the later browser QA/polish task.
+- Limitations: provisional geometry repeats every 1920 world units; travel phase
+  is transient and resets on scene re-entry. World persistence remains its later
+  plan task. No new dependencies or changes to movement, camera, NPC or narration
+  controllers were needed.
+
+Manual check: run `npm run dev`, watch the river while standing still, then walk
+with WASD/arrows in both directions. Approach the sailor and press E, continue
+walking while reading, and leave the choices open to observe uninterrupted travel.
+Resize to 800x600 and check the banks, water and sparse foreground at the edges.
 
 ## Completed walk-and-talk task — 2026-09-15
 

@@ -6,6 +6,8 @@ import { attachWorldCamera } from "../../engine/camera/attachWorldCamera";
 import { attachNpcRoutine } from "../../engine/npc/attachNpcRoutine";
 import { deckhandRoutine } from "../../story/heart-of-darkness/deckhand";
 import { attachJourneyConversation } from "./attachJourneyConversation";
+import { attachParallaxLayer } from "../../engine/parallax/attachParallaxLayer";
+import { journeyRiverLayers } from "../../story/heart-of-darkness/riverParallax";
 
 const DECK_LAYER = "journey-deck";
 
@@ -16,7 +18,7 @@ export function showJourneyDeck() {
     canvas.layers.remove(DECK_LAYER);
     previous.destroy({ children: true });
   }
-  const { presentation, player, world, deckhand } = createJourneyDeck();
+  const { presentation, player, world, deckhand, layers } = createJourneyDeck();
   canvas.layers.add(DECK_LAYER, presentation);
   const surface = canvas.app.canvas as HTMLCanvasElement;
   surface.tabIndex = 0;
@@ -35,6 +37,11 @@ export function showJourneyDeck() {
     smoothing: journeyCamera.smoothing,
   });
   camera.follow(() => player.position, journeyCamera.offset);
+  for (const definition of journeyRiverLayers) {
+    attachParallaxLayer(layers[definition.placement], canvas.app.ticker, camera, {
+      ...definition, reference: { x: journeyDeck.size.width / 2, y: journeyDeck.size.height / 2 },
+    });
+  }
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface);
   surface.focus({ preventScroll: true });
   return { camera, npc, player };

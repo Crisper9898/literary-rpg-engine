@@ -52,7 +52,10 @@ test("camera follows all movement directions while keeping the world covered and
     ["ArrowLeft", "x", 420], ["ArrowUp", "y", 680],
   ] as const) {
     await page.keyboard.down(key);
-    await expect.poll(async () => (await inspect(page))!.player[axis], { timeout: 12_000 }).toBe(bound);
+    // Software rendering can fall below 10fps. Movement deliberately caps each
+    // tick at 50ms, so allow the full crossing without relaxing its exact bounds.
+    // movement.spec checks velocity over actual rendered frames separately.
+    await expect.poll(async () => (await inspect(page))!.player[axis], { timeout: 20_000 }).toBe(bound);
     await page.keyboard.up(key);
     const state = (await inspect(page))!;
     expect(state.worldStart.x).toBeLessThanOrEqual(0.01);
