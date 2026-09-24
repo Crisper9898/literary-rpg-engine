@@ -61,7 +61,7 @@ test("Marlow walks, stops, stays on deck and clears held keys on restart", async
     await page.keyboard.down(key);
     // Software-rendered Chromium can fall below 20 fps. The controller deliberately
     // caps stalled frames, so allow enough real frames for the full deck crossing.
-    await expect.poll(async () => (await position(page))[axis], { timeout: 12_000 }).toBe(bound);
+    await expect.poll(async () => (await position(page))[axis], { timeout: 20_000 }).toBe(bound);
     await page.keyboard.up(key);
   }
 

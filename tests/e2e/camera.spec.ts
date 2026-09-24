@@ -82,6 +82,8 @@ test("camera follows all movement directions while keeping the world covered and
 });
 
 test("scripted focus and zoom can lock independently of movement then return to Marlow", async ({ page }, testInfo) => {
+  // Includes several eased camera moves and scene rebuilds on the software renderer.
+  test.setTimeout(45_000);
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
   await command(page, "create");

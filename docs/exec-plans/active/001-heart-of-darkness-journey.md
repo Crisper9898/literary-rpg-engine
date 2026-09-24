@@ -23,6 +23,9 @@ deckhand and hold a branching Pixi'VN conversation while both continue moving.
 Reading and choices leave the world running; distance gates conversation input.
 Five scenery layers now travel continuously past the fixed vessel at distinct
 speeds and camera depths, including while Marlow stands still or reads dialogue.
+Voyage distance now drives smooth clear, humid and deep atmosphere profiles.
+Three fog depths and world shading preserve movement, camera follow, NPC routines
+and readable dialogue/HUD at both supported test resolutions.
 
 ## Ordered tasks
 
@@ -35,7 +38,7 @@ speeds and camera depths, including while Marlow stands still or reads dialogue.
 - [x] Add one independently animated/routined NPC.
 - [x] Add a walk-and-talk dialogue sequence using Pixi'VN.
 - [x] Add layered scrolling river/background parallax.
-- [ ] Add a simple fog/weather progression.
+- [x] Add a simple fog/weather progression.
 - [ ] Add one meaningful environmental interaction that changes a later dialogue line.
 - [ ] Add basic zone-aware ambience/audio transition.
 - [ ] Add save/restore smoke coverage for relevant world state.
@@ -43,10 +46,70 @@ speeds and camera depths, including while Marlow stands still or reads dialogue.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add a simple fog/weather progression when the user resumes the plan.
-Keep the working movement, NPC routine, camera and walk-and-talk interaction intact.
-Parallax is complete. Fog/weather, audio and environmental consequences have not
-been started in this task.
+Add one meaningful environmental interaction that changes a later dialogue line.
+Keep the working movement, NPC routine, camera, walk-and-talk, parallax and weather
+intact. This weather task ends here; the environmental interaction has not started.
+
+## Completed weather task — 2026-09-19
+
+Baseline: `33bcb9f` on `journey-vertical-slice`.
+
+- [x] Add a reusable progress-driven scalar atmosphere profile with continuous
+  interpolation and smoothing. No timer advances its target; future effects can
+  consume additional channels without changing the progression controller.
+- [x] Expose signed travel distance from the existing parallax controller without
+  changing its motion. Journey reads near-bank distance / 3600; an external
+  navigation progress source can be supplied at scene composition.
+- [x] Compose three soft fog depths and a restrained shade channel using the
+  existing parallax, camera, world layers and ticker. Share one small generated
+  texture per scene, clean up on destruction, and keep HUD/dialogue above weather.
+- [x] Validate gradual clear/intermediate/deep states, travel while idle, movement,
+  conversation, scene re-entry and UI visibility at 1366x768 and 800x600. Measure
+  rendering cost without starting a global optimization task.
+- [x] Run `npm run agent:check` and `npm run agent:e2e`, review, update the plan
+  and commit only after all validations pass. No push or Phaser stash changes.
+
+Decisions and verification:
+- `AtmosphereController` interpolates authored scalar channels at progress 0, 0.5
+  and 1, with smooth transitions and frame-rate-independent response. A fixed
+  progress input never ages by itself. Additional channels can later drive rain,
+  storms or lighting without adding novel-specific logic to the engine.
+- Journey supplies near-bank signed travel distance / 3600 as progress. Camera
+  motion and repeat seams do not affect that distance; an optional progress getter
+  supports a future navigation source. The ship keeps advancing while Marlow is
+  idle or reading. Time only smooths changes to the supplied progress.
+- Three pooled fog layers reuse `attachParallaxLayer` at different speeds/depths.
+  A single 256x128 texture is shared per scene. World tint supplies restrained
+  shading without another full-screen layer; HUD and dialogue remain outside it.
+  Existing ticker/lifecycle own updates and disposal. No per-frame texture creation
+  or changes to movement, camera, NPC or Pixi'VN narration controllers.
+- Eleven added unit tests cover interpolation, boundaries, fixed progress,
+  30/60/120 fps response, reversal, invalid input, stable state reuse, profile
+  validation, ticker order/disposal and signed travel distance.
+- Three added browser tests cover real voyage advancement while idle/walking,
+  smooth atmospheric stages, usable dialogue choices, scene re-entry cleanup,
+  shared texture and stable tile pools. Screenshots of all three stages reviewed
+  at 1366x768 and 800x600: distant scenery progressively fades while actors,
+  controls and dialogue remain visible. Existing gameplay regressions pass.
+- `npm run agent:check`: TypeScript passed, 70 unit tests passed and production
+  build passed. Existing bundle warning remains (main chunk 551.54 kB).
+  `npm run agent:e2e`: all 17 tests passed in 8.0 minutes. Read-only code review
+  found no blocking issues.
+- Final software-rendering diagnostic measured 7.6/7.5 fps with fog visible and
+  9.7 fps with it hidden. Reducing fog overdraw and using world tint improved the
+  initial weather implementation, but a measurable rendering cost remains.
+  This is functional validation, not a 60 fps claim; GPU performance remains for
+  later QA. Measured slow full-deck crossings and scripted camera/re-entry tests
+  required longer waits in three existing E2E tests; exact assertions are retained.
+- Limitations: provisional fog art; voyage/weather reset on scene re-entry.
+  Persistence remains the later save/restore task. No rain, audio, new dependencies
+  or general art/performance pass were added.
+
+Manual check: run `npm run dev`, watch the voyage while idle, then use WASD/arrows
+and approach the sailor with E. Keep reading or choices open as the fog deepens.
+The authored route reaches its deep profile after 3600 units (about 120 simulated
+seconds at the current bank speed; slower in the software-rendering environment).
+Check dialogue and controls again at 800x600.
 
 ## Completed parallax task — 2026-09-17
 

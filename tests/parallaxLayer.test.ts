@@ -6,6 +6,23 @@ const camera = { position: { x: 900, y: 600 }, zoom: 1.5 };
 const viewport = { width: 1920, height: 1080 };
 
 describe("periodic voyage layers", () => {
+  it("exposes signed journey distance independently of tile wrapping and camera motion", () => {
+    const layer = new ParallaxLayerController({ ...options, period: 10, speed: 100 });
+    for (let i = 0; i < 7; i++) layer.update(50);
+    expect(layer.distance).toBeCloseTo(35);
+    expect(layer.phase).toBeCloseTo(5);
+    layer.layout(camera, viewport);
+    expect(layer.distance).toBeCloseTo(35);
+    for (const dt of [0, -1, NaN, Infinity]) layer.update(dt);
+    expect(layer.distance).toBeCloseTo(35);
+    const reverse = new ParallaxLayerController({ ...options, speed: -100 });
+    reverse.update(1000);
+    expect(reverse.distance).toBe(-5);
+    const stopped = new ParallaxLayerController({ ...options, speed: 0 });
+    stopped.update(50);
+    expect(stopped.distance).toBe(0);
+  });
+
   it("travels at the authored speed at 30, 60 and 120fps and wraps without growing coordinates", () => {
     for (const fps of [30, 60, 120]) {
       const layer = new ParallaxLayerController(options);

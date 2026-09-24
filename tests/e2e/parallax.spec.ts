@@ -48,7 +48,8 @@ test("the river keeps traveling at five depths while idle, reading and choosing"
 });
 
 test("tiles cover pans, zooms and both resolutions, and scene re-entry disposes every old layer", async ({ page }, info) => {
-  test.setTimeout(45_000);
+  // Preserve all live-frame samples and screenshots as weather adds rendering work.
+  test.setTimeout(65_000);
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
   for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {

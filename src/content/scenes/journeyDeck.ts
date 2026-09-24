@@ -8,11 +8,13 @@ import { deckhandRoutine } from "../../story/heart-of-darkness/deckhand";
 import { attachJourneyConversation } from "./attachJourneyConversation";
 import { attachParallaxLayer } from "../../engine/parallax/attachParallaxLayer";
 import { journeyRiverLayers } from "../../story/heart-of-darkness/riverParallax";
+import { journeyWeather } from "../../story/heart-of-darkness/weather";
+import { attachJourneyAtmosphere } from "./attachJourneyAtmosphere";
 
 const DECK_LAYER = "journey-deck";
 
 /** Rebuild transient scenery on label entry; Pixi'VN remains the canvas owner. */
-export function showJourneyDeck() {
+export function showJourneyDeck(options: { progress?: () => number } = {}) {
   const previous = canvas.layers.get(DECK_LAYER);
   if (previous) {
     canvas.layers.remove(DECK_LAYER);
@@ -37,12 +39,16 @@ export function showJourneyDeck() {
     smoothing: journeyCamera.smoothing,
   });
   camera.follow(() => player.position, journeyCamera.offset);
-  for (const definition of journeyRiverLayers) {
-    attachParallaxLayer(layers[definition.placement], canvas.app.ticker, camera, {
+  const river = journeyRiverLayers.map((definition) => {
+    return attachParallaxLayer(layers[definition.placement], canvas.app.ticker, camera, {
       ...definition, reference: { x: journeyDeck.size.width / 2, y: journeyDeck.size.height / 2 },
-    });
-  }
+    }).controller;
+  });
+  const voyage = river[journeyRiverLayers.findIndex((layer) => layer.id === "near-bank")];
+  // A scene/navigation director may supply progress; otherwise follow actual bank travel.
+  const atmosphere = attachJourneyAtmosphere(layers, canvas.app.ticker, camera,
+    options.progress ?? (() => voyage.distance / journeyWeather.routeDistance));
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface);
   surface.focus({ preventScroll: true });
-  return { camera, npc, player };
+  return { camera, npc, player, atmosphere, voyage };
 }

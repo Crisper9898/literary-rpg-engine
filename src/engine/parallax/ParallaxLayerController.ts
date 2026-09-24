@@ -11,6 +11,7 @@ export interface ParallaxLayerOptions {
 /** Periodic travel and camera compensation, independent of renderer and story. */
 export class ParallaxLayerController {
   private offset = 0;
+  private traveled = 0;
   private readonly options: ParallaxLayerOptions;
 
   constructor(options: ParallaxLayerOptions) {
@@ -23,12 +24,16 @@ export class ParallaxLayerController {
   }
 
   get phase(): number { return this.offset; }
+  /** Signed travel, unaffected by tile wrapping or camera movement. */
+  get distance(): number { return this.traveled; }
 
   update(elapsedMS: number): void {
     if (!Number.isFinite(elapsedMS) || elapsedMS <= 0) return;
     const { period, speed } = this.options;
     // Same suspension protection as movement/NPC/camera; never catch up a hidden tab.
-    this.offset = ((this.offset + speed * (Math.min(elapsedMS, 50) / 1000)) % period + period) % period;
+    const distance = speed * (Math.min(elapsedMS, 50) / 1000);
+    this.traveled += distance;
+    this.offset = ((this.offset + distance) % period + period) % period;
   }
 
   layout(camera: Pick<CameraState, "position" | "zoom">, viewport: CameraSize) {
