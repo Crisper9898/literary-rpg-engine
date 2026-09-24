@@ -10,6 +10,7 @@ import { attachParallaxLayer } from "../../engine/parallax/attachParallaxLayer";
 import { journeyRiverLayers } from "../../story/heart-of-darkness/riverParallax";
 import { journeyWeather } from "../../story/heart-of-darkness/weather";
 import { attachJourneyAtmosphere } from "./attachJourneyAtmosphere";
+import { createJourneyCargoInspection } from "./createJourneyCargoInspection";
 
 const DECK_LAYER = "journey-deck";
 
@@ -48,7 +49,8 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
   // A scene/navigation director may supply progress; otherwise follow actual bank travel.
   const atmosphere = attachJourneyAtmosphere(layers, canvas.app.ticker, camera,
     options.progress ?? (() => voyage.distance / journeyWeather.routeDistance));
-  attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface);
+  attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface,
+    createJourneyCargoInspection(player));
   surface.focus({ preventScroll: true });
   return { camera, npc, player, atmosphere, voyage };
 }

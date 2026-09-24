@@ -1,4 +1,4 @@
-import { Graphics } from "pixi.js";
+import { Graphics, Text } from "pixi.js";
 import type { createWorldLayers } from "../../engine/world/createWorldLayers";
 import { journeyDeck } from "./deck";
 
@@ -47,4 +47,8 @@ export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>): v
   }
   fittings.moveTo(320, 900).lineTo(1600, 900).stroke({ color: 0x202e2e, width: 7 });
   layers.foreground.addChild(fittings);
+  layers.foreground.addChild(new Graphics({ label: "cargo-tally" })
+    .rect(423, 570, 65, 57).fill(0x584f3d).stroke({ color: 0xb39f7a, width: 2 }));
+  layers.foreground.addChild(new Text({ label: "cargo-mark", text: "DEST.\n——",
+    x: 430, y: 580, style: { fontFamily: "Arial", fontSize: 12, fill: 0xd0bea0 } }));
 }

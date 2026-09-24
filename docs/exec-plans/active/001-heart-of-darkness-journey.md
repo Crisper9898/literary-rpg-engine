@@ -26,6 +26,9 @@ speeds and camera depths, including while Marlow stands still or reads dialogue.
 Voyage distance now drives smooth clear, humid and deep atmosphere profiles.
 Three fog depths and world shading preserve movement, camera follow, NPC routines
 and readable dialogue/HUD at both supported test resolutions.
+An optional cargo tally on the port side now records its inspection in Pixi'VN
+storage. If Marlow reads its erased destination before asking about the cargo,
+the deckhand answers differently; the original line remains when it is ignored.
 
 ## Ordered tasks
 
@@ -39,16 +42,43 @@ and readable dialogue/HUD at both supported test resolutions.
 - [x] Add a walk-and-talk dialogue sequence using Pixi'VN.
 - [x] Add layered scrolling river/background parallax.
 - [x] Add a simple fog/weather progression.
-- [ ] Add one meaningful environmental interaction that changes a later dialogue line.
+- [x] Add one meaningful environmental interaction that changes a later dialogue line.
 - [ ] Add basic zone-aware ambience/audio transition.
 - [ ] Add save/restore smoke coverage for relevant world state.
 - [ ] Replace placeholders with first-pass art direction assets.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add one meaningful environmental interaction that changes a later dialogue line.
-Keep the working movement, NPC routine, camera, walk-and-talk, parallax and weather
-intact. This weather task ends here; the environmental interaction has not started.
+Add basic zone-aware ambience/audio transition. Keep movement, NPC routine, camera,
+walk-and-talk, parallax, weather and the optional cargo consequence intact. Audio
+has not started.
+
+## Completed environmental interaction task — 2026-09-23
+
+Baseline: `bb8d2a1` on `journey-vertical-slice`.
+
+- [x] Place an optional, visibly marked cargo tally on the port-side fittings.
+  Reuse the existing conversation prompt and `E` input when Marlow is in reach;
+  active conversation still owns `E`, and `1/2` remain Pixi'VN choices.
+- [x] Record inspection as `journey.cargoMarkInspected` in Pixi'VN storage.
+  Keep the world reach adapter small and story-specific, without inventory,
+  quests, a new UI or a parallel narrative state manager.
+- [x] Let the existing cargo-answer label choose its later line from stored state:
+  an uninspected tally keeps the original answer; inspecting the erased mark
+  makes the sailor acknowledge the missing destination.
+- [x] Test both paths in browser, recheck conversation regression and review
+  the prompt and changed dialogue visually at 1366x768 and 800x600.
+- [x] Run `npm run agent:check` and the complete `npm run agent:e2e`; commit only
+  after they pass. No push or Phaser stash changes.
+
+Verification: `agent:check` passed TypeScript, 70 unit tests and the production
+build. `agent:e2e` passed all 19 tests, including two new cases for inspecting
+and ignoring the tally. The existing conversation test now waits for the sailor's
+specific prompt, since `E` can also offer inspection elsewhere on the deck.
+Visual captures at both resolutions show the tally and reachable prompt; the
+later answer is readable with the existing dialogue panel. Existing build chunk
+warning remains (main chunk about 552 kB). Pixi'VN storage owns the flag, but
+export/restore coverage belongs to the later save/restore task.
 
 ## Completed weather task — 2026-09-19
 

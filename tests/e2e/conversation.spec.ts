@@ -11,7 +11,8 @@ async function approach(page: Page) {
   const key = positions.find((a) => a.id === "playerSpawn")!.x <
     positions.find((a) => a.id === "journey-deckhand")!.x ? "d" : "a";
   await page.keyboard.down(key);
-  try { await expect(page.getByTestId("talk-prompt")).toBeEnabled({ timeout: 12_000 }); }
+  // The shared E prompt can offer the optional cargo inspection nearby.
+  try { await expect(page.getByTestId("talk-prompt")).toHaveText("E · Hablar con el marinero", { timeout: 20_000 }); }
   finally { await page.keyboard.up(key); }
 }
 async function begin(page: Page) {

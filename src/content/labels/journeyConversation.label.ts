@@ -1,5 +1,6 @@
 import { narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
 import { deckConversation as lines } from "../../story/heart-of-darkness/conversation";
+import { hasInspectedCargoMark } from "../state/journeyState";
 import { journeyDeckhand, marlow } from "../characters";
 
 export const journeyRiverAnswer = newLabel("journey-talk-river", [
@@ -9,7 +10,8 @@ export const journeyRiverAnswer = newLabel("journey-talk-river", [
 
 export const journeyCargoAnswer = newLabel("journey-talk-cargo", [
   () => { narration.dialogue = { character: marlow, text: lines.cargoQuestion }; },
-  () => { narration.dialogue = { character: journeyDeckhand, text: lines.cargoAnswer }; },
+  () => { narration.dialogue = { character: journeyDeckhand,
+    text: hasInspectedCargoMark() ? lines.cargoAnswerInspected : lines.cargoAnswer }; },
 ]);
 
 export const journeyConversation = newLabel("journey-talk", [

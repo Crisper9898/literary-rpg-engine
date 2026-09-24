@@ -7,7 +7,8 @@ import { journeyConversation } from "../labels/journeyConversation.label";
 
 /** Spatial/input adapter only: no copied dialogue cursor, choices, history or flags. */
 export function attachJourneyConversation(presentation: Container, player: Container,
-  npc: NpcRoutineController, ticker: Ticker, surface: HTMLCanvasElement) {
+  npc: NpcRoutineController, ticker: Ticker, surface: HTMLCanvasElement,
+  inspection?: { prompt: string; available(): boolean; inspect(): void }) {
   const root = surface.parentElement!;
   const listeners = new AbortController();
   let disposed = false;
@@ -33,6 +34,7 @@ export function attachJourneyConversation(presentation: Container, player: Conta
   };
   const interact = () => {
     if (active()) { advance(); return; }
+    if (inspection?.available()) { inspection.inspect(); render(); return; }
     if (!inRange() || disposed || busy) return;
     // Acknowledge Marlow without pausing the work route or stealing camera follow.
     if (npc.state.mode === "idle") npc.face(player.position);
@@ -46,12 +48,13 @@ export function attachJourneyConversation(presentation: Container, player: Conta
   const view = createJourneyConversationView(root, surface, { interact, advance, choose });
   const render = () => {
     const isActive = active();
+    const canInspect = !isActive && !!inspection?.available();
     const dialogue = isActive ? narration.dialogue : undefined;
     const character = dialogue?.character;
     const model = typeof character === "string" ? RegisteredCharacters.get<CharacterBaseModel, string>(character) : character;
     const speaker = model instanceof CharacterBaseModel ? model.name : "";
-    view.render({ active: isActive, inRange: inRange(), busy, error,
-      prompt: inRange() ? "E · Hablar con el marinero" : "Acércate al marinero · E para hablar",
+    view.render({ active: isActive, inRange: canInspect || inRange(), busy, error,
+      prompt: canInspect ? inspection!.prompt : inRange() ? "E · Hablar con el marinero" : "Acércate al marinero · E para hablar",
       speaker: speaker ?? "", text: [dialogue?.text ?? ""].flat().join(" "),
       choices: isActive ? (narration.choices.list ?? []).map((choice) => [choice.text].flat().join(" ")) : [],
     });
