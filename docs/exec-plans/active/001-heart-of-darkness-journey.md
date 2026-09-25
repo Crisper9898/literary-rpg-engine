@@ -29,6 +29,8 @@ and readable dialogue/HUD at both supported test resolutions.
 An optional cargo tally on the port side now records its inspection in Pixi'VN
 storage. If Marlow reads its erased destination before asking about the cargo,
 the deckhand answers differently; the original line remains when it is ignored.
+Pixi'VN export/restore coverage now proves both versions of that consequence
+survive a serialized save; restored movement and traveling scenery remain live.
 
 ## Ordered tasks
 
@@ -44,7 +46,7 @@ the deckhand answers differently; the original line remains when it is ignored.
 - [x] Add a simple fog/weather progression.
 - [x] Add one meaningful environmental interaction that changes a later dialogue line.
 - [ ] Add basic zone-aware ambience/audio transition.
-- [ ] Add save/restore smoke coverage for relevant world state.
+- [x] Add save/restore smoke coverage for relevant world state.
 - [ ] Replace placeholders with first-pass art direction assets.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
@@ -52,6 +54,32 @@ the deckhand answers differently; the original line remains when it is ignored.
 Add basic zone-aware ambience/audio transition. Keep movement, NPC routine, camera,
 walk-and-talk, parallax, weather and the optional cargo consequence intact. Audio
 has not started.
+
+## Completed narrative save/restore task — 2026-09-24
+
+Baseline: `c1d64c1` on `journey-vertical-slice`. The user explicitly selected
+save/restore before the still-pending audio task.
+
+- [x] Use Pixi'VN's `Game.exportGameState()` and `Game.restoreGameState()` directly.
+  Keep `journey.cargoMarkInspected` in Pixi'VN storage, which is part of its
+  serialized `GameState`; add no project save manager, save UI or gameplay code.
+- [x] Exercise inspected -> JSON save -> fresh page -> restore -> modified sailor
+  answer. Reach the sailor after restore and verify real parallax/fog ticker updates.
+- [x] Exercise ignored -> JSON save -> later inspection -> restore -> original
+  sailor answer. This proves restoration replaces the changed narrative flag.
+- [x] Run `npm run agent:check` and the full `npm run agent:e2e`; keep the
+  existing movement, camera, NPC, conversation, interaction, parallax and weather
+  regression suite passing. One commit, no push, Phaser stash untouched.
+
+Verification: TypeScript, 70 unit tests and production build passed in
+`agent:check`. Playwright's complete 21-test `agent:e2e` run finished with
+`passed` and no failed tests, including both new save/restore paths. A small
+test-only probe calls the public Pixi'VN API and samples restored scenery; it
+does not add an alternate persistence path. The existing large-chunk build
+warning remains. This smoke test covers the narrative flag and live scene after
+restore; exact player/NPC positions and voyage phase are not checkpointed by
+these smoke tests. Pixi'VN warns that no route-navigation callback is configured
+during restore; the current slice has only the start route.
 
 ## Completed environmental interaction task — 2026-09-23
 
