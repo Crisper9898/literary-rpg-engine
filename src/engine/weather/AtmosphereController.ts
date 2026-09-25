@@ -46,6 +46,13 @@ export class AtmosphereController<Channel extends string> {
   get state(): Readonly<Record<Channel, number>> { return this.values; }
   get progress(): number { return this.currentProgress; }
 
+  /** Rebuild visible channels immediately when a saved phase is loaded. */
+  restoreProgress(progress: number): void {
+    if (!Number.isFinite(progress)) throw new RangeError("Atmosphere restore requires finite progress.");
+    this.currentProgress = Math.max(0, Math.min(1, progress));
+    this.evaluate();
+  }
+
   update(progress: number, elapsedMS: number): void {
     if (!Number.isFinite(progress) || !Number.isFinite(elapsedMS) || elapsedMS <= 0) return;
     const target = Math.max(0, Math.min(1, progress));

@@ -27,6 +27,13 @@ export class ParallaxLayerController {
   /** Signed travel, unaffected by tile wrapping or camera movement. */
   get distance(): number { return this.traveled; }
 
+  /** Restore unwrapped travel; the visible tile phase follows from the same distance. */
+  restoreDistance(distance: number): void {
+    if (!Number.isFinite(distance)) throw new RangeError("Parallax restore requires finite distance.");
+    this.traveled = distance;
+    this.offset = ((distance % this.options.period) + this.options.period) % this.options.period;
+  }
+
   update(elapsedMS: number): void {
     if (!Number.isFinite(elapsedMS) || elapsedMS <= 0) return;
     const { period, speed } = this.options;

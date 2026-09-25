@@ -30,7 +30,9 @@ An optional cargo tally on the port side now records its inspection in Pixi'VN
 storage. If Marlow reads its erased destination before asking about the cargo,
 the deckhand answers differently; the original line remains when it is ignored.
 Pixi'VN export/restore coverage now proves both versions of that consequence
-survive a serialized save; restored movement and traveling scenery remain live.
+survive a serialized save. Marlow's bounded world coordinates, unwrapped voyage
+distance and the smoothed atmospheric progress now also round-trip through
+Pixi'VN storage; restored movement and traveling scenery remain live.
 
 ## Ordered tasks
 
@@ -54,6 +56,47 @@ survive a serialized save; restored movement and traveling scenery remain live.
 Add basic zone-aware ambience/audio transition. Keep movement, NPC routine, camera,
 walk-and-talk, parallax, weather and the optional cargo consequence intact. Audio
 has not started.
+
+## Completed spatial and voyage save/restore validation — 2026-09-24
+
+Baseline: `a16ef94` on `journey-vertical-slice`. The user selected this validation
+before the pending audio task.
+
+- [x] Checkpoint Marlow's exact world coordinates, unwrapped near-bank voyage
+  distance and smoothed atmosphere progress in Pixi'VN `storage`, which
+  `Game.exportGameState()` and `Game.restoreGameState()` already serialize.
+  Generic movement, parallax and atmosphere adapters accept an optional
+  checkpoint channel; Journey owns the story-specific keys.
+- [x] Rehydrate live controllers when Pixi'VN replaces storage on restore.
+  Constrain restored player coordinates to deck bounds, reset stale velocity,
+  reconstruct the river tile phase from saved distance, and immediately rebuild
+  fog and world shading from saved atmospheric progress. Gameplay then continues
+  on the existing ticker without a second save manager or save/load UI.
+- [x] Browser-test move -> export -> move elsewhere -> restore using the real
+  actor's exact coordinates. Browser-test early voyage -> export -> deep voyage
+  -> restore using exact serialized distance/progress plus visibly lighter fog
+  and world tint. The existing inspected/ignored cargo dialogue save tests and
+  the complete gameplay regression suite still exercise restored interaction,
+  river motion and weather.
+- [x] Add focused controller tests for exact/bounded position restore, wrapped
+  river phase restore and immediate atmosphere reversal. Run `agent:check` and
+  complete `agent:e2e`; commit separately without push or touching the Phaser
+  stash.
+
+Validation: `npm run agent:check` passed TypeScript, 73 unit tests across 12
+files and the production Vite build. `npm run agent:e2e` passed all 23 browser
+tests in 10.3 minutes, including both new restore paths and the existing cargo,
+movement, dialogue, parallax and weather cases. The pre-existing >500 kB bundle
+warning remains. The weather diagnostic reported about 7–7.3 fps with fog and
+9.4 fps without it in software rendering; no new rendering optimization was in
+scope.
+
+Limits: the route currently has continuous travel progress and authored
+atmospheric bands, but no phase-gated dialogue or event to replay. The browser
+test verifies the visible weather state for the restored phase. NPC routine
+position and independent decorative parallax/fog offsets are outside this
+checkpoint; the near-bank distance is the canonical journey-progress source.
+There is still no player-facing save/load UI. Audio remains the next task.
 
 ## Completed narrative save/restore task — 2026-09-24
 

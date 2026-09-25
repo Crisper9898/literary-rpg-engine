@@ -6,6 +6,17 @@ const camera = { position: { x: 900, y: 600 }, zoom: 1.5 };
 const viewport = { width: 1920, height: 1080 };
 
 describe("periodic voyage layers", () => {
+  it("restores unwrapped voyage distance and matching visible tile phase", () => {
+    const layer = new ParallaxLayerController({ ...options, period: 10 });
+    layer.update(50);
+    layer.restoreDistance(35.25);
+    expect(layer.distance).toBe(35.25);
+    expect(layer.phase).toBeCloseTo(5.25);
+    layer.restoreDistance(-5);
+    expect(layer.phase).toBe(5);
+    expect(() => layer.restoreDistance(Infinity)).toThrow(RangeError);
+  });
+
   it("exposes signed journey distance independently of tile wrapping and camera motion", () => {
     const layer = new ParallaxLayerController({ ...options, period: 10, speed: 100 });
     for (let i = 0; i < 7; i++) layer.update(50);

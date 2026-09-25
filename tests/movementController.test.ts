@@ -9,6 +9,16 @@ const options = {
 };
 
 describe("movement controller", () => {
+  it("restores exact world coordinates, stops stale velocity and constrains bounds", () => {
+    const controller = new MovementController(options);
+    controller.update({ x: 1, y: 0 }, 50);
+    expect(controller.restore({ x: 842.25, y: 733.5 }).position).toEqual({ x: 842.25, y: 733.5 });
+    expect(controller.state.velocity).toEqual({ x: 0, y: 0 });
+    expect(controller.state.isMoving).toBe(false);
+    expect(controller.restore({ x: 9999, y: -100 }).position).toEqual({ x: 1500, y: 680 });
+    expect(() => controller.restore({ x: NaN, y: 760 })).toThrow(RangeError);
+  });
+
   it.each([30, 60, 120])("moves 240 units per second at %i fps", (fps) => {
     const controller = new MovementController(options);
     for (let frame = 0; frame < fps; frame++) controller.update({ x: 1, y: 0 }, 1000 / fps);

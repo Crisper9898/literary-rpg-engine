@@ -11,6 +11,7 @@ import { journeyRiverLayers } from "../../story/heart-of-darkness/riverParallax"
 import { journeyWeather } from "../../story/heart-of-darkness/weather";
 import { attachJourneyAtmosphere } from "./attachJourneyAtmosphere";
 import { createJourneyCargoInspection } from "./createJourneyCargoInspection";
+import { journeyAtmosphereProgress, journeyPlayerPosition, journeyVoyageDistance } from "../state/journeyState";
 
 const DECK_LAYER = "journey-deck";
 
@@ -30,7 +31,7 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     position: journeyDeck.anchors.playerSpawn,
     bounds: journeyDeck.walkableArea,
     ...marlowMovement,
-  });
+  }, journeyPlayerPosition);
   const npc = attachNpcRoutine(deckhand.actor, canvas.app.ticker, deckhandRoutine, deckhand.pose);
   const camera = attachWorldCamera(world, canvas.app.ticker, {
     world: journeyDeck.size,
@@ -43,12 +44,13 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
   const river = journeyRiverLayers.map((definition) => {
     return attachParallaxLayer(layers[definition.placement], canvas.app.ticker, camera, {
       ...definition, reference: { x: journeyDeck.size.width / 2, y: journeyDeck.size.height / 2 },
-    }).controller;
+    }, definition.id === "near-bank" ? journeyVoyageDistance : undefined).controller;
   });
   const voyage = river[journeyRiverLayers.findIndex((layer) => layer.id === "near-bank")];
   // A scene/navigation director may supply progress; otherwise follow actual bank travel.
   const atmosphere = attachJourneyAtmosphere(layers, canvas.app.ticker, camera,
-    options.progress ?? (() => voyage.distance / journeyWeather.routeDistance));
+    options.progress ?? (() => voyage.distance / journeyWeather.routeDistance),
+    options.progress ? undefined : journeyAtmosphereProgress);
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface,
     createJourneyCargoInspection(player));
   surface.focus({ preventScroll: true });

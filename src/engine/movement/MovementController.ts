@@ -33,6 +33,16 @@ export class MovementController {
 
   get state(): MovementState { return this.current; }
 
+  /** Rehydrate a saved world position without carrying stale movement into the next frame. */
+  restore(position: Point): MovementState {
+    if (!Number.isFinite(position.x) || !Number.isFinite(position.y)) {
+      throw new RangeError("Movement restore requires finite coordinates.");
+    }
+    this.current = { ...this.current, position: this.constrain(position),
+      velocity: { x: 0, y: 0 }, isMoving: false };
+    return this.current;
+  }
+
   update(direction: Point, elapsedMS: number): MovementState {
     const length = Math.hypot(direction.x, direction.y);
     if (!this.enabled || !Number.isFinite(elapsedMS) || elapsedMS <= 0 || !Number.isFinite(length) || length === 0) {

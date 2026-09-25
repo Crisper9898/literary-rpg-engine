@@ -9,6 +9,16 @@ const stages: readonly AtmosphereKeyframe<Channel>[] = [
 ];
 
 describe("progress-driven atmosphere", () => {
+  it("restores a previous visual phase immediately after deeper fog", () => {
+    const controller = new AtmosphereController(stages, { progress: 1 });
+    const originalView = controller.state;
+    controller.restoreProgress(0.5);
+    expect(controller.progress).toBe(0.5);
+    expect(controller.state).toBe(originalView);
+    expect(controller.state).toEqual(stages[1].values);
+    expect(() => controller.restoreProgress(NaN)).toThrow(RangeError);
+  });
+
   it("reproduces all authored stages and clamps initial progress", () => {
     for (const stage of stages) {
       const controller = new AtmosphereController(stages, { progress: stage.progress });

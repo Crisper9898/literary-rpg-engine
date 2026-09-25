@@ -6,9 +6,11 @@ import { attachAtmosphere } from "../../engine/weather/attachAtmosphere";
 import { createFogTexture } from "../../engine/weather/createFogTexture";
 import { journeyWeather } from "../../story/heart-of-darkness/weather";
 import { journeyDeck } from "../../story/heart-of-darkness/deck";
+import type { CheckpointChannel } from "../../engine/world/CheckpointChannel";
 
 export function attachJourneyAtmosphere(layers: ReturnType<typeof createWorldLayers>,
-  ticker: Ticker, camera: CameraDirector, progress: () => number) {
+  ticker: Ticker, camera: CameraDirector, progress: () => number,
+  checkpoint?: CheckpointChannel<number>) {
   const texture = createFogTexture();
   const targets = {} as Record<typeof journeyWeather.fog[number]["channel"], Container>;
   for (const definition of journeyWeather.fog) {
@@ -33,7 +35,7 @@ export function attachJourneyAtmosphere(layers: ReturnType<typeof createWorldLay
     targets[definition.channel] = layer;
   }
   const controller = attachAtmosphere(layers.root, ticker, {
-    keyframes: journeyWeather.keyframes, progress,
+    keyframes: journeyWeather.keyframes, progress, checkpoint,
     apply: (state) => {
       targets.distantFog.alpha = state.distantFog;
       targets.riverFog.alpha = state.riverFog;
