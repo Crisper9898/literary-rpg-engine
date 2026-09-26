@@ -22,10 +22,36 @@ audio direction. Future replacements can change the paths in
 ## Listening check
 
 Run `npm run dev`, open the local page, click the game canvas and use headphones
-at a comfortable volume. Near Marlow's starting position, listen for water with
-some shore texture. Hold `A` toward the port edge: the shore/insect texture should
-grow while the river recedes smoothly. Hold `D` across the deck: the shore fades,
-the river returns and a low machinery thrum grows near the opposite end. Pause
-at each point for a few seconds and listen for an obvious pop at the 8-second
-loop seam. Browser tests can verify decoded non-silent samples and live channel
-state; they cannot judge timbre, comfort or the perceived balance on your device.
+at a comfortable volume. Press `P` to show the Journey-only diagnostic panel;
+press `P` again to hide it. The panel shows Marlow's current deck coordinate,
+the river/shore/engine mixer volume, each target and Pixi'VN channel volume,
+and whether its source is playing. It is hidden by default and does not capture
+mouse or movement keys. Use `A`/`D` or the arrow keys for this short route:
+
+1. Move to **river** around `x 850`; pause. Water should lead, with little
+   shore or machinery. Wait at least 8 seconds to hear a complete loop.
+2. Move left to **shore** around `x 420`; pause. The foliage/insect texture
+   should rise as water recedes, without a sudden jump.
+3. Move right to **engine** around `x 1280`; pause. The low machinery thrum
+   should grow while the shore recedes. Walk slowly across both transitions.
+
+To check restoration before a Save/Load menu exists, open the browser's
+developer console **while running `npm run dev`**. At the shore, enter:
+
+```js
+const audioProbe = await import("/tests/e2e/audioProbe.ts");
+const savedAudioRoute = await audioProbe.saveAudioPosition();
+```
+
+Walk to the engine, then enter `await audioProbe.restoreAudioPosition(savedAudioRoute)`.
+The scene is rebuilt at the saved shore position. Press `P` again (the newly
+created panel starts hidden) and confirm the shore mix returns, with only one
+playing source per active layer. The automated browser test also checks this
+save/restore path through Pixi'VN.
+
+For each stop, note the coordinate, which cue feels **too loud**, **too weak**
+or **artificial**, and whether a transition or 8-second loop seam is audible.
+For example: `x 420 · shore too loud · slight click on loop`. These are
+provisional sketches. Browser tests verify decoded non-silent samples and live
+channel state; they cannot judge timbre, comfort or perceived balance on your
+device.

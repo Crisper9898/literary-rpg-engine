@@ -14,6 +14,7 @@ import { createJourneyCargoInspection } from "./createJourneyCargoInspection";
 import { journeyAtmosphereProgress, journeyPlayerPosition, journeyVoyageDistance } from "../state/journeyState";
 import { attachSpatialAudio } from "../../engine/audio/attachSpatialAudio";
 import { journeyAudioLayers, registerJourneyAudioAssets } from "../../story/heart-of-darkness/journeyAudio";
+import { attachJourneyAudioDiagnostics } from "./attachJourneyAudioDiagnostics";
 
 const DECK_LAYER = "journey-deck";
 
@@ -58,6 +59,7 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     namespace: DECK_LAYER, listener: () => ({ x: player.x, y: player.y }),
     layers: journeyAudioLayers,
   });
+  attachJourneyAudioDiagnostics(presentation, player, audio, canvas.app.ticker, surface);
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface,
     createJourneyCargoInspection());
   surface.focus({ preventScroll: true });

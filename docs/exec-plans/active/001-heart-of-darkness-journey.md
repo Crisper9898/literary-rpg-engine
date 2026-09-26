@@ -64,6 +64,28 @@ Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
 
+## Journey audio listening diagnostics — 2026-09-26
+
+Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does
+not start the pending first-pass art task.
+
+- [x] Add a Journey-only panel, hidden during normal play and toggled with `P`.
+  It shows Marlow's deck location and coordinates, plus live mixer volume,
+  target, Pixi'VN channel volume and playback state for river, shore and engine.
+  It reads the existing controller without changing sound or gameplay state.
+- [x] Keep the overlay and route outside `src/engine/`; dispose its key listener,
+  ticker callback and DOM when the scene is rebuilt. Browser-test that `P` works
+  during movement and Pixi'VN dialogue without capturing input, and that scene
+  restart leaves one hidden panel.
+- [x] Document river → shore → engine listening stops, save/restore instructions
+  and a short way to note levels, timbre and transition/loop artifacts in
+  `public/assets/audio/README.md`.
+- [x] Run `agent:check` and pertinent browser regressions. `agent:check` passed
+  TypeScript, 89 unit tests in 19 files and production build. Targeted
+  `agent:e2e` passed 14/14 tests covering audio, diagnostics, conversation,
+  movement and save/restore in 3.5 minutes. The existing >500 kB bundle warning
+  remains. No human auditory judgment is claimed; the route is ready for it.
+
 ## Audible provisional ambience — 2026-09-26
 
 Baseline: `0cd5876` on `journey-vertical-slice`. This is a focused audio-asset
