@@ -25,12 +25,12 @@ view in `src/ui/journeyConversationView.ts` and fog texture recipe in
 
 ## Starting another work
 
-For a conceptual *Metamorphosis* prototype, add Gregor, a room layout and
-dialogue as new story/content modules. Register its characters and labels with
-Pixi'VN. Compose a room with `createWorldLayers()` and an authored
-`WorldLayout`; attach a player with `attachPlayerMovement()` (including room
-bounds, collider radius, speed, controls and a checkpoint), and use
-`attachWorldCamera()` if that room needs a moving camera. Use
+*La metamorfosis* now supplies Gregor, a room layout, window/door dialogue,
+provisional art and three audio cues in `src/story/metamorphosis/` and
+`src/content/metamorphosis/`. Its labels and character are registered with
+Pixi'VN. `createWorldLayers()`, `attachPlayerMovement()` and
+`attachWorldCamera()` compose the same movement and camera systems used by
+Journey, with room-specific bounds and a Pixi'VN checkpoint. Use
 `attachNpcRoutine()`, `attachParallaxLayer()` or `attachAtmosphere()` only if the
 scene calls for them. The existing `journeyDeck.ts` demonstrates composition;
 there is no generic scene schema to copy or extend.
@@ -94,26 +94,34 @@ the next update recalculates zones. The output checks Pixi'VN's tracked media
 and resumes a missing source; it never creates a second save format or tries to
 serialize an exact sample time.
 
-For a second work, e.g. *The Metamorphosis*, define its own asset aliases and
-layers in its story module: an unzoned room loop, a window zone with exterior
-sound, and a door zone with family voices. Compose the same adapter in that
-work's scene with `listener: () => gregor.position` (or a camera provider),
-and destroy the scene container on exit. No `src/engine/` edits are required.
-The neutral browser fixture exercises precisely this three-layer pattern with
-test sources. Journey's temporary source registration and authored zone values
-are in `src/story/heart-of-darkness/journeyAudio.ts`.
+*La metamorfosis* defines its own aliases and layers in
+`src/story/metamorphosis/audio.ts`: an unzoned room loop, a window zone with
+exterior sound, and a door zone with abstract family-voice texture. Its scene
+passes `listener: () => actor.position` to the same adapter and destroys the
+container on re-entry. No `src/engine/` edits were needed. The temporary WAVs
+and generator are documented under `public/assets/audio/metamorphosis/`.
+Journey's authored zone values remain in
+`src/story/heart-of-darkness/journeyAudio.ts`.
+
+## Selecting a work
+
+The default `/` entry still starts Heart of Darkness. The visible selector
+links to `/?story=metamorphosis` for Gregor's room. `src/content/storyEntries.ts`
+maps the query to Pixi'VN start labels; changing works reloads the page and
+starts a fresh game. Character, label, spatial, sound and checkpoint data remain
+in each work's modules. There is no cross-work save slot.
 
 ## Current limits
 
 Movement supports an axis-aligned rectangular area and circular footprint,
 not arbitrary collision geometry. NPC routines are deterministic authored
 stops; they have no generic checkpoint yet. Camera framing, individual
-decorative parallax phases and NPC routine state are transient. The dialogue
-and HUD input adapter is still Journey-specific, while Pixi'VN itself is
-reusable for any work. Scene setup is explicit TypeScript composition and the
-app entry currently boots one game at a fixed logical resolution; a second
-shipping title would need its own entry/registration selection. Journey's
-ambient files are silent placeholders pending authored audio.
+decorative parallax phases and NPC routine state are transient. Each work has
+its own dialogue HUD/input adapter; Pixi'VN dialogue and the engine's spatial
+interactions are shared. Scene setup is explicit TypeScript composition at a
+fixed logical resolution. The works share an entry selector, but do not yet
+have separate production builds. Both soundscapes use audible provisional
+loops pending human sound review.
 
 Before adding infrastructure, check whether Pixi'VN or an existing engine
 module already provides the capability. Keep authored decisions in content;

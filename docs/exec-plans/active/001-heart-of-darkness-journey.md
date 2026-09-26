@@ -64,6 +64,34 @@ Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
 
+## La metamorfosis portability scene — 2026-09-26
+
+User-directed extension from `f3fd9e0` to prove a second work can use the
+approved architecture. The unfinished first-pass Heart of Darkness art task
+remains next on this plan; its pending human audio listening is not a gate.
+
+- [x] Add a selectable `/?story=metamorphosis` entry while `/` keeps Journey as
+  the default. The visible work selector reloads into the chosen Pixi'VN label.
+- [x] Keep Gregor, room geometry, interactions, dialogue, checkpoints, audio
+  sources and authored parameters in Metamorphosis story/content modules.
+  Reuse engine movement, camera, spatial interactions and audio adapter, plus
+  Pixi'VN labels, storage, sound and export/restore. No `src/engine/` changes.
+- [x] Demonstrate an optional window observation that changes a later door
+  line, and three audible provisional layers: room, exterior near the window,
+  and abstract voices near the door. Their generator and CC0 attribution are
+  documented with the assets; final sound design remains future content work.
+- [x] Browser-test both entry paths, movement/camera, both dialogue paths,
+  live zoned audio, decoded assets and Pixi'VN save/restore. Review the room
+  at 800×600; keep the Phaser stash and local-only Git history intact.
+
+Validation: `npm run agent:check` passed TypeScript, 89 unit tests in 19 files
+and the production build. `npm run agent:e2e` passed the complete 34-test
+browser suite in 11.8 minutes, including all existing Journey tests. Gregor's
+room was visually reviewed at 800×600. The pre-existing >500 kB bundle warning
+and slow software fog rendering (7–9 fps in the diagnostic) remain. No human
+listening was performed or required for this task. The Metamorphosis loops are
+provisional, and the Heart of Darkness listening review remains separate.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does

@@ -12,6 +12,26 @@ body,
   margin: 0;
 }
 
+.story-selector {
+  position: fixed;
+  z-index: 10;
+  right: 12px;
+  top: 10px;
+  display: flex;
+  gap: 8px;
+  font: 12px/1.2 Arial, sans-serif;
+}
+.story-selector a {
+  padding: 6px 9px;
+  color: #e9e3d3;
+  background: #152022ed;
+  border: 1px solid #a4a18a66;
+  border-radius: 3px;
+  text-decoration: none;
+}
+.story-selector a[aria-current="page"] { border-color: #d0b784; color: #f4dfb7; }
+.story-selector a:focus-visible { outline: 2px solid #e3cc98; }
+
 canvas:focus-visible {
   outline: 2px solid #a3b4aa;
   outline-offset: -2px;

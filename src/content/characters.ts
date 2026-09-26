@@ -6,6 +6,7 @@
  */
 import { CharacterBaseModel, RegisteredCharacters } from "@drincs/pixi-vn";
 import { deckhandIdentity } from "../story/heart-of-darkness/deckhand";
+import "./metamorphosis/character";
 
 export const journeyDeckhand = new CharacterBaseModel(deckhandIdentity.id, {
   name: deckhandIdentity.name, color: deckhandIdentity.color,

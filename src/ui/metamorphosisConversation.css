@@ -1,0 +1,37 @@
+.metamorphosis-conversation {
+  position: absolute;
+  width: min(100vw, 177.7778vh);
+  height: min(100vh, 56.25vw);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  container-type: inline-size;
+}
+.metamorphosis-conversation [hidden] { display: none; }
+.metamorphosis-conversation button,
+.metamorphosis-conversation section {
+  position: absolute;
+  right: 5%;
+  top: 8%;
+  width: min(38%, 480px);
+  box-sizing: border-box;
+  pointer-events: auto;
+  color: #eee0ca;
+  background: #1c1a1cf2;
+  border: 1px solid #b4a284;
+  border-left: 4px solid #a68965;
+  padding: clamp(12px, 1.5cqw, 23px);
+  font: clamp(13px, 1.3cqw, 18px)/1.4 Georgia, serif;
+}
+.metamorphosis-conversation section button {
+  position: static;
+  width: 100%;
+  margin-top: .8em;
+  text-align: left;
+  cursor: pointer;
+}
+.metamorphosis-conversation > button { text-align: left; cursor: pointer; }
+.metamorphosis-conversation button:disabled { color: #9d968b; cursor: default; }
+.metamorphosis-conversation h2 { margin: 0 0 .5em; font-size: 1em; }
+.metamorphosis-conversation p { margin: 0; line-height: 1.5; }

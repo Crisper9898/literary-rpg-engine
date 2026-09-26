@@ -32,6 +32,11 @@ npm install
 npm run dev
 ```
 
+La página abre **Heart of Darkness** por defecto. El selector visible permite
+entrar en **La metamorfosis**; también puedes abrir directamente
+`/?story=metamorphosis`. En la habitación de Gregor, camina con WASD/flechas y
+pulsa `E` cerca de la ventana o la puerta. Sus tres ambientes son provisionales.
+
 Quality checks:
 
 ```bash
