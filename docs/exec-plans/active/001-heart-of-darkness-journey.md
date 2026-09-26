@@ -36,6 +36,9 @@ Pixi'VN storage; restored movement and traveling scenery remain live.
 An architecture audit has separated reusable spatial-action selection and
 Pixi'VN checkpoint binding from Journey content. A neutral browser fixture and
 an engine-import guard now protect portability without adding another story.
+Reusable position-aware ambience now mixes independent layers and priority
+zones through Pixi'VN sound. Journey demonstrates the system with silent
+temporary assets; authored audio can replace them in story configuration.
 
 ## Ordered tasks
 
@@ -50,15 +53,56 @@ an engine-import guard now protect portability without adding another story.
 - [x] Add layered scrolling river/background parallax.
 - [x] Add a simple fog/weather progression.
 - [x] Add one meaningful environmental interaction that changes a later dialogue line.
-- [ ] Add basic zone-aware ambience/audio transition.
+- [x] Add basic zone-aware ambience/audio transition.
 - [x] Add save/restore smoke coverage for relevant world state.
 - [ ] Replace placeholders with first-pass art direction assets.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Add basic zone-aware ambience/audio transition. Keep movement, NPC routine, camera,
-walk-and-talk, parallax, weather and the optional cargo consequence intact. Audio
-has not started.
+Replace placeholders with first-pass art direction assets. The zone-aware audio
+infrastructure is complete; its silent files await separately produced audio.
+
+## Completed zone ambience implementation — 2026-09-26
+
+Baseline: `2b03ddf` on `journey-vertical-slice`. The user selected the first
+unchecked task and specified a reusable layered zone system before final assets.
+
+- [x] Build a story-neutral audio mixer: independent layers, optional proximity
+  zones, priority groups, smooth fade/crossfade, enable/volume control, generic
+  listener target and lifecycle cleanup.
+- [x] Adapt it to Pixi'VN's public `sound.play`/channels/stop/pause/resume API.
+  Pixi'VN owns playback and save state; the scene owns zone definitions. Reconcile
+  aliases after `Game.restoreGameState()` rather than serializing playback time.
+- [x] Compose a minimal temporary-silence ambience and one zone in Journey, with
+  no authored music or final sound design. Exercise neutral and Journey browser
+  flows, including scene re-entry and restored position.
+- [x] Document how a second work supplies its own sources and zones. Run
+  `agent:check`, then `agent:e2e`; create one commit, keep Git clean and the
+  Phaser stash intact, with no push or next-task work.
+
+Implementation: `SpatialAudioController` accepts any position provider and
+authored base or circular-zone layers. Distance determines continuous gain;
+groups divide gain by priority while unrelated layers mix simultaneously.
+Per-layer fade durations smooth entries, exits and content-driven changes.
+`PixiVnAudioOutput` uses Pixi'VN tracked sounds and background channels, waits
+for a canvas gesture, reconciles restored/missing media and cleans late loads.
+`attachSpatialAudio` uses the existing Pixi ticker and scene destruction event.
+Journey defines river, shore and engine placeholder layers outside the engine;
+the three aliases currently point at the same short silent WAV. There is no
+music design, user audio menu, alternate persistence format or other-story code.
+
+Validation: `npm run agent:check` passed TypeScript, 88 unit tests across 18
+files and Vite production build. `npm run agent:e2e` passed all 28 Playwright
+tests in 9.7 minutes. New browser cases cover real Pixi'VN media and channel
+state, priority/proximity, keyboard movement, scene restoration and a neutral
+room/window/door soundscape. Existing camera, movement, NPC, dialogue, cargo,
+parallax, save/restore and weather regressions passed. The existing >500 kB
+main-chunk warning remains. Software-rendered fog diagnostics were 7.6/7.9 fps
+with fog and 10.1 fps without; no general rendering optimization was in scope.
+No physical listening claim is made: the integration asset is intentionally
+silent, and browser tests inspect media, gains and transitions deterministically.
+Pixi'VN retains named channel definitions (it exposes no channel removal);
+scene media and event listeners are cleaned, and stable aliases are reused.
 
 ## Architecture portability audit — 2026-09-24 (before refactor)
 

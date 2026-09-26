@@ -12,6 +12,8 @@ import { journeyWeather } from "../../story/heart-of-darkness/weather";
 import { attachJourneyAtmosphere } from "./attachJourneyAtmosphere";
 import { createJourneyCargoInspection } from "./createJourneyCargoInspection";
 import { journeyAtmosphereProgress, journeyPlayerPosition, journeyVoyageDistance } from "../state/journeyState";
+import { attachSpatialAudio } from "../../engine/audio/attachSpatialAudio";
+import { journeyAudioLayers, registerJourneyAudioAssets } from "../../story/heart-of-darkness/journeyAudio";
 
 const DECK_LAYER = "journey-deck";
 
@@ -51,8 +53,13 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
   const atmosphere = attachJourneyAtmosphere(layers, canvas.app.ticker, camera,
     options.progress ?? (() => voyage.distance / journeyWeather.routeDistance),
     options.progress ? undefined : journeyAtmosphereProgress);
+  registerJourneyAudioAssets();
+  const audio = attachSpatialAudio(presentation, canvas.app.ticker, surface, {
+    namespace: DECK_LAYER, listener: () => ({ x: player.x, y: player.y }),
+    layers: journeyAudioLayers,
+  });
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface,
     createJourneyCargoInspection());
   surface.focus({ preventScroll: true });
-  return { camera, npc, player, atmosphere, voyage };
+  return { camera, npc, player, atmosphere, voyage, audio };
 }

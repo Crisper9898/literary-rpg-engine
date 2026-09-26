@@ -13,6 +13,8 @@ directly. The engine adds spatial/game-world capabilities that Pixi'VN does not
 provide: bounded movement and configurable keyboard bindings, smooth camera
 direction, cyclic NPC routines, proximity-based action selection, world layers,
 periodic parallax, atmosphere interpolation and optional checkpoint channels.
+`SpatialAudioController` adds position-driven mixing; `PixiVnAudioOutput`
+delegates playback, channels and sound state to Pixi'VN.
 
 Each work owns its characters, scene geometry, text, labels, visual recipes,
 interactable definitions, storage keys and authored parameters. The current
@@ -52,6 +54,55 @@ save file format. The Journey uses this for player coordinates, unwrapped
 travel distance and smoothed atmosphere progress. The engine knows none of
 those keys or what they mean.
 
+## Environmental audio
+
+`src/engine/audio/SpatialAudioController.ts` is a scene-neutral mixer. Supply a
+`listener: () => Point` for whichever actor or camera hears the scene and an
+array of `AudioLayer` definitions. A layer has a unique `id`, Pixi asset alias
+`source`, and `volume` in 0–1. Without a zone it is a base layer; with a zone,
+give `center: () => Point`, `innerRadius` (full gain) and `outerRadius` (zero
+gain). Between the radii, gain declines linearly with distance. `enabled` and
+`setEnabled()`/`setLayerVolume()` let content alter layers without putting
+narrative decisions in the engine. Unrelated layers play together.
+
+To crossfade mutually competing ambience, give those layers the same `group`
+and a numeric `priority`. Highest priority takes its proximity share first;
+lower layers receive the remaining share. At an overlapping edge, this blends
+instead of abruptly replacing a base layer. `fadeInMS` and `fadeOutMS` limit
+volume changes over ticker time. A story can change a layer's enablement or
+volume at any time; the controller has no knowledge of the reason. Zones are
+circles in world coordinates; polygonal occlusion and directional acoustics
+are not implemented.
+
+Compose it through `attachSpatialAudio(sceneContainer, app.ticker, canvas,
+{ namespace, listener, layers })`. Register file aliases with Pixi `Assets`
+in story/content first. The adapter creates one Pixi'VN background channel
+per layer and uses Pixi'VN `sound.play/find/stop/pause/resume`; it waits for a
+canvas pointer/key gesture to start browser playback. The namespace separates
+scene aliases. The returned controller exposes `getLayerState()` for inspection
+and `pause()`/`resume()` for scene direction. Destroying the scene container
+removes the ticker callback, gesture listeners and its tracked media, including
+late asset loads. Re-entering a scene reuses the canvas's unlocked state.
+Pixi'VN exposes no channel-removal API; the adapter stops scene media and
+reuses stable namespaced channel aliases on re-entry, so channel definitions
+do not multiply.
+
+The mix and playback position are transient. Save narrative flags, scene and
+listener coordinates through Pixi'VN as usual. After
+`Game.restoreGameState()`, compose the scene again with the restored listener;
+the next update recalculates zones. The output checks Pixi'VN's tracked media
+and resumes a missing source; it never creates a second save format or tries to
+serialize an exact sample time.
+
+For a second work, e.g. *The Metamorphosis*, define its own asset aliases and
+layers in its story module: an unzoned room loop, a window zone with exterior
+sound, and a door zone with family voices. Compose the same adapter in that
+work's scene with `listener: () => gregor.position` (or a camera provider),
+and destroy the scene container on exit. No `src/engine/` edits are required.
+The neutral browser fixture exercises precisely this three-layer pattern with
+test sources. Journey's temporary source registration and authored zone values
+are in `src/story/heart-of-darkness/journeyAudio.ts`.
+
 ## Current limits
 
 Movement supports an axis-aligned rectangular area and circular footprint,
@@ -61,8 +112,8 @@ decorative parallax phases and NPC routine state are transient. The dialogue
 and HUD input adapter is still Journey-specific, while Pixi'VN itself is
 reusable for any work. Scene setup is explicit TypeScript composition and the
 app entry currently boots one game at a fixed logical resolution; a second
-shipping title would need its own entry/registration selection. Zone audio is
-not implemented yet.
+shipping title would need its own entry/registration selection. Journey's
+ambient files are silent placeholders pending authored audio.
 
 Before adding infrastructure, check whether Pixi'VN or an existing engine
 module already provides the capability. Keep authored decisions in content;

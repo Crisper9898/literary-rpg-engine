@@ -46,6 +46,9 @@ Custom project code is appropriate for:
 - `docs/exec-plans/`: resumable implementation plans
 
 Keep novel-specific decisions out of reusable engine code.
+For environmental audio, keep sources, aliases, zone locations and narrative
+enablement in story/content. Use the generic spatial mixer and Pixi'VN sound
+adapter; do not add a parallel playback or sound-save manager.
 
 Before adding a feature, check Pixi'VN and existing engine systems, decide
 whether it belongs to engine or content, and prefer configuration/composition
