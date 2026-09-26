@@ -27,6 +27,8 @@ export function inspectAudio() {
         channel.alias === `journey-deck:${id}:channel`)?.volume ?? null,
       background: sound.channels.values.find(channel =>
         channel.alias === `journey-deck:${id}:channel`)?.background ?? null,
+      mediaCount: sound.channels.values.find(channel =>
+        channel.alias === `journey-deck:${id}:channel`)?.mediaInstances.length ?? 0,
     }])),
   };
 }

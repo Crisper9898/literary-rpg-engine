@@ -2,12 +2,11 @@ import { Assets } from "pixi.js";
 import type { AudioLayer } from "../../engine/audio/SpatialAudioController";
 import { journeyDeck } from "./deck";
 
-// Replace these asset paths here when the final soundscape is produced.
-const placeholder = "/assets/audio/silent-placeholder.wav";
+// Provisional loops. Replace these paths here when the authored soundscape arrives.
 const assets = [
-  { alias: "journey-audio-river", src: placeholder },
-  { alias: "journey-audio-shore", src: placeholder },
-  { alias: "journey-audio-engine", src: placeholder },
+  { alias: "journey-audio-river", src: "/assets/audio/journey-river.wav" },
+  { alias: "journey-audio-shore", src: "/assets/audio/journey-shore.wav" },
+  { alias: "journey-audio-engine", src: "/assets/audio/journey-engine.wav" },
 ] as const;
 let registered = false;
 
@@ -19,12 +18,12 @@ export function registerJourneyAudioAssets(): void {
 
 export const journeyAudioLayers: readonly AudioLayer[] = [
   { id: "river", source: assets[0].alias, group: "waterside", priority: 0,
-    volume: 0.22, fadeInMS: 850, fadeOutMS: 1000 },
+    volume: 0.25, fadeInMS: 1000, fadeOutMS: 1200 },
   { id: "shore", source: assets[1].alias, group: "waterside", priority: 10,
-    volume: 0.34, fadeInMS: 850, fadeOutMS: 1000,
+    volume: 0.36, fadeInMS: 1000, fadeOutMS: 1200,
     zone: { center: () => ({ x: journeyDeck.walkableArea.x, y: 760 }),
-      innerRadius: 70, outerRadius: 500 } },
-  { id: "engine", source: assets[2].alias, volume: 0.13,
-    fadeInMS: 750, fadeOutMS: 750,
+      innerRadius: 70, outerRadius: 400 } },
+  { id: "engine", source: assets[2].alias, volume: 0.26,
+    fadeInMS: 900, fadeOutMS: 1100,
     zone: { center: () => ({ x: 1280, y: 760 }), innerRadius: 70, outerRadius: 450 } },
 ];

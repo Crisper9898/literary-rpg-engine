@@ -37,8 +37,9 @@ An architecture audit has separated reusable spatial-action selection and
 Pixi'VN checkpoint binding from Journey content. A neutral browser fixture and
 an engine-import guard now protect portability without adding another story.
 Reusable position-aware ambience now mixes independent layers and priority
-zones through Pixi'VN sound. Journey demonstrates the system with silent
-temporary assets; authored audio can replace them in story configuration.
+zones through Pixi'VN sound. Journey demonstrates the system with three
+distinct, audible provisional loops; authored audio can replace them in story
+configuration.
 
 ## Ordered tasks
 
@@ -60,7 +61,40 @@ temporary assets; authored audio can replace them in story configuration.
 
 ## Next task
 Replace placeholders with first-pass art direction assets. The zone-aware audio
-infrastructure is complete; its silent files await separately produced audio.
+infrastructure is complete and its provisional loops are audible; final sound
+design remains separate from this art task.
+
+## Audible provisional ambience — 2026-09-26
+
+Baseline: `0cd5876` on `journey-vertical-slice`. This is a focused audio-asset
+follow-up, not the broader first-pass art or vertical-slice polish task.
+
+- [x] Replace the shared silent WAV with distinct reproducible river, shore and
+  machinery sketches. The generator uses only original oscillators and seeded
+  noise, with no third-party recordings or samples. Record source, creator and
+  CC0 asset terms in `public/assets/audio/README.md`.
+- [x] Keep aliases and cue parameters in Heart of Darkness story configuration.
+  Retune zone radius, volume and fades without editing the generic audio engine.
+- [x] Add PCM asset checks for distinct non-silent files, duration, peak and
+  loop seam. Browser-check decode, running context after gesture, live Pixi'VN
+  media/channel counts, movement and save/restore.
+- [x] Run complete `agent:check` and `agent:e2e`, then create one local commit.
+  Leave the Phaser stash untouched; no push or next-task work.
+
+Automated tests cannot judge the perceived timbre or balance of these synthetic
+drafts. The asset README gives a short headphone-based listening route for the
+project owner. The separate sound-production phase may replace the three paths
+in story configuration without modifying `src/engine/`.
+
+Validation: `npm run agent:check` passed TypeScript, 89 unit tests in 19 files
+and the production build. `npm run agent:e2e` passed 29 browser tests in 9.7
+minutes, including browser decoding of all three non-silent loops, channel
+uniqueness, movement, scene restoration, neutral portability and all existing
+gameplay regressions. The browser confirmed a running audio context after a
+canvas gesture; no direct human listening took place. The previous >500 kB
+bundle warning remains. Software-rendered fog diagnostic was 7.8 fps with fog
+and 10.1 fps without it, consistent with prior runs. No audio engine module,
+save format or other-story content changed.
 
 ## Completed zone ambience implementation — 2026-09-26
 

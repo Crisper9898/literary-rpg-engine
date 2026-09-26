@@ -29,14 +29,16 @@ test("Journey layers blend by proximity, use Pixi'VN and survive restore without
   await place(page, 1450);
   await expect.poll(async () => (await inspect(page)).layers.river.active).toBe(true);
   let state = await inspect(page);
-  expect(state.layers.river.target).toBeCloseTo(0.22);
+  expect(state.layers.river.target).toBeCloseTo(0.25);
   expect(state.layers.shore.target).toBe(0);
   expect(state.layers.engine.target).toBeGreaterThan(0);
   expect(state.layers.engine.background).toBe(true);
+  expect(state.layers.river.mediaCount).toBe(1);
+  expect(state.layers.engine.mediaCount).toBe(1);
   await place(page, 600);
   state = await inspect(page);
   expect(state.layers.shore.target).toBeGreaterThan(0);
-  expect(state.layers.river.target).toBeLessThan(0.22);
+  expect(state.layers.river.target).toBeLessThan(0.25);
   expect(state.layers.shore.active).toBe(true);
   expect(state.layers.shore.channelVolume).toBeCloseTo(state.layers.shore.volume, 2);
   const saved = await page.evaluate(async () => {
@@ -52,6 +54,7 @@ test("Journey layers blend by proximity, use Pixi'VN and survive restore without
   expect(restored.player.x).toBe(600);
   expect(restored.layers.shore.target).toBeGreaterThan(0);
   await expect.poll(async () => (await inspect(page)).layers.shore.active).toBe(true);
+  expect((await inspect(page)).layers.shore.mediaCount).toBe(1);
   await page.locator("canvas").focus();
   await page.keyboard.down("d");
   await expect.poll(async () => (await inspect(page)).player.x, { timeout: 15_000 }).toBeGreaterThan(710);
@@ -60,6 +63,29 @@ test("Journey layers blend by proximity, use Pixi'VN and survive restore without
   expect(errors).toEqual([]);
   expect(warnings.filter(message => message.includes("Channel with alias"))).toEqual([]);
   expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+});
+
+test("the three authored ambience files decode as non-silent browser audio", async ({ page }) => {
+  await page.goto("/");
+  const result = await page.evaluate(async () => {
+    const context = new AudioContext();
+    try {
+      return await Promise.all(["river", "shore", "engine"].map(async (name) => {
+        const response = await fetch(`/assets/audio/journey-${name}.wav`);
+        if (!response.ok) throw new Error(`Missing ${name} ambience`);
+        const buffer = await context.decodeAudioData(await response.arrayBuffer());
+        const samples = buffer.getChannelData(0);
+        let energy = 0;
+        for (let index = 0; index < samples.length; index += 16) energy += samples[index] ** 2;
+        return { name, seconds: buffer.duration, rms: Math.sqrt(energy / Math.ceil(samples.length / 16)) };
+      }));
+    } finally { await context.close(); }
+  });
+  expect(result.map(entry => entry.name)).toEqual(["river", "shore", "engine"]);
+  for (const entry of result) {
+    expect(entry.seconds).toBeCloseTo(8, 1);
+    expect(entry.rms).toBeGreaterThan(0.03);
+  }
 });
 
 test("a neutral room can mix window and door zones without any story-specific engine code", async ({ page }) => {
