@@ -56,6 +56,8 @@ Pixi'VN + PixiJS
 ```
 
 Reusable engine code must not depend on one specific novel unless unavoidable.
+The automatic boundary test checks this rule. See `docs/ENGINE_ARCHITECTURE.md`
+for the current reusable APIs, scene-composition recipe and known limits.
 
 ## State ownership
 Persistent game state should flow through Pixi'VN storage/save mechanisms.

@@ -47,6 +47,12 @@ Custom project code is appropriate for:
 
 Keep novel-specific decisions out of reusable engine code.
 
+Before adding a feature, check Pixi'VN and existing engine systems, decide
+whether it belongs to engine or content, and prefer configuration/composition
+over copying code. Never import a particular work from `src/engine/`; add new
+engine infrastructure only for a real reusable capability. For another work,
+read `docs/ENGINE_ARCHITECTURE.md` first.
+
 ## Context discipline
 - Do not scan the whole repository by default.
 - Never scan `node_modules`, build output, or Pixi'VN internals unless the local guide and public API are insufficient.

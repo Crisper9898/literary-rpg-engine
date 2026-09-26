@@ -52,7 +52,7 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     options.progress ?? (() => voyage.distance / journeyWeather.routeDistance),
     options.progress ? undefined : journeyAtmosphereProgress);
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface,
-    createJourneyCargoInspection(player));
+    createJourneyCargoInspection());
   surface.focus({ preventScroll: true });
   return { camera, npc, player, atmosphere, voyage };
 }

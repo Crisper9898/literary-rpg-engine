@@ -1,9 +1,20 @@
 import type { Point } from "./MovementController";
 
-const movementKeys = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"]);
+export interface MovementBindings {
+  readonly up: readonly string[];
+  readonly down: readonly string[];
+  readonly left: readonly string[];
+  readonly right: readonly string[];
+}
+
+const defaultBindings: MovementBindings = {
+  up: ["KeyW", "ArrowUp"], down: ["KeyS", "ArrowDown"],
+  left: ["KeyA", "ArrowLeft"], right: ["KeyD", "ArrowRight"],
+};
 
 /** Keyboard ownership is limited to the focused game surface, never dialogue inputs. */
-export function keyboardMovement(surface: HTMLElement) {
+export function keyboardMovement(surface: HTMLElement, bindings: MovementBindings = defaultBindings) {
+  const movementKeys = new Set(Object.values(bindings).flat());
   const held = new Set<string>();
   const listeners = new AbortController();
   const options = { signal: listeners.signal };
@@ -24,9 +35,10 @@ export function keyboardMovement(surface: HTMLElement) {
   return {
     read(): Point {
       if (document.hidden || document.activeElement !== surface) clear();
+      const pressed = (keys: readonly string[]) => keys.some((key) => held.has(key));
       return {
-        x: Number(held.has("KeyD") || held.has("ArrowRight")) - Number(held.has("KeyA") || held.has("ArrowLeft")),
-        y: Number(held.has("KeyS") || held.has("ArrowDown")) - Number(held.has("KeyW") || held.has("ArrowUp")),
+        x: Number(pressed(bindings.right)) - Number(pressed(bindings.left)),
+        y: Number(pressed(bindings.down)) - Number(pressed(bindings.up)),
       };
     },
     dispose(): void { clear(); listeners.abort(); },

@@ -3,7 +3,7 @@ import type { CameraDirector } from "../../engine/camera/CameraDirector";
 import type { createWorldLayers } from "../../engine/world/createWorldLayers";
 import { attachParallaxLayer } from "../../engine/parallax/attachParallaxLayer";
 import { attachAtmosphere } from "../../engine/weather/attachAtmosphere";
-import { createFogTexture } from "../../engine/weather/createFogTexture";
+import { createFogTexture } from "../../story/heart-of-darkness/createFogTexture";
 import { journeyWeather } from "../../story/heart-of-darkness/weather";
 import { journeyDeck } from "../../story/heart-of-darkness/deck";
 import type { CheckpointChannel } from "../../engine/world/CheckpointChannel";

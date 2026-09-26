@@ -33,6 +33,9 @@ Pixi'VN export/restore coverage now proves both versions of that consequence
 survive a serialized save. Marlow's bounded world coordinates, unwrapped voyage
 distance and the smoothed atmospheric progress now also round-trip through
 Pixi'VN storage; restored movement and traveling scenery remain live.
+An architecture audit has separated reusable spatial-action selection and
+Pixi'VN checkpoint binding from Journey content. A neutral browser fixture and
+an engine-import guard now protect portability without adding another story.
 
 ## Ordered tasks
 
@@ -56,6 +59,75 @@ Pixi'VN storage; restored movement and traveling scenery remain live.
 Add basic zone-aware ambience/audio transition. Keep movement, NPC routine, camera,
 walk-and-talk, parallax, weather and the optional cargo consequence intact. Audio
 has not started.
+
+## Architecture portability audit — 2026-09-24 (before refactor)
+
+The user selected this audit before the pending audio task. Baseline: `1ed2331`.
+
+- Already reusable: bounded `MovementController`, configurable `CameraDirector`,
+  `NpcRoutineController`, periodic parallax, scalar atmosphere, world layers and
+  their ticker adapters. No `src/engine/` module imports Journey story/content.
+  Pixi'VN already provides labels, choices, conditions, storage and save/restore;
+  wrapping those in a second narrative engine would add coupling, not remove it.
+- Correctly game-specific: Marlow/deckhand art and routine, river layer data,
+  weather keyframes, cargo flag, labels, dialogue text, scene composition and
+  conversation HUD. These belong outside `src/engine/`.
+- Reuse gaps: `attachJourneyConversation` owns proximity selection and `E`
+  arbitration for both talk and cargo; `createJourneyCargoInspection` repeats its
+  own reach check. A neutral spatial-action resolver can serve both while leaving
+  Pixi'VN dialogue in content. `journeyState` holds a generic number checkpoint
+  helper; make the storage adapter reusable while Journey still defines keys.
+  The fixed procedural fog artwork currently lives in `engine/weather`, although
+  its visual recipe is content art. Camera's private `player` label means any
+  follow target, so clarify that name. Keyboard controls have fixed defaults;
+  expose optional bindings without changing existing input.
+- Deliberate limits: one rectangular walkable area/circular footprint, manually
+  composed Journey scene, Journey-specific HUD, no NPC routine checkpoint and no
+  audio implementation. A declarative scene DSL, generalized collider, custom
+  dialogue/save systems or speculative NPC persistence are not justified now.
+
+Audit follow-up: extract only the shared spatial-action and Pixi'VN checkpoint
+adapters, keep fixed fog artwork with Heart of Darkness, add a neutral portability
+fixture and an engine-import boundary check, document the composition recipe,
+then run the complete validation gates before one commit.
+
+Implementation:
+
+- [x] Add a pure `SpatialInteractions` resolver for targets, ranges, priorities,
+  enabled predicates and callbacks, plus a focused-key binder. Both the sailor
+  and cargo tally now use it; Pixi'VN still owns dialogue/choices and Journey
+  still owns prompts, labels and narrative outcomes.
+- [x] Extract `createPixiStorageCheckpoint` from Journey-specific state code.
+  A caller supplies its storage key and validator; Journey's own keys and cargo
+  decision remain in content. Pixi'VN remains the only save/restore authority.
+- [x] Allow authored keyboard bindings while preserving WASD/arrows by default.
+  Clarify the camera's generic follow-target name and move the fixed fog texture
+  recipe into Heart of Darkness story art. Leave world/NPC/parallax/atmosphere
+  algorithms in `src/engine` without novel imports.
+- [x] Add a story-neutral browser fixture proving movement, interaction and
+  Pixi'VN export/restore with `test-player`/`test-interactable` keys; check
+  custom controls and focused `E` input. Add a TypeScript-AST unit guard that
+  rejects relative imports from `src/engine` to outside that directory.
+- [x] Document current boundaries, the composition path for another work and
+  known limitations in `docs/ENGINE_ARCHITECTURE.md`; add an agent rule to reuse
+  systems and keep engine dependencies pointed inward.
+- [x] Run complete `agent:check` and `agent:e2e`, record results, create one
+  commit, verify clean Git and untouched Phaser stash. No push.
+
+Validation: `npm run agent:check` passed TypeScript, 77 unit tests in 15 files
+and Vite production build. `npm run agent:e2e` passed all 26 browser tests in
+9.6 minutes, including the three neutral portability cases and the existing
+Journey movement, camera, NPC, interaction, conversation, parallax, save/restore
+and weather regressions. The existing >500 kB chunk warning remains. The
+software-rendered weather diagnostic was 7.6/7.7 fps with fog and 9.8 fps
+without; no rendering optimization was attempted in this architecture task.
+
+Remaining design limits are intentional: no generic scene schema or multi-game
+bootstrap, Journey-specific HUD/dialogue adapter, rectangular navigation, no
+NPC-routine checkpoint, and no zone audio yet. A future *Metamorphosis* scene
+can reuse movement, camera, action selection/input, NPC routine, parallax,
+atmosphere and Pixi'VN checkpoint adapters, but must author its own scene,
+visuals, labels and UI adapter.
 
 ## Completed spatial and voyage save/restore validation — 2026-09-24
 

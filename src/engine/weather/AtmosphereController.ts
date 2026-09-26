@@ -56,7 +56,7 @@ export class AtmosphereController<Channel extends string> {
   update(progress: number, elapsedMS: number): void {
     if (!Number.isFinite(progress) || !Number.isFinite(elapsedMS) || elapsedMS <= 0) return;
     const target = Math.max(0, Math.min(1, progress));
-    // Match world simulation stall protection without advancing the journey itself.
+    // Match world simulation stall protection without advancing the progress source itself.
     const blend = 1 - Math.exp(-this.response * Math.min(elapsedMS, 50) / 1000);
     this.currentProgress += (target - this.currentProgress) * blend;
     this.evaluate();

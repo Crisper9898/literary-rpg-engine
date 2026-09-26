@@ -26,7 +26,7 @@ export class CameraDirector {
   private readonly minimumZoom: number;
   private desiredZoom: number;
   private target: CameraTarget;
-  private player?: CameraTarget;
+  private followTarget?: CameraTarget;
   private followOffset: CameraPoint = { x: 0, y: 0 };
 
   constructor({ world, viewport, position, zoom, smoothing }: CameraOptions) {
@@ -48,7 +48,7 @@ export class CameraDirector {
 
   follow(target: CameraTarget, offset: CameraPoint = { x: 0, y: 0 }): void {
     if (!finitePoint(offset)) throw new RangeError("Camera offset must be finite.");
-    this.player = target;
+    this.followTarget = target;
     this.followOffset = { ...offset };
     this.resumeFollow();
   }
@@ -73,8 +73,8 @@ export class CameraDirector {
   lock(): void { this.current = { ...this.current, mode: "locked" }; }
 
   resumeFollow(): void {
-    if (!this.player) return;
-    this.target = this.player;
+    if (!this.followTarget) return;
+    this.target = this.followTarget;
     this.current = { ...this.current, mode: "follow" };
   }
 

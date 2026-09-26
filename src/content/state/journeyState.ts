@@ -1,32 +1,19 @@
 import { storage } from "@drincs/pixi-vn";
 import type { Point } from "../../engine/movement/MovementController";
-import type { CheckpointChannel } from "../../engine/world/CheckpointChannel";
+import { createPixiStorageCheckpoint } from "../../engine/world/createPixiStorageCheckpoint";
 
 const CARGO_MARK_KEY = "journey.cargoMarkInspected";
 const PLAYER_POSITION_KEY = "journey.playerPosition";
 const VOYAGE_DISTANCE_KEY = "journey.voyageDistance";
 const ATMOSPHERE_PROGRESS_KEY = "journey.atmosphereProgress";
 
-export const journeyPlayerPosition: CheckpointChannel<Point> = {
-  read: () => {
-    const value = storage.get<Point>(PLAYER_POSITION_KEY);
-    return value && Number.isFinite(value.x) && Number.isFinite(value.y) ? value : undefined;
-  },
-  write: (value) => storage.set(PLAYER_POSITION_KEY, { x: value.x, y: value.y }),
-};
+const isFiniteNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+const isPoint = (value: unknown): value is Point => value !== null && typeof value === "object" &&
+  "x" in value && "y" in value && isFiniteNumber(value.x) && isFiniteNumber(value.y);
 
-function numberCheckpoint(key: string): CheckpointChannel<number> {
-  return {
-    read: () => {
-      const value = storage.get<number>(key);
-      return typeof value === "number" && Number.isFinite(value) ? value : undefined;
-    },
-    write: (value) => storage.set(key, value),
-  };
-}
-
-export const journeyVoyageDistance = numberCheckpoint(VOYAGE_DISTANCE_KEY);
-export const journeyAtmosphereProgress = numberCheckpoint(ATMOSPHERE_PROGRESS_KEY);
+export const journeyPlayerPosition = createPixiStorageCheckpoint(PLAYER_POSITION_KEY, isPoint);
+export const journeyVoyageDistance = createPixiStorageCheckpoint(VOYAGE_DISTANCE_KEY, isFiniteNumber);
+export const journeyAtmosphereProgress = createPixiStorageCheckpoint(ATMOSPHERE_PROGRESS_KEY, isFiniteNumber);
 
 export function hasInspectedCargoMark(): boolean {
   return storage.get<boolean>(CARGO_MARK_KEY) === true;
