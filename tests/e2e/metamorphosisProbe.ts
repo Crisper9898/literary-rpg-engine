@@ -1,8 +1,9 @@
 import { Game, sound } from "@drincs/pixi-vn";
 import { getContext } from "tone";
 import { showMetamorphosisRoom } from "../../src/content/metamorphosis/showRoom";
-import { familyResponse, gregorPosition, greteResponse, hasHeardDoor,
-  hasHeardFamilyActivity, hasSeenWindow, setFamilyResponse,
+import { clerkResponse, familyResponse, gregorPosition, greteResponse,
+  hasHeardClerkArrival, hasHeardDoor, hasHeardFamilyActivity, hasSeenWindow,
+  setClerkResponse, setFamilyResponse, type ClerkResponse,
   type FamilyResponse } from "../../src/content/metamorphosis/state";
 
 let scene: ReturnType<typeof showMetamorphosisRoom> | undefined;
@@ -16,6 +17,7 @@ export function placeGregor(x: number, y = 700) {
   scene.audio.update(1200);
 }
 export function changeFamilyResponse(response: FamilyResponse) { setFamilyResponse(response); }
+export function changeClerkResponse(response: ClerkResponse) { setClerkResponse(response); }
 export function inspectRoom() {
   if (!scene) throw new Error("Room is not mounted");
   return { position: { x: scene.actor.x, y: scene.actor.y },
@@ -23,6 +25,7 @@ export function inspectRoom() {
     audioContextState: getContext().state,
     windowSeen: hasSeenWindow(), doorHeard: hasHeardDoor(), greteResponse: greteResponse(),
     familyActivityHeard: hasHeardFamilyActivity(), familyResponse: familyResponse(),
+    clerkArrivalHeard: hasHeardClerkArrival(), clerkResponse: clerkResponse(),
     layers: Object.fromEntries(ids.map((id) => [id, {
       ...scene!.audio.getLayerState(id),
       active: !!sound.find(`metamorphosis-room:${id}`),

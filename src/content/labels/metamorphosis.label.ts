@@ -1,7 +1,8 @@
 import { narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
 import { metamorphosisText as lines } from "../../story/metamorphosis/text";
-import { gregor, grete } from "../metamorphosis/character";
-import { familyResponse, greteResponse, hasSeenWindow, markFamilyActivityHeard,
+import { clerk, gregor, grete } from "../metamorphosis/character";
+import { clerkResponse, familyResponse, greteResponse, hasSeenWindow,
+  markClerkArrivalHeard, markFamilyActivityHeard, setClerkResponse,
   setFamilyResponse, setGreteResponse } from "../metamorphosis/state";
 import { showMetamorphosisRoom } from "../metamorphosis/showRoom";
 
@@ -54,6 +55,38 @@ export const metamorphosisFamilyDoor = newLabel("metamorphosis-family-door", [
   () => { narration.choices = undefined;
     narration.dialogue = { character: grete, text: familyResponse() === "answered" ?
       lines.familyAfterAnswer : lines.familyAfterSilence }; },
+  close,
+]);
+
+export const metamorphosisClerkArrival = newLabel("metamorphosis-clerk-arrival", [
+  () => { markClerkArrivalHeard();
+    narration.dialogue = { character: gregor, text: lines.clerkArrival }; },
+  close,
+]);
+
+export const metamorphosisClerkExplain = newLabel("metamorphosis-clerk-explain", [
+  () => { setClerkResponse("explain"); narration.choices = undefined;
+    narration.dialogue = { character: gregor, text: lines.clerkExplain }; },
+]);
+
+export const metamorphosisClerkSilence = newLabel("metamorphosis-clerk-silence", [
+  () => { setClerkResponse("silent"); narration.choices = undefined;
+    narration.dialogue = { character: gregor, text: lines.clerkSilence }; },
+]);
+
+export const metamorphosisClerkDoor = newLabel("metamorphosis-clerk-door", [
+  () => { narration.dialogue = { character: grete, text: familyResponse() === "answered" ?
+    lines.clerkGreteAfterAnswer : lines.clerkGreteAfterSilence }; },
+  () => {
+    narration.dialogue = { character: clerk, text: lines.clerkQuestion };
+    narration.choices = [
+      newChoiceOption(lines.clerkChoices[0], metamorphosisClerkExplain, {}),
+      newChoiceOption(lines.clerkChoices[1], metamorphosisClerkSilence, {}),
+    ];
+  },
+  () => { narration.choices = undefined;
+    narration.dialogue = { character: clerk, text: clerkResponse() === "explain" ?
+      lines.clerkAfterExplain : lines.clerkAfterSilence }; },
   close,
 ]);
 

@@ -5,10 +5,12 @@ import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey"
 import { createMetamorphosisConversationView } from "../../ui/metamorphosisConversationView";
 import { familyActivityRange, metamorphosisRoom as room, roomInteractionRange } from "../../story/metamorphosis/room";
 import { metamorphosisText as copy } from "../../story/metamorphosis/text";
-import { metamorphosisDoor, metamorphosisFamilyAnswer, metamorphosisFamilyApproach,
+import { metamorphosisClerkArrival, metamorphosisClerkDoor, metamorphosisClerkExplain,
+  metamorphosisClerkSilence, metamorphosisDoor, metamorphosisFamilyAnswer, metamorphosisFamilyApproach,
   metamorphosisFamilyDoor, metamorphosisFamilySilence, metamorphosisLeave,
   metamorphosisStay, metamorphosisWindow } from "../labels/metamorphosis.label";
-import { familyResponse, hasHeardFamilyActivity, markDoorHeard, markWindowSeen } from "./state";
+import { clerkResponse, familyResponse, hasHeardClerkArrival, hasHeardFamilyActivity,
+  markDoorHeard, markWindowSeen } from "./state";
 
 export function attachRoomInteractions(presentation: Container, actor: Container,
   ticker: Ticker, surface: HTMLCanvasElement) {
@@ -17,7 +19,9 @@ export function attachRoomInteractions(presentation: Container, actor: Container
   const listeners = new AbortController();
   const roomLabels = new Set([metamorphosisWindow.id, metamorphosisDoor.id,
     metamorphosisStay.id, metamorphosisLeave.id, metamorphosisFamilyApproach.id,
-    metamorphosisFamilyDoor.id, metamorphosisFamilyAnswer.id, metamorphosisFamilySilence.id]);
+    metamorphosisFamilyDoor.id, metamorphosisFamilyAnswer.id, metamorphosisFamilySilence.id,
+    metamorphosisClerkArrival.id, metamorphosisClerkDoor.id, metamorphosisClerkExplain.id,
+    metamorphosisClerkSilence.id]);
   const active = () => narration.labels.opened.some(({ label }) => roomLabels.has(label));
   const run = async (action: () => Promise<unknown>) => {
     if (busy || disposed) return;
@@ -34,15 +38,19 @@ export function attachRoomInteractions(presentation: Container, actor: Container
     { id: "door", prompt: copy.doorPrompt, target: () => room.anchors.door,
       range: roomInteractionRange, execute: () => {
         markDoorHeard();
-        const label = familyResponse() ? metamorphosisDoor : metamorphosisFamilyDoor;
+        const label = !familyResponse() ? metamorphosisFamilyDoor :
+          !clerkResponse() ? metamorphosisClerkDoor : metamorphosisDoor;
         void run(() => narration.call(label, {}));
       } },
   ];
   const interactions = new SpatialInteractions(() => actor.position, actions);
-  const familyInRange = () => interactions.inRange(() => room.anchors.door, familyActivityRange);
-  const hearFamily = () => {
-    if (busy || disposed || active() || hasHeardFamilyActivity() || !familyInRange()) return false;
-    void run(() => narration.call(metamorphosisFamilyApproach, {}));
+  const hearDoorEvent = () => {
+    if (busy || disposed || active() ||
+      !interactions.inRange(() => room.anchors.door, familyActivityRange)) return false;
+    const event = !hasHeardFamilyActivity() ? metamorphosisFamilyApproach :
+      familyResponse() && !hasHeardClerkArrival() ? metamorphosisClerkArrival : undefined;
+    if (!event) return false;
+    void run(() => narration.call(event, {}));
     return true;
   };
   const interact = () => {
@@ -51,7 +59,7 @@ export function attachRoomInteractions(presentation: Container, actor: Container
       return;
     }
     if (busy || disposed) return;
-    if (hearFamily()) return;
+    if (hearDoorEvent()) return;
     void interactions.available()?.execute();
   };
   const choose = (index: number) => {
@@ -61,7 +69,7 @@ export function attachRoomInteractions(presentation: Container, actor: Container
   const view = createMetamorphosisConversationView(surface.parentElement!, surface,
     { interact, advance: interact, choose });
   const render = () => {
-    hearFamily();
+    hearDoorEvent();
     const isActive = active();
     const available = isActive ? undefined : interactions.available();
     const dialogue = isActive ? narration.dialogue : undefined;

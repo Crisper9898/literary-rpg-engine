@@ -1,5 +1,5 @@
 import { CharacterBaseModel, RegisteredCharacters } from "@drincs/pixi-vn";
-import { gregorIdentity, greteIdentity } from "../../story/metamorphosis/room";
+import { clerkIdentity, gregorIdentity, greteIdentity } from "../../story/metamorphosis/room";
 
 export const gregor = new CharacterBaseModel(gregorIdentity.id, {
   name: gregorIdentity.name, color: gregorIdentity.color,
@@ -10,3 +10,8 @@ export const grete = new CharacterBaseModel(greteIdentity.id, {
   name: greteIdentity.name, color: greteIdentity.color,
 });
 RegisteredCharacters.add(grete);
+
+export const clerk = new CharacterBaseModel(clerkIdentity.id, {
+  name: clerkIdentity.name, color: clerkIdentity.color,
+});
+RegisteredCharacters.add(clerk);

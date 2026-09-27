@@ -16,3 +16,4 @@ export const roomInteractionRange = 150;
 export const familyActivityRange = 185;
 export const gregorIdentity = { id: "gregor-samsa", name: "Gregor Samsa", color: "#e2d4bb" } as const;
 export const greteIdentity = { id: "grete-samsa", name: "Grete Samsa", color: "#d8bd9b" } as const;
+export const clerkIdentity = { id: "office-clerk", name: "Representante de la oficina", color: "#c5d0cf" } as const;

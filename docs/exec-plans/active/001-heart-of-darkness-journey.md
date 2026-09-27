@@ -142,6 +142,34 @@ files, and the production build. `npm run agent:e2e` passed 39/39 tests in
 warning and slow software fog diagnostic (7.1 fps with weather, 9.3 without)
 remain unrelated to this content change.
 
+## Office representative arrives — 2026-09-27
+
+User-directed Metamorphosis follow-up from `875feb4`. The pending Journey art
+task remains unchanged; Gregor stays inside the existing room.
+
+- [x] After the family exchange, a one-time proximity cue at the door announces
+  that an office representative has arrived because Gregor missed work. The
+  cue waits for `familyResponse`, so it cannot interrupt the earlier choice.
+- [x] The next `E` interaction has a short Grete and representative exchange.
+  Grete's first reaction reflects whether Gregor answered his family. Gregor
+  can explain his absence or remain silent; the representative's immediate
+  response differs. The earlier window, family and Grete conversations remain
+  available afterward.
+- [x] Store `metamorphosis.clerkArrivalHeard` and
+  `metamorphosis.clerkResponse` (`explain`/`silent`) in Pixi'VN storage. Browser
+  tests cover saves before arrival, after arrival, and after each choice;
+  restoring beside the door does not duplicate the cue or dialogue.
+- [x] Keep the representative offscreen, add no new scene or audio asset, and
+  leave `src/engine/` untouched. Review both choice paths at 800×600 and run
+  the complete project validation before one local commit.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and production build. `npm run agent:e2e` passed 44/44 browser tests in
+12.7 minutes, including all Journey regressions. Both 800×600 screenshots
+show the representative's question and two fully visible, usable buttons with
+no overlap. The existing >500 kB bundle warning and software fog diagnostic
+(7.2–7.3 fps with weather, 9.5 without) remain outside this task.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does
