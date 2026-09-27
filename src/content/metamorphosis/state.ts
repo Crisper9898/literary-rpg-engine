@@ -13,6 +13,8 @@ const CLERK_RESPONSE = "metamorphosis.clerkResponse";
 const CURRENT_SPACE = "metamorphosis.currentSpace";
 const GRETE_SAW_GREGOR = "metamorphosis.greteSawGregor";
 const CLERK_SAW_GREGOR = "metamorphosis.clerkSawGregor";
+const CLERK_LEAVING = "metamorphosis.clerkLeaving";
+const CLERK_LEFT = "metamorphosis.clerkLeft";
 export type GreteResponse = "stay" | "leave";
 export type FamilyResponse = "answered" | "silent";
 export type ClerkResponse = "explain" | "silent";
@@ -52,3 +54,7 @@ export const hasGreteSeenGregor = () => storage.get<boolean>(GRETE_SAW_GREGOR) =
 export const markGreteSawGregor = () => storage.set(GRETE_SAW_GREGOR, true);
 export const hasClerkSeenGregor = () => storage.get<boolean>(CLERK_SAW_GREGOR) === true;
 export const markClerkSawGregor = () => storage.set(CLERK_SAW_GREGOR, true);
+export const hasClerkLeaving = () => storage.get<boolean>(CLERK_LEAVING) === true;
+export const markClerkLeaving = () => storage.set(CLERK_LEAVING, true);
+export const hasClerkLeft = () => storage.get<boolean>(CLERK_LEFT) === true;
+export const markClerkLeft = () => storage.set(CLERK_LEFT, true);

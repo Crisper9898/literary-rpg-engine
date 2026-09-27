@@ -2,14 +2,15 @@ import { CharacterBaseModel, narration, RegisteredCharacters } from "@drincs/pix
 import { type Container, type Ticker, UPDATE_PRIORITY } from "pixi.js";
 import { SpatialInteractions, type SpatialAction } from "../../engine/interaction/SpatialInteractions";
 import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey";
+import { attachNpcRoutine } from "../../engine/npc/attachNpcRoutine";
 import { metamorphosisHallway as hall, hallwayInteractionRange, hallwayReactionRange,
-  hallwayReactionStep, hallwayNpcRange } from "../../story/metamorphosis/hallway";
+  hallwayReactionStep, hallwayNpcRange, clerkDeparture } from "../../story/metamorphosis/hallway";
 import { metamorphosisText as copy } from "../../story/metamorphosis/text";
 import { createMetamorphosisConversationView } from "../../ui/metamorphosisConversationView";
 import { metamorphosisHallwayClerk, metamorphosisHallwayGrete,
   metamorphosisHallwayPicture } from "../labels/metamorphosis.label";
-import { hasClerkSeenGregor, hasGreteSeenGregor, markClerkSawGregor,
-  markGreteSawGregor } from "./state";
+import { hasClerkLeft, hasClerkLeaving, hasClerkSeenGregor, hasGreteSeenGregor,
+  markClerkLeft, markClerkSawGregor, markGreteSawGregor } from "./state";
 
 export function attachHallwayInteractions(presentation: Container, actor: Container,
   ticker: Ticker, surface: HTMLCanvasElement, returnToRoom: () => void) {
@@ -18,11 +19,32 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   const grete = presentation.getChildByLabel("hallway-grete", true);
   const clerk = presentation.getChildByLabel("hallway-clerk", true);
   if (!grete || !clerk) throw new Error("The hallway needs both authored NPC actors.");
-  const setReactionPose = () => {
+  const setGreteReactionPose = () => {
     grete.x = hall.anchors.grete.x + (hasGreteSeenGregor() ? hallwayReactionStep : 0);
+  };
+  const setClerkReactionPose = () => {
     clerk.x = hall.anchors.clerk.x + (hasClerkSeenGregor() ? hallwayReactionStep : 0);
   };
-  setReactionPose();
+  setGreteReactionPose();
+  setClerkReactionPose();
+  const removeClerk = () => {
+    if (!clerk.parent) return;
+    clerk.parent.removeChild(clerk);
+    clerk.destroy({ children: true });
+  };
+  // Sound and renderer positions are transient. An in-flight save settles on restore.
+  if (hasClerkLeaving() && !hasClerkLeft()) markClerkLeft();
+  if (hasClerkLeft()) removeClerk();
+  let retreatStarted = false;
+  const beginRetreat = () => {
+    if (retreatStarted || hasClerkLeft() || !hasClerkLeaving()) return;
+    retreatStarted = true;
+    attachNpcRoutine(clerk, ticker, clerkDeparture({ x: clerk.x, y: clerk.y }), (state) => {
+      if (state.mode !== "idle" || hasClerkLeft()) return;
+      markClerkLeft();
+      removeClerk();
+    });
+  };
   const hallwayLabels = new Set([metamorphosisHallwayPicture.id,
     metamorphosisHallwayGrete.id, metamorphosisHallwayClerk.id]);
   const active = () => narration.labels.opened.some(({ label }) => hallwayLabels.has(label));
@@ -45,7 +67,7 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
         void run(() => narration.call(metamorphosisHallwayGrete, {}));
       } },
     { id: "clerk", prompt: copy.hallwayClerkPrompt, target: () => clerk.position,
-      range: hallwayNpcRange, execute: () => {
+      range: hallwayNpcRange, enabled: () => !hasClerkLeaving() && !hasClerkLeft(), execute: () => {
         void run(() => narration.call(metamorphosisHallwayClerk, {}));
       } },
   ];
@@ -53,11 +75,12 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   const reactToGregor = () => {
     if (!hasGreteSeenGregor() && interactions.inRange(() => grete.position, hallwayReactionRange)) {
       markGreteSawGregor();
-      setReactionPose();
+      setGreteReactionPose();
     }
-    if (!hasClerkSeenGregor() && interactions.inRange(() => clerk.position, hallwayReactionRange)) {
+    if (!hasClerkLeaving() && !hasClerkLeft() && !hasClerkSeenGregor() &&
+      interactions.inRange(() => clerk.position, hallwayReactionRange)) {
       markClerkSawGregor();
-      setReactionPose();
+      setClerkReactionPose();
     }
   };
   const interact = () => {
@@ -72,6 +95,7 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
     { interact, advance: interact, choose: () => {} }, "Interacciones del pasillo");
   const render = () => {
     reactToGregor();
+    beginRetreat();
     const isActive = active();
     const available = isActive ? undefined : interactions.available();
     const dialogue = isActive ? narration.dialogue : undefined;

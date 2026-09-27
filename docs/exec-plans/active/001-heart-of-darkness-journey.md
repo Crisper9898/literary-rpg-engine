@@ -234,6 +234,33 @@ does not overlap them at interaction distance, and the contextual dialogue
 fits the panel. The existing >500 kB bundle warning and software-weather
 diagnostic (7.3–7.7 fps with weather, 9.6 without) remain outside this task.
 
+## Office representative leaves the hallway — 2026-09-27
+
+User-directed Metamorphosis follow-up to the visible hallway NPCs. The
+pending Heart of Darkness art task remains the first unchecked Journey task.
+
+- [x] After the existing two-line contextual conversation closes, mark
+  `metamorphosis.clerkLeaving` in Pixi'VN storage. Compose the already-general
+  `attachNpcRoutine()` with one authored exit stop, so the representative
+  visibly walks past the picture toward the hallway exit while Gregor remains
+  controllable. His interaction is disabled as soon as the withdrawal starts.
+- [x] At the exit, remove the actor and record `metamorphosis.clerkLeft` in
+  Pixi'VN storage. Rebuilding from a save before the conversation keeps him
+  present; rebuilding a save made during the walk settles the withdrawal as
+  complete; a save after departure keeps him absent. No trajectory snapshots,
+  engine changes, new dialogue choices or new room were needed.
+- [x] Browser-test initial presence, dialogue, live movement and disappearance,
+  no repeated encounter, Gregor's continued movement, Grete's availability,
+  the return door and all three save phases. Inspect the start, route and
+  empty exit at 800×600; run every Journey regression.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and production build. `npm run agent:e2e` passed 51/51 browser tests in
+14.9 minutes. At 800×600, the representative moves below the wall picture
+toward the marked exit without crossing the door or Gregor; dialogue and
+prompts remain legible. The existing >500 kB bundle warning and software
+weather diagnostic (7.0–7.1 fps with weather, 9.2 without) are unrelated.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does

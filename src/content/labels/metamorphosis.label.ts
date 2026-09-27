@@ -2,7 +2,7 @@ import { narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
 import { metamorphosisText as lines } from "../../story/metamorphosis/text";
 import { clerk, gregor, grete } from "../metamorphosis/character";
 import { clerkResponse, familyResponse, greteResponse, hasSeenWindow,
-  markClerkArrivalHeard, markFamilyActivityHeard, setClerkResponse,
+  markClerkArrivalHeard, markClerkLeaving, markFamilyActivityHeard, setClerkResponse,
   setFamilyResponse, setGreteResponse } from "../metamorphosis/state";
 import { showMetamorphosisSpace } from "../metamorphosis/showRoom";
 
@@ -132,7 +132,7 @@ export const metamorphosisHallwayClerk = newLabel("metamorphosis-hallway-clerk",
   () => { narration.dialogue = { character: clerk, text: clerkResponse() === "explain" ?
     lines.hallwayClerkAfterExplain : lines.hallwayClerkAfterSilence }; },
   () => { narration.dialogue = { character: clerk, text: lines.hallwayClerkFollowup }; },
-  close,
+  () => { markClerkLeaving(); close(); },
 ]);
 
 export const metamorphosisStart = newLabel("metamorphosis-start", [

@@ -409,6 +409,74 @@ test("Grete and the office representative are visible, react once, and retain re
   expect(restoredClerk.greteSawGregor).toBe(true);
 });
 
+test("the office representative walks to the exit and stays gone across every save phase", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  await enterHallway(page);
+  await page.setViewportSize({ width: 800, height: 600 });
+  await place(page, 1010, 700);
+  await expect(page.getByTestId("metamorphosis-prompt")).toContainText("representante");
+  const inspectNpc = () => useProbe<{
+    clerk: { x: number; y: number } | null; clerkLeaving: boolean; clerkLeft: boolean;
+  }>(page, "inspectHallwayNpcs");
+  const initially = await inspectNpc();
+  expect(initially.clerk).not.toBeNull();
+  expect(initially.clerkLeaving).toBe(false);
+  expect(initially.clerkLeft).toBe(false);
+  await page.screenshot({ path: testInfo.outputPath("clerk-before-departure-800x600.png") });
+  const beforeTalk = await useProbe<string>(page, "saveRoom");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Dijo que estaba enfermo");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("informar a la oficina");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+  await expect.poll(async () => (await inspectNpc()).clerkLeaving).toBe(true);
+  expect((await inspectNpc()).clerkLeft).toBe(false);
+  const startingX = (await inspectNpc()).clerk!.x;
+  await page.screenshot({ path: testInfo.outputPath("clerk-departure-start-800x600.png") });
+  await page.keyboard.down("a");
+  await expect.poll(async () => (await useProbe<{ position: { x: number } }>(page, "inspectSpace")).position.x)
+    .toBeLessThan(985);
+  await page.keyboard.up("a");
+  await expect.poll(async () => (await inspectNpc()).clerk?.x ?? 0).toBeGreaterThan(startingX + 55);
+  await page.screenshot({ path: testInfo.outputPath("clerk-departure-progress-800x600.png") });
+  await expect(page.getByTestId("metamorphosis-prompt")).not.toContainText("representante");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+  await expect.poll(async () => (await inspectNpc()).clerkLeft, { timeout: 15_000 }).toBe(true);
+  expect((await inspectNpc()).clerk).toBeNull();
+  await page.screenshot({ path: testInfo.outputPath("clerk-departure-complete-800x600.png") });
+  const afterDeparture = await useProbe<string>(page, "saveRoom");
+  await place(page, 700, 700);
+  await expect(page.getByTestId("metamorphosis-prompt")).toContainText("Grete");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+
+  await useProbe(page, "restoreSpace", beforeTalk);
+  expect((await inspectNpc()).clerk).not.toBeNull();
+  expect((await inspectNpc()).clerkLeaving).toBe(false);
+  await place(page, 1010, 700);
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Dijo que estaba enfermo");
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await expect.poll(async () => (await inspectNpc()).clerkLeaving).toBe(true);
+  expect((await inspectNpc()).clerkLeft).toBe(false);
+  const duringDeparture = await useProbe<string>(page, "saveRoom");
+  await useProbe(page, "restoreSpace", duringDeparture);
+  expect((await inspectNpc()).clerkLeft).toBe(true);
+  expect((await inspectNpc()).clerk).toBeNull();
+  await useProbe(page, "restoreSpace", afterDeparture);
+  expect((await inspectNpc()).clerkLeft).toBe(true);
+  expect((await inspectNpc()).clerk).toBeNull();
+  await place(page, 370, 680);
+  await page.keyboard.press("e");
+  expect(await useProbe<string>(page, "currentSpaceLayer")).toBe("room");
+  expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+});
+
 for (const path of [
   { family: "1", clerk: "1", grete: "1", greteLine: "Te oí responder",
     greteMemory: "Dije que me quedaría", clerkLine: "Dijo que estaba enfermo",
@@ -436,6 +504,7 @@ for (const path of [
       await place(page, 1010, 700);
       await expect(page.getByTestId("metamorphosis-prompt")).toContainText("representante");
       await page.screenshot({ path: testInfo.outputPath(`hallway-clerk-prompt-${path.clerk}-800x600.png`) });
+      const saved = await useProbe<string>(page, "saveRoom");
       await page.keyboard.press("e");
       await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Representante de la oficina");
       await expect(page.getByTestId("metamorphosis-line")).toContainText(path.clerkLine);
@@ -444,7 +513,6 @@ for (const path of [
       await expect(page.getByTestId("metamorphosis-line")).toContainText("informar a la oficina");
       await page.keyboard.press("e");
       await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
-      const saved = await useProbe<string>(page, "saveRoom");
       await useProbe(page, "changeFamilyResponse", path.otherFamily);
       await useProbe(page, "changeClerkResponse", path.otherClerk);
       await useProbe(page, "restoreSpace", saved);

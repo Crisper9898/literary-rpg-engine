@@ -42,6 +42,8 @@ export function createMetamorphosisHallway() {
   layers.ground.addChild(new Graphics().roundRect(door.x - 90, 325, 180, 405, 7)
     .fill(0x342b2c).stroke({ color: 0x8a6d56, width: 13 })
     .circle(door.x + 56, 570, 8).fill(0xc1a37b));
+  layers.ground.addChild(new Graphics().roundRect(1495, 335, 140, 425, 7)
+    .fill(0x201e22).stroke({ color: 0x726451, width: 12 }));
   const picture = hall.anchors.picture;
   layers.ground.addChild(new Graphics().roundRect(picture.x - 105, 335, 210, 185, 5)
     .fill(0x6f7270).stroke({ color: 0x332b2a, width: 18 })
