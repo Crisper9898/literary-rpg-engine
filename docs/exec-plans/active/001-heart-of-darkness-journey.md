@@ -92,6 +92,32 @@ and slow software fog rendering (7–9 fps in the diagnostic) remain. No human
 listening was performed or required for this task. The Metamorphosis loops are
 provisional, and the Heart of Darkness listening review remains separate.
 
+## Grete at the door — 2026-09-26
+
+User-directed follow-up from `bc25924`. This extends only the existing room
+interaction; the pending Journey art task remains unchanged.
+
+- [x] Register Grete as an offscreen character behind the existing door. Show
+  her presence with provisional doorway light and a label, without adding a
+  house scene or autonomous NPC routine.
+- [x] Extend the `E` interaction through Pixi'VN dialogue and two native
+  choices. `1`/`2` or the choice buttons let Gregor ask Grete to stay or leave.
+  The selected response is stored once in namespaced Pixi'VN storage; Grete's
+  immediate and later lines differ. The existing window flag changes her first
+  line before a choice, with no duplicate state.
+- [x] Browser-test door availability, both choices and later replies, both
+  serialized save/restore paths, the original window consequence, and the
+  default Heart of Darkness entry. Keep all work-specific code outside
+  `src/engine/` and make one local commit after validation.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests across
+19 files, and the production build. `npm run agent:e2e` passed 36/36 tests,
+including both Metamorphosis choice/save paths and Heart of Darkness regressions.
+The 800×600 choice view was inspected visually and remained readable. Grete is
+intentionally offscreen with provisional doorway art; this slice does not add
+the rest of the house or an autonomous routine. The first unchecked Journey
+task below remains the next planned work.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does

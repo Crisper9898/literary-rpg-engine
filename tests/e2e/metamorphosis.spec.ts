@@ -60,6 +60,7 @@ test("Gregor moves, interacts with window and door, and restores position, flags
   await expect(page.getByTestId("metamorphosis-prompt")).toContainText("puerta");
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-line")).toContainText("lluvia");
+  await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
   expect((await inspect(page)).doorHeard).toBe(true);
   const atDoor = await inspect(page);
   expect(atDoor.layers.voices.target).toBeGreaterThan(atDoor.layers.outside.target);
@@ -86,8 +87,55 @@ test("door dialogue keeps its original line when Gregor ignores the window", asy
   await place(page, 1480, 650);
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-line")).toContainText("hermana");
+  await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
   expect((await inspect(page)).windowSeen).toBe(false);
 });
+
+for (const path of [
+  { key: "1", saved: "stay", other: "2", gregor: "Quédate", grete: "Me quedaré", returnLine: "Sigo aquí" },
+  { key: "2", saved: "leave", other: "1", gregor: "Déjame solo", grete: "De acuerdo", returnLine: "He vuelto" },
+] as const) {
+  test(`Grete's ${path.saved} response changes later dialogue and survives save/restore`, async ({ page }, testInfo) => {
+    test.setTimeout(90_000);
+    await page.goto("/?story=metamorphosis");
+    await expect.poll(() => page.locator("canvas").count()).toBe(1);
+    await useProbe(page, "mountRoom");
+    const canvas = page.locator("canvas");
+    await canvas.click({ position: { x: 80, y: 80 } });
+    await place(page, 1480, 650);
+    await expect(page.getByTestId("metamorphosis-prompt")).toContainText("puerta");
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-choice")).toHaveCount(2);
+    if (path.saved === "stay") {
+      await page.setViewportSize({ width: 800, height: 600 });
+      await page.screenshot({ path: testInfo.outputPath("grete-choices-800x600.png") });
+    }
+    await page.keyboard.press(path.key);
+    await expect(page.getByTestId("metamorphosis-line")).toContainText(path.gregor);
+    expect((await inspect(page)).greteResponse).toBe(path.saved);
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-line")).toContainText(path.grete);
+    await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+    const saved = await useProbe<string>(page, "saveRoom");
+
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-line")).toContainText(path.returnLine);
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-choice")).toHaveCount(2);
+    await page.keyboard.press(path.other);
+    await expect.poll(async () => (await inspect(page)).greteResponse).not.toBe(path.saved);
+    const restored = await useProbe<ReturnType<typeof inspect>>(page, "restoreRoom", saved);
+    expect(restored.greteResponse).toBe(path.saved);
+    await canvas.focus();
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-line")).toContainText(path.returnLine);
+    expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+  });
+}
 
 test("all three Metamorphosis cues decode as distinct non-silent audio", async ({ page }) => {
   await page.goto("/?story=metamorphosis");

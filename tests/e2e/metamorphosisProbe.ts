@@ -1,7 +1,7 @@
 import { Game, sound } from "@drincs/pixi-vn";
 import { getContext } from "tone";
 import { showMetamorphosisRoom } from "../../src/content/metamorphosis/showRoom";
-import { gregorPosition, hasHeardDoor, hasSeenWindow } from "../../src/content/metamorphosis/state";
+import { gregorPosition, greteResponse, hasHeardDoor, hasSeenWindow } from "../../src/content/metamorphosis/state";
 
 let scene: ReturnType<typeof showMetamorphosisRoom> | undefined;
 const ids = ["room", "outside", "voices"] as const;
@@ -18,7 +18,7 @@ export function inspectRoom() {
   return { position: { x: scene.actor.x, y: scene.actor.y },
     camera: { x: scene.camera.state.position.x, y: scene.camera.state.position.y },
     audioContextState: getContext().state,
-    windowSeen: hasSeenWindow(), doorHeard: hasHeardDoor(),
+    windowSeen: hasSeenWindow(), doorHeard: hasHeardDoor(), greteResponse: greteResponse(),
     layers: Object.fromEntries(ids.map((id) => [id, {
       ...scene!.audio.getLayerState(id),
       active: !!sound.find(`metamorphosis-room:${id}`),

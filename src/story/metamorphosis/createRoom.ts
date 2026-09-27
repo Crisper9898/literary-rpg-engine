@@ -23,9 +23,14 @@ export function createMetamorphosisRoom() {
     .fill(0x74848a).stroke({ color: 0x201f21, width: 18 })
     .moveTo(window.x, 325).lineTo(window.x, 605).stroke({ color: 0x28282a, width: 12 }));
   const door = room.anchors.door;
-  layers.environment.addChild(new Graphics().roundRect(door.x - 95, 330, 190, 430, 8)
+  layers.ground.addChild(new Graphics().roundRect(door.x - 95, 330, 190, 430, 8)
     .fill(0x352b2b).stroke({ color: 0x775c4a, width: 13 })
     .circle(door.x + 58, 575, 9).fill(0xc2aa78));
+  layers.ground.addChild(new Graphics().rect(door.x - 78, 755, 156, 6)
+    .fill({ color: 0xd1b783, alpha: .7 }));
+  const greteHint = new Text({ text: "Grete · tras la puerta", x: door.x - 92, y: 788,
+    style: { fontFamily: "Georgia", fontSize: 17, fill: 0xd8bd9b } });
+  layers.ground.addChild(greteHint);
   const actor = new Container({ label: "gregor", x: room.anchors.gregorSpawn.x, y: room.anchors.gregorSpawn.y });
   const body = new Graphics().ellipse(0, -21, 33, 46).fill(0x352820)
     .ellipse(0, -25, 14, 33).fill(0x5d4735)
@@ -40,7 +45,7 @@ export function createMetamorphosisRoom() {
   layers.actors.addChild(actor);
   const title = new Text({ text: "II  /  LA HABITACIÓN\nLa metamorfosis",
     x: 155, y: 90, style: { fontFamily: "Georgia", fontSize: 47, fill: 0xe4d6c5 } });
-  const controls = new Text({ text: "WASD / FLECHAS · Camina     E · Interactúa y continúa",
+  const controls = new Text({ text: "WASD / FLECHAS · Camina     E · Interactúa y continúa     1 / 2 · Responde",
     x: 210, y: 1000, style: { fontFamily: "Arial", fontSize: 19, fill: 0xc4baaa } });
   presentation.addChild(title, controls);
   return { presentation, world: layers.root, actor };

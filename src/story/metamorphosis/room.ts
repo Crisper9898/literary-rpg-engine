@@ -14,3 +14,4 @@ export const gregorMovement = { speed: 230, footprintRadius: 22 } as const;
 export const roomCamera = { zoom: 1.2, smoothing: 6 } as const;
 export const roomInteractionRange = 150;
 export const gregorIdentity = { id: "gregor-samsa", name: "Gregor Samsa", color: "#e2d4bb" } as const;
+export const greteIdentity = { id: "grete-samsa", name: "Grete Samsa", color: "#d8bd9b" } as const;

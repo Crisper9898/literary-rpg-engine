@@ -31,6 +31,8 @@
   text-align: left;
   cursor: pointer;
 }
+.metamorphosis-choices { display: grid; gap: 7px; margin-top: .8em; }
+.metamorphosis-choices button { margin-top: 0 !important; }
 .metamorphosis-conversation > button { text-align: left; cursor: pointer; }
 .metamorphosis-conversation button:disabled { color: #9d968b; cursor: default; }
 .metamorphosis-conversation h2 { margin: 0 0 .5em; font-size: 1em; }

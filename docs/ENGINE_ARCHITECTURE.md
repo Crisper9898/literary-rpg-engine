@@ -25,12 +25,15 @@ view in `src/ui/journeyConversationView.ts` and fog texture recipe in
 
 ## Starting another work
 
-*La metamorfosis* now supplies Gregor, a room layout, window/door dialogue,
+*La metamorfosis* now supplies Gregor and Grete (heard behind the door), a room
+layout, window/door dialogue,
 provisional art and three audio cues in `src/story/metamorphosis/` and
 `src/content/metamorphosis/`. Its labels and character are registered with
 Pixi'VN. `createWorldLayers()`, `attachPlayerMovement()` and
 `attachWorldCamera()` compose the same movement and camera systems used by
-Journey, with room-specific bounds and a Pixi'VN checkpoint. Use
+Journey, with room-specific bounds and a Pixi'VN checkpoint. Grete's two
+responses are Pixi'VN choices; the selected response is a namespaced storage
+value that changes later dialogue and survives Pixi'VN export/restore. Use
 `attachNpcRoutine()`, `attachParallaxLayer()` or `attachAtmosphere()` only if the
 scene calls for them. The existing `journeyDeck.ts` demonstrates composition;
 there is no generic scene schema to copy or extend.
