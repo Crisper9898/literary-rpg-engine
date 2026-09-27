@@ -13,6 +13,19 @@ const inspect = (page: Page) => page.evaluate(async () => {
   const url = "/tests/e2e/metamorphosisProbe.ts";
   return (await import(url)).inspectRoom();
 });
+const finishFamilyIntro = async (page: Page, key: "1" | "2" = "1") => {
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("pasos");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-choice")).toHaveCount(2);
+  await page.keyboard.press(key);
+  await expect(page.getByTestId("metamorphosis-line")).toContainText(key === "1" ? "Estoy bien" : "no decir nada");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText(key === "1" ? "no ha entendido" : "Sigue llamándote");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+};
 
 test("both works have accessible entries and the Journey remains the default", async ({ page }, testInfo) => {
   await page.goto("/");
@@ -57,6 +70,7 @@ test("Gregor moves, interacts with window and door, and restores position, flags
   expect(atWindow.layers.outside.active).toBe(true);
   const saved = await useProbe<string>(page, "saveRoom");
   await place(page, 1480, 650);
+  await finishFamilyIntro(page);
   await expect(page.getByTestId("metamorphosis-prompt")).toContainText("puerta");
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-line")).toContainText("lluvia");
@@ -74,6 +88,7 @@ test("Gregor moves, interacts with window and door, and restores position, flags
   await expect.poll(async () => (await inspect(page)).layers.room.mediaCount).toBe(1);
   await place(page, 1480, 650);
   await canvas.focus();
+  await finishFamilyIntro(page);
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-line")).toContainText("lluvia");
   expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
@@ -85,11 +100,67 @@ test("door dialogue keeps its original line when Gregor ignores the window", asy
   await useProbe(page, "mountRoom");
   await page.locator("canvas").click({ position: { x: 80, y: 80 } });
   await place(page, 1480, 650);
+  await finishFamilyIntro(page);
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-line")).toContainText("hermana");
   await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
   expect((await inspect(page)).windowSeen).toBe(false);
 });
+
+test("approaching the door reveals family activity only once before a response", async ({ page }, testInfo) => {
+  await page.goto("/?story=metamorphosis");
+  await expect.poll(() => page.locator("canvas").count()).toBe(1);
+  await useProbe(page, "mountRoom");
+  await page.locator("canvas").click({ position: { x: 80, y: 80 } });
+  await place(page, 1480, 650);
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("pasos");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+  await place(page, 960, 730);
+  await place(page, 1480, 650);
+  await page.evaluate(() => new Promise<void>(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+  }));
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-choice")).toHaveCount(2);
+  await page.setViewportSize({ width: 800, height: 600 });
+  await page.screenshot({ path: testInfo.outputPath("family-choices-800x600.png") });
+});
+
+for (const path of [
+  { key: "1", saved: "answered", other: "silent", consequence: "Madre sigue inquieta" },
+  { key: "2", saved: "silent", other: "answered", consequence: "Madre ha vuelto a preguntar" },
+] as const) {
+  test(`family ${path.saved} decision changes later dialogue and survives save/restore`, async ({ page }, testInfo) => {
+    test.setTimeout(90_000);
+    await page.goto("/?story=metamorphosis");
+    await expect.poll(() => page.locator("canvas").count()).toBe(1);
+    await useProbe(page, "mountRoom");
+    const canvas = page.locator("canvas");
+    await canvas.click({ position: { x: 80, y: 80 } });
+    await place(page, 1480, 650);
+    await finishFamilyIntro(page, path.key);
+    expect((await inspect(page)).familyActivityHeard).toBe(true);
+    expect((await inspect(page)).familyResponse).toBe(path.saved);
+    const saved = await useProbe<string>(page, "saveRoom");
+    await useProbe(page, "changeFamilyResponse", path.other);
+    expect((await inspect(page)).familyResponse).toBe(path.other);
+    const restored = await useProbe<ReturnType<typeof inspect>>(page, "restoreRoom", saved);
+    expect(restored.familyActivityHeard).toBe(true);
+    expect(restored.familyResponse).toBe(path.saved);
+    await canvas.focus();
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-line")).toContainText(path.consequence);
+    if (path.saved === "answered") {
+      await page.setViewportSize({ width: 800, height: 600 });
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-choice")).toHaveCount(2);
+      await page.screenshot({ path: testInfo.outputPath("grete-after-family-800x600.png") });
+    }
+    expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+  });
+}
 
 for (const path of [
   { key: "1", saved: "stay", other: "2", gregor: "Quédate", grete: "Me quedaré", returnLine: "Sigo aquí" },
@@ -103,6 +174,7 @@ for (const path of [
     const canvas = page.locator("canvas");
     await canvas.click({ position: { x: 80, y: 80 } });
     await place(page, 1480, 650);
+    await finishFamilyIntro(page);
     await expect(page.getByTestId("metamorphosis-prompt")).toContainText("puerta");
     await page.keyboard.press("e");
     await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");

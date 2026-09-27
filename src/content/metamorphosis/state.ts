@@ -6,7 +6,10 @@ const POSITION = "metamorphosis.gregorPosition";
 const WINDOW_SEEN = "metamorphosis.windowSeen";
 const DOOR_HEARD = "metamorphosis.doorHeard";
 const GRETE_RESPONSE = "metamorphosis.greteResponse";
+const FAMILY_ACTIVITY_HEARD = "metamorphosis.familyActivityHeard";
+const FAMILY_RESPONSE = "metamorphosis.familyResponse";
 export type GreteResponse = "stay" | "leave";
+export type FamilyResponse = "answered" | "silent";
 const isPoint = (value: unknown): value is Point => value !== null && typeof value === "object" &&
   "x" in value && "y" in value && typeof value.x === "number" && Number.isFinite(value.x) &&
   typeof value.y === "number" && Number.isFinite(value.y);
@@ -21,3 +24,10 @@ export const greteResponse = (): GreteResponse | undefined => {
   return value === "stay" || value === "leave" ? value : undefined;
 };
 export const setGreteResponse = (response: GreteResponse) => storage.set(GRETE_RESPONSE, response);
+export const hasHeardFamilyActivity = () => storage.get<boolean>(FAMILY_ACTIVITY_HEARD) === true;
+export const markFamilyActivityHeard = () => storage.set(FAMILY_ACTIVITY_HEARD, true);
+export const familyResponse = (): FamilyResponse | undefined => {
+  const value = storage.get<string>(FAMILY_RESPONSE);
+  return value === "answered" || value === "silent" ? value : undefined;
+};
+export const setFamilyResponse = (response: FamilyResponse) => storage.set(FAMILY_RESPONSE, response);

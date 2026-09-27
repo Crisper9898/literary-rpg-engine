@@ -118,6 +118,30 @@ intentionally offscreen with provisional doorway art; this slice does not add
 the rest of the house or an autonomous routine. The first unchecked Journey
 task below remains the next planned work.
 
+## Family activity at Gregor's door — 2026-09-27
+
+User-directed Metamorphosis follow-up from `ee047df`. The pending Journey art
+task remains unchanged.
+
+- [x] Trigger one brief Pixi'VN narrative cue when Gregor enters a small zone
+  near the existing door. Record that cue once in namespaced Pixi'VN storage.
+  Returning to the zone, including after restore, does not replay it.
+- [x] On the next door interaction, let Gregor try to answer his family or stay
+  silent through Pixi'VN choices. Store `answered`/`silent` in the same
+  narrative storage; Grete's immediate and later lines reflect that choice.
+  Her previous stay/leave choice and the window-conditioned line still work.
+- [x] Keep the room, Grete and family scene composition in Metamorphosis
+  content/story modules. No new scene, audio asset, dependency or `src/engine/`
+  change. Browser-test both outcomes, one-time activation, serialized
+  save/restore, previous interactions and Journey regressions.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files, and the production build. `npm run agent:e2e` passed 39/39 tests in
+11.9 minutes. The family question and both buttons were visually inspected at
+800×600 and were readable without clipping. The existing >500 kB bundle
+warning and slow software fog diagnostic (7.1 fps with weather, 9.3 without)
+remain unrelated to this content change.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does
