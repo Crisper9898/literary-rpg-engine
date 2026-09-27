@@ -3,7 +3,8 @@ import { type Container, type Ticker, UPDATE_PRIORITY } from "pixi.js";
 import { SpatialInteractions, type SpatialAction } from "../../engine/interaction/SpatialInteractions";
 import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey";
 import { createMetamorphosisConversationView } from "../../ui/metamorphosisConversationView";
-import { familyActivityRange, metamorphosisRoom as room, roomInteractionRange } from "../../story/metamorphosis/room";
+import { familyActivityRange, metamorphosisRoom as room, roomExitRange,
+  roomInteractionRange } from "../../story/metamorphosis/room";
 import { metamorphosisText as copy } from "../../story/metamorphosis/text";
 import { metamorphosisClerkArrival, metamorphosisClerkDoor, metamorphosisClerkExplain,
   metamorphosisClerkSilence, metamorphosisDoor, metamorphosisFamilyAnswer, metamorphosisFamilyApproach,
@@ -13,7 +14,7 @@ import { clerkResponse, familyResponse, hasHeardClerkArrival, hasHeardFamilyActi
   markDoorHeard, markWindowSeen } from "./state";
 
 export function attachRoomInteractions(presentation: Container, actor: Container,
-  ticker: Ticker, surface: HTMLCanvasElement) {
+  ticker: Ticker, surface: HTMLCanvasElement, exitRoom: () => void) {
   let busy = false;
   let disposed = false;
   const listeners = new AbortController();
@@ -23,6 +24,8 @@ export function attachRoomInteractions(presentation: Container, actor: Container
     metamorphosisClerkArrival.id, metamorphosisClerkDoor.id, metamorphosisClerkExplain.id,
     metamorphosisClerkSilence.id]);
   const active = () => narration.labels.opened.some(({ label }) => roomLabels.has(label));
+  const canExit = () => hasHeardFamilyActivity() && !!familyResponse() &&
+    hasHeardClerkArrival() && !!clerkResponse();
   const run = async (action: () => Promise<unknown>) => {
     if (busy || disposed) return;
     busy = true;
@@ -36,11 +39,18 @@ export function attachRoomInteractions(presentation: Container, actor: Container
         markWindowSeen(); void run(() => narration.call(metamorphosisWindow, {}));
       } },
     { id: "door", prompt: copy.doorPrompt, target: () => room.anchors.door,
-      range: roomInteractionRange, execute: () => {
+      range: roomInteractionRange, enabled: () => !clerkResponse(), execute: () => {
         markDoorHeard();
         const label = !familyResponse() ? metamorphosisFamilyDoor :
-          !clerkResponse() ? metamorphosisClerkDoor : metamorphosisDoor;
+          metamorphosisClerkDoor;
         void run(() => narration.call(label, {}));
+      } },
+    { id: "exit", prompt: copy.exitPrompt, target: () => room.anchors.door,
+      range: roomExitRange, priority: 1, enabled: canExit,
+      execute: exitRoom },
+    { id: "grete", prompt: copy.gretePrompt, target: () => room.anchors.grete,
+      range: roomExitRange, enabled: () => !!clerkResponse(), execute: () => {
+        void run(() => narration.call(metamorphosisDoor, {}));
       } },
   ];
   const interactions = new SpatialInteractions(() => actor.position, actions);
@@ -77,7 +87,7 @@ export function attachRoomInteractions(presentation: Container, actor: Container
     const model = typeof character === "string" ?
       RegisteredCharacters.get<CharacterBaseModel, string>(character) : character;
     view.render({ active: isActive, available: !!available, busy,
-      prompt: available?.prompt ?? "Acércate a la ventana o a la puerta · E",
+      prompt: available?.prompt ?? "Acércate a la ventana, a Grete o a la puerta · E",
       speaker: model instanceof CharacterBaseModel ? model.name ?? "" : "",
       text: isActive ? [dialogue?.text ?? ""].flat().join(" ") : "",
       choices: isActive ? (narration.choices.list ?? []).map(item => [item.text].flat().join(" ")) : [] });

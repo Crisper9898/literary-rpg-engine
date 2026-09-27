@@ -1,12 +1,13 @@
 import "./metamorphosisConversation.css";
 
 export function createMetamorphosisConversationView(root: HTMLElement, surface: HTMLCanvasElement,
-  actions: { interact(): void; advance(): void; choose(index: number): void }) {
+  actions: { interact(): void; advance(): void; choose(index: number): void },
+  ariaLabel = "Interacciones de la habitación") {
   const listeners = new AbortController();
   let choiceListeners = new AbortController();
   const hud = document.createElement("aside");
   hud.className = "metamorphosis-conversation";
-  hud.setAttribute("aria-label", "Interacciones de la habitación");
+  hud.setAttribute("aria-label", ariaLabel);
   const prompt = document.createElement("button");
   prompt.type = "button";
   prompt.dataset.testid = "metamorphosis-prompt";

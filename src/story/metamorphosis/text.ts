@@ -2,6 +2,11 @@ export const metamorphosisText = {
   gregorName: "Gregor Samsa",
   windowPrompt: "E · Mirar por la ventana",
   doorPrompt: "E · Escuchar junto a la puerta",
+  exitPrompt: "E · Abrir la puerta y salir",
+  gretePrompt: "E · Hablar con Grete",
+  returnPrompt: "E · Volver a la habitación",
+  picturePrompt: "E · Mirar el cuadro del pasillo",
+  hallwayPicture: "En el cuadro del pasillo, una casa tranquila parecía pertenecer a otra familia.",
   window: [
     "Tras el cristal, la calle seguía su mañana como si nada hubiera ocurrido.",
     "Gregor apoyó una pata en el marco. La lluvia le devolvió una silueta que no reconocía.",

@@ -170,6 +170,38 @@ show the representative's question and two fully visible, usable buttons with
 no overlap. The existing >500 kB bundle warning and software fog diagnostic
 (7.2–7.3 fps with weather, 9.5 without) remain outside this task.
 
+## First Metamorphosis spatial transition — 2026-09-27
+
+User-directed follow-up to the office representative scene. The pending Journey
+art task remains unchanged; the rest of the Samsa apartment and visible family
+characters remain for later work.
+
+- [x] Unlock the room door only after the family proximity event, family
+  response, office arrival and clerk response. Keep the earlier window, family,
+  clerk and optional Grete dialogue; Grete has a separate nearby hotspot once
+  opening the door becomes available.
+- [x] Add one provisional hallway with bounded movement, camera follow, a
+  picture observation through a Pixi'VN label, and an E interaction to return.
+  Compose both spaces from existing movement, camera, interaction and audio
+  helpers; no `src/engine/` changes or new dependencies.
+- [x] Store `metamorphosis.currentSpace` in Pixi'VN storage alongside the
+  existing Gregor position checkpoint. On transition, write the destination
+  and its valid arrival position, dispose the old presentation/listeners/sound,
+  then rebuild the destination. On restore, rebuild the saved space and position
+  from Pixi'VN without serializing transient renderer or audio objects.
+- [x] Browser-test the locked door, unlocked exit, hallway movement and picture,
+  return path, narrative state, and saves in the room before unlock, after
+  unlock, in the hallway, and after returning. Check room, hallway, observation
+  dialogue and return at 800×600; keep Journey regressions in the full suite.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and production build. `npm run agent:e2e` passed 47/47 browser tests in
+13.5 minutes, including all Journey regressions. The 800×600 room, hallway,
+hallway dialogue and return captures show Gregor in bounds with readable
+prompts and no clipped dialogue. The pre-existing >500 kB bundle warning and
+slow software weather diagnostic (6.8–7.4 fps with weather, 9.6 without) are
+unchanged in scope.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does

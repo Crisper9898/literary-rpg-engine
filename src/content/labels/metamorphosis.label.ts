@@ -4,7 +4,7 @@ import { clerk, gregor, grete } from "../metamorphosis/character";
 import { clerkResponse, familyResponse, greteResponse, hasSeenWindow,
   markClerkArrivalHeard, markFamilyActivityHeard, setClerkResponse,
   setFamilyResponse, setGreteResponse } from "../metamorphosis/state";
-import { showMetamorphosisRoom } from "../metamorphosis/showRoom";
+import { showMetamorphosisSpace } from "../metamorphosis/showRoom";
 
 const close = () => {
   narration.dialogue = undefined;
@@ -114,7 +114,12 @@ export const metamorphosisDoor = newLabel("metamorphosis-door", [
   close,
 ]);
 
+export const metamorphosisHallwayPicture = newLabel("metamorphosis-hallway-picture", [
+  () => { narration.dialogue = { character: gregor, text: lines.hallwayPicture }; },
+  close,
+]);
+
 export const metamorphosisStart = newLabel("metamorphosis-start", [
-  () => { showMetamorphosisRoom(); narration.dialogue = undefined; },
+  () => { showMetamorphosisSpace(); narration.dialogue = undefined; },
   () => { narration.dialogue = undefined; },
 ]);

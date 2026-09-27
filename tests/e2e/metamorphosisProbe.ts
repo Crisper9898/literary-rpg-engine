@@ -1,8 +1,8 @@
-import { Game, sound } from "@drincs/pixi-vn";
+import { canvas, Game, sound } from "@drincs/pixi-vn";
 import { getContext } from "tone";
-import { showMetamorphosisRoom } from "../../src/content/metamorphosis/showRoom";
+import { showMetamorphosisRoom, showMetamorphosisSpace } from "../../src/content/metamorphosis/showRoom";
 import { clerkResponse, familyResponse, gregorPosition, greteResponse,
-  hasHeardClerkArrival, hasHeardDoor, hasHeardFamilyActivity, hasSeenWindow,
+  currentSpace, hasHeardClerkArrival, hasHeardDoor, hasHeardFamilyActivity, hasSeenWindow,
   setClerkResponse, setFamilyResponse, type ClerkResponse,
   type FamilyResponse } from "../../src/content/metamorphosis/state";
 
@@ -11,13 +11,36 @@ const ids = ["room", "outside", "voices"] as const;
 
 export function mountRoom() { scene = showMetamorphosisRoom(); }
 export function placeGregor(x: number, y = 700) {
-  if (!scene) throw new Error("Room is not mounted");
+  const layer = canvas.layers.get(`metamorphosis-${currentSpace()}`);
+  const actor = layer?.getChildByLabel("gregor", true);
+  if (!actor) throw new Error("Metamorphosis scene is not mounted");
   gregorPosition.write({ x, y });
-  scene.actor.position.set(x, y);
-  scene.audio.update(1200);
+  actor.position.set(x, y);
+  if (currentSpace() === "room") scene?.audio.update(1200);
 }
 export function changeFamilyResponse(response: FamilyResponse) { setFamilyResponse(response); }
 export function changeClerkResponse(response: ClerkResponse) { setClerkResponse(response); }
+export function currentSpaceLayer() {
+  return canvas.layers.get("metamorphosis-hallway") ? "hallway" : "room";
+}
+export function inspectSpace() {
+  const space = currentSpace();
+  const layer = canvas.layers.get(`metamorphosis-${space}`);
+  const actor = layer?.getChildByLabel("gregor", true);
+  const world = layer?.getChildByLabel("world", true);
+  if (!actor || !world) throw new Error(`Missing ${space} presentation`);
+  return {
+    space, position: { x: actor.x, y: actor.y },
+    world: { x: world.x, y: world.y },
+    familyActivityHeard: hasHeardFamilyActivity(), familyResponse: familyResponse(),
+    clerkArrivalHeard: hasHeardClerkArrival(), clerkResponse: clerkResponse(),
+    windowSeen: hasSeenWindow(), greteResponse: greteResponse(),
+    audio: { room: sound.channels.values.filter(channel =>
+      channel.alias?.startsWith("metamorphosis-room:") && channel.mediaInstances.length > 0).length,
+      hallway: sound.channels.values.filter(channel =>
+        channel.alias?.startsWith("metamorphosis-hallway:") && channel.mediaInstances.length > 0).length },
+  };
+}
 export function inspectRoom() {
   if (!scene) throw new Error("Room is not mounted");
   return { position: { x: scene.actor.x, y: scene.actor.y },
@@ -36,7 +59,13 @@ export function inspectRoom() {
 export async function saveRoom() { return JSON.stringify(await Game.exportGameState()); }
 export async function restoreRoom(serialized: string) {
   await Game.restoreGameState(JSON.parse(serialized));
-  scene = showMetamorphosisRoom();
-  scene.audio.update(1200);
+  scene = showMetamorphosisSpace();
+  if (currentSpace() === "room") scene.audio.update(1200);
   return inspectRoom();
+}
+export async function restoreSpace(serialized: string) {
+  await Game.restoreGameState(JSON.parse(serialized));
+  scene = showMetamorphosisSpace();
+  scene.audio.update(1200);
+  return inspectSpace();
 }

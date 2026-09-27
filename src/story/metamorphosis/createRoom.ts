@@ -3,6 +3,7 @@ import { createWorldLayers } from "../../engine/world/createWorldLayers";
 import { validateWorldLayout } from "../../engine/world/worldLayout";
 import { metamorphosisRoom as room } from "./room";
 import { metamorphosisText as copy } from "./text";
+import { createGregorActor } from "./createGregorActor";
 
 /** Provisional artwork belongs to this work; movement/camera remain generic. */
 export function createMetamorphosisRoom() {
@@ -28,20 +29,10 @@ export function createMetamorphosisRoom() {
     .circle(door.x + 58, 575, 9).fill(0xc2aa78));
   layers.ground.addChild(new Graphics().rect(door.x - 78, 755, 156, 6)
     .fill({ color: 0xd1b783, alpha: .7 }));
-  const greteHint = new Text({ text: "Grete · tras la puerta", x: door.x - 92, y: 788,
+  const greteHint = new Text({ text: "Grete · tras la puerta", x: room.anchors.grete.x - 90, y: 788,
     style: { fontFamily: "Georgia", fontSize: 17, fill: 0xd8bd9b } });
   layers.ground.addChild(greteHint);
-  const actor = new Container({ label: "gregor", x: room.anchors.gregorSpawn.x, y: room.anchors.gregorSpawn.y });
-  const body = new Graphics().ellipse(0, -21, 33, 46).fill(0x352820)
-    .ellipse(0, -25, 14, 33).fill(0x5d4735)
-    .circle(-10, -61, 5).fill(0x28201d).circle(10, -61, 5).fill(0x28201d);
-  for (const side of [-1, 1]) for (const y of [-45, -26, -8]) {
-    body.moveTo(side * 20, y).lineTo(side * 47, y + 14).stroke({ color: 0x201b19, width: 5 });
-  }
-  const name = new Text({ text: copy.gregorName,
-    style: { fontFamily: "Georgia", fontSize: 20, fill: 0xe2d4bb } });
-  name.anchor.set(.5, 0); name.y = 24;
-  actor.addChild(body, name);
+  const actor = createGregorActor(room.anchors.gregorSpawn.x, room.anchors.gregorSpawn.y);
   layers.actors.addChild(actor);
   const title = new Text({ text: "II  /  LA HABITACIÓN\nLa metamorfosis",
     x: 155, y: 90, style: { fontFamily: "Georgia", fontSize: 47, fill: 0xe4d6c5 } });

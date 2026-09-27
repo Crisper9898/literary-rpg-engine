@@ -10,9 +10,11 @@ const FAMILY_ACTIVITY_HEARD = "metamorphosis.familyActivityHeard";
 const FAMILY_RESPONSE = "metamorphosis.familyResponse";
 const CLERK_ARRIVAL_HEARD = "metamorphosis.clerkArrivalHeard";
 const CLERK_RESPONSE = "metamorphosis.clerkResponse";
+const CURRENT_SPACE = "metamorphosis.currentSpace";
 export type GreteResponse = "stay" | "leave";
 export type FamilyResponse = "answered" | "silent";
 export type ClerkResponse = "explain" | "silent";
+export type MetamorphosisSpace = "room" | "hallway";
 const isPoint = (value: unknown): value is Point => value !== null && typeof value === "object" &&
   "x" in value && "y" in value && typeof value.x === "number" && Number.isFinite(value.x) &&
   typeof value.y === "number" && Number.isFinite(value.y);
@@ -41,3 +43,6 @@ export const clerkResponse = (): ClerkResponse | undefined => {
   return value === "explain" || value === "silent" ? value : undefined;
 };
 export const setClerkResponse = (response: ClerkResponse) => storage.set(CLERK_RESPONSE, response);
+export const currentSpace = (): MetamorphosisSpace =>
+  storage.get<string>(CURRENT_SPACE) === "hallway" ? "hallway" : "room";
+export const setCurrentSpace = (space: MetamorphosisSpace) => storage.set(CURRENT_SPACE, space);

@@ -24,3 +24,8 @@ export const metamorphosisAudioLayers: readonly AudioLayer[] = [
     zone: { center: () => room.anchors.door, innerRadius: 80, outerRadius: 560 },
     fadeInMS: 900, fadeOutMS: 1100 },
 ];
+
+export const metamorphosisHallwayAudioLayers: readonly AudioLayer[] = [
+  { id: "room", source: sources[0].alias, volume: .12,
+    fadeInMS: 900, fadeOutMS: 1100 },
+];
