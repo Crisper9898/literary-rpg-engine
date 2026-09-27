@@ -1,4 +1,4 @@
-import { canvas, Game, sound } from "@drincs/pixi-vn";
+import { canvas, Game, sound, storage } from "@drincs/pixi-vn";
 import { getContext } from "tone";
 import { showMetamorphosisRoom, showMetamorphosisSpace } from "../../src/content/metamorphosis/showRoom";
 import { clerkResponse, familyResponse, gregorPosition, greteResponse,
@@ -39,6 +39,18 @@ export function inspectSpace() {
       channel.alias?.startsWith("metamorphosis-room:") && channel.mediaInstances.length > 0).length,
       hallway: sound.channels.values.filter(channel =>
         channel.alias?.startsWith("metamorphosis-hallway:") && channel.mediaInstances.length > 0).length },
+  };
+}
+export function inspectHallwayNpcs() {
+  const layer = canvas.layers.get("metamorphosis-hallway");
+  const grete = layer?.getChildByLabel("hallway-grete", true);
+  const clerk = layer?.getChildByLabel("hallway-clerk", true);
+  const actor = (npc: typeof grete) => npc ?
+    { x: npc.x, y: npc.y, facing: npc.scale.x } : null;
+  return {
+    grete: actor(grete), clerk: actor(clerk),
+    greteSawGregor: storage.get<boolean>("metamorphosis.greteSawGregor") === true,
+    clerkSawGregor: storage.get<boolean>("metamorphosis.clerkSawGregor") === true,
   };
 }
 export function inspectRoom() {

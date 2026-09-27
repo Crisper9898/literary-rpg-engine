@@ -119,6 +119,22 @@ export const metamorphosisHallwayPicture = newLabel("metamorphosis-hallway-pictu
   close,
 ]);
 
+export const metamorphosisHallwayGrete = newLabel("metamorphosis-hallway-grete", [
+  () => { narration.dialogue = { character: grete, text: familyResponse() === "answered" ?
+    lines.hallwayGreteAfterAnswer : lines.hallwayGreteAfterSilence }; },
+  () => { narration.dialogue = { character: grete, text: greteResponse() === "stay" ?
+    lines.hallwayGreteAfterStay : greteResponse() === "leave" ?
+      lines.hallwayGreteAfterLeave : lines.hallwayGreteOtherwise }; },
+  close,
+]);
+
+export const metamorphosisHallwayClerk = newLabel("metamorphosis-hallway-clerk", [
+  () => { narration.dialogue = { character: clerk, text: clerkResponse() === "explain" ?
+    lines.hallwayClerkAfterExplain : lines.hallwayClerkAfterSilence }; },
+  () => { narration.dialogue = { character: clerk, text: lines.hallwayClerkFollowup }; },
+  close,
+]);
+
 export const metamorphosisStart = newLabel("metamorphosis-start", [
   () => { showMetamorphosisSpace(); narration.dialogue = undefined; },
   () => { narration.dialogue = undefined; },

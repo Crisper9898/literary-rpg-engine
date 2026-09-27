@@ -42,6 +42,30 @@ const finishClerkIntro = async (page: Page, key: "1" | "2" = "1") => {
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
 };
+const enterHallway = async (page: Page, family: "1" | "2" = "1", clerk: "1" | "2" = "1",
+  grete?: "1" | "2") => {
+  await page.goto("/?story=metamorphosis");
+  await expect.poll(() => page.locator("canvas").count()).toBe(1);
+  await useProbe(page, "mountRoom");
+  await page.locator("canvas").click({ position: { x: 80, y: 80 } });
+  await place(page, 1480, 650);
+  await finishFamilyIntro(page, family);
+  await finishClerkIntro(page, clerk);
+  if (grete) {
+    await place(page, 1290, 650);
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-choice")).toHaveCount(2);
+    await page.keyboard.press(grete);
+    await page.keyboard.press("e");
+    await page.keyboard.press("e");
+    await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+    await place(page, 1480, 650);
+  }
+  await page.keyboard.press("e");
+  await expect.poll(() => useProbe<string>(page, "currentSpaceLayer")).toBe("hallway");
+};
 
 test("both works have accessible entries and the Journey remains the default", async ({ page }, testInfo) => {
   await page.goto("/");
@@ -331,6 +355,115 @@ test("hallway movement, observation and both return paths survive save/restore",
   expect(await page.locator("[aria-label='Interacciones de la habitación']").count()).toBe(0);
   expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
 });
+
+test("Grete and the office representative are visible, react once, and retain reactions after restore", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  await enterHallway(page);
+  const initial = await useProbe<{
+    grete: { x: number; y: number; facing: number } | null;
+    clerk: { x: number; y: number; facing: number } | null;
+    greteSawGregor: boolean; clerkSawGregor: boolean;
+  }>(page, "inspectHallwayNpcs");
+  expect(initial.grete).not.toBeNull();
+  expect(initial.clerk).not.toBeNull();
+  expect(initial.greteSawGregor).toBe(false);
+  expect(initial.clerkSawGregor).toBe(false);
+  await page.setViewportSize({ width: 800, height: 600 });
+  await page.screenshot({ path: testInfo.outputPath("hallway-both-npcs-800x600.png") });
+  const beforeGrete = await useProbe<string>(page, "saveRoom");
+  await place(page, 650, 700);
+  await expect.poll(async () => (await useProbe<typeof initial>(page, "inspectHallwayNpcs")).greteSawGregor).toBe(true);
+  const reactedGrete = await useProbe<typeof initial>(page, "inspectHallwayNpcs");
+  expect(reactedGrete.grete!.x).toBeGreaterThan(initial.grete!.x);
+  await place(page, 560, 700);
+  await place(page, 650, 700);
+  expect((await useProbe<typeof initial>(page, "inspectHallwayNpcs")).grete!.x)
+    .toBe(reactedGrete.grete!.x);
+  await place(page, 560, 700);
+  await useProbe(page, "restoreSpace", beforeGrete);
+  const restoredBefore = await useProbe<typeof initial>(page, "inspectHallwayNpcs");
+  expect(restoredBefore.greteSawGregor).toBe(false);
+  expect((await useProbe<typeof initial>(page, "inspectHallwayNpcs")).grete!.x).toBe(initial.grete!.x);
+  await place(page, 650, 700);
+  await expect.poll(async () => (await useProbe<typeof initial>(page, "inspectHallwayNpcs")).greteSawGregor).toBe(true);
+  const afterGrete = await useProbe<string>(page, "saveRoom");
+  await place(page, 560, 700);
+  await useProbe(page, "restoreSpace", afterGrete);
+  const restoredGrete = await useProbe<typeof initial>(page, "inspectHallwayNpcs");
+  expect(restoredGrete.greteSawGregor).toBe(true);
+  expect(restoredGrete.grete!.x).toBe(reactedGrete.grete!.x);
+  await place(page, 980, 700);
+  await expect.poll(async () => (await useProbe<typeof initial>(page, "inspectHallwayNpcs")).clerkSawGregor).toBe(true);
+  const reactedClerk = await useProbe<typeof initial>(page, "inspectHallwayNpcs");
+  expect(reactedClerk.clerk!.x).toBeGreaterThan(initial.clerk!.x);
+  await place(page, 560, 700);
+  await place(page, 980, 700);
+  expect((await useProbe<typeof initial>(page, "inspectHallwayNpcs")).clerk!.x)
+    .toBe(reactedClerk.clerk!.x);
+  const afterClerk = await useProbe<string>(page, "saveRoom");
+  await place(page, 560, 700);
+  await useProbe(page, "restoreSpace", afterClerk);
+  const restoredClerk = await useProbe<typeof initial>(page, "inspectHallwayNpcs");
+  expect(restoredClerk.clerkSawGregor).toBe(true);
+  expect(restoredClerk.clerk!.x).toBe(reactedClerk.clerk!.x);
+  expect(restoredClerk.greteSawGregor).toBe(true);
+});
+
+for (const path of [
+  { family: "1", clerk: "1", grete: "1", greteLine: "Te oí responder",
+    greteMemory: "Dije que me quedaría", clerkLine: "Dijo que estaba enfermo",
+    otherFamily: "silent", otherClerk: "silent" },
+  { family: "2", clerk: "2", grete: "2", greteLine: "No dijiste nada",
+    greteMemory: "Pediste que me fuera", clerkLine: "Guardó silencio",
+    otherFamily: "answered", otherClerk: "explain" },
+] as const) {
+  test(`hallway NPC dialogue reflects the ${path.family === "1" ? "answered" : "silent"} path after restore`,
+    async ({ page }, testInfo) => {
+      test.setTimeout(120_000);
+      await enterHallway(page, path.family, path.clerk, path.grete);
+      await page.setViewportSize({ width: 800, height: 600 });
+      await place(page, 700, 700);
+      await expect(page.getByTestId("metamorphosis-prompt")).toContainText("Grete");
+      await page.screenshot({ path: testInfo.outputPath(`hallway-grete-prompt-${path.family}-800x600.png`) });
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Grete Samsa");
+      await expect(page.getByTestId("metamorphosis-line")).toContainText(path.greteLine);
+      await page.screenshot({ path: testInfo.outputPath(`hallway-grete-dialogue-${path.family}-800x600.png`) });
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-line")).toContainText(path.greteMemory);
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+      await place(page, 1010, 700);
+      await expect(page.getByTestId("metamorphosis-prompt")).toContainText("representante");
+      await page.screenshot({ path: testInfo.outputPath(`hallway-clerk-prompt-${path.clerk}-800x600.png`) });
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Representante de la oficina");
+      await expect(page.getByTestId("metamorphosis-line")).toContainText(path.clerkLine);
+      await page.screenshot({ path: testInfo.outputPath(`hallway-clerk-dialogue-${path.clerk}-800x600.png`) });
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-line")).toContainText("informar a la oficina");
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+      const saved = await useProbe<string>(page, "saveRoom");
+      await useProbe(page, "changeFamilyResponse", path.otherFamily);
+      await useProbe(page, "changeClerkResponse", path.otherClerk);
+      await useProbe(page, "restoreSpace", saved);
+      await place(page, 700, 700);
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-line")).toContainText(path.greteLine);
+      await page.keyboard.press("e");
+      await page.keyboard.press("e");
+      await place(page, 1010, 700);
+      await page.keyboard.press("e");
+      await expect(page.getByTestId("metamorphosis-line")).toContainText(path.clerkLine);
+      await page.keyboard.press("e");
+      await page.keyboard.press("e");
+      await place(page, 370, 680);
+      await page.keyboard.press("e");
+      expect(await useProbe<string>(page, "currentSpaceLayer")).toBe("room");
+      expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+    });
+}
 
 for (const path of [
   { familyKey: "1", family: "answered", clerkKey: "1", response: "explain",

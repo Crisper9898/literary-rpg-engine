@@ -2,16 +2,30 @@ import { CharacterBaseModel, narration, RegisteredCharacters } from "@drincs/pix
 import { type Container, type Ticker, UPDATE_PRIORITY } from "pixi.js";
 import { SpatialInteractions, type SpatialAction } from "../../engine/interaction/SpatialInteractions";
 import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey";
-import { metamorphosisHallway as hall, hallwayInteractionRange } from "../../story/metamorphosis/hallway";
+import { metamorphosisHallway as hall, hallwayInteractionRange, hallwayReactionRange,
+  hallwayReactionStep, hallwayNpcRange } from "../../story/metamorphosis/hallway";
 import { metamorphosisText as copy } from "../../story/metamorphosis/text";
 import { createMetamorphosisConversationView } from "../../ui/metamorphosisConversationView";
-import { metamorphosisHallwayPicture } from "../labels/metamorphosis.label";
+import { metamorphosisHallwayClerk, metamorphosisHallwayGrete,
+  metamorphosisHallwayPicture } from "../labels/metamorphosis.label";
+import { hasClerkSeenGregor, hasGreteSeenGregor, markClerkSawGregor,
+  markGreteSawGregor } from "./state";
 
 export function attachHallwayInteractions(presentation: Container, actor: Container,
   ticker: Ticker, surface: HTMLCanvasElement, returnToRoom: () => void) {
   let busy = false;
   let disposed = false;
-  const active = () => narration.labels.opened.some(({ label }) => label === metamorphosisHallwayPicture.id);
+  const grete = presentation.getChildByLabel("hallway-grete", true);
+  const clerk = presentation.getChildByLabel("hallway-clerk", true);
+  if (!grete || !clerk) throw new Error("The hallway needs both authored NPC actors.");
+  const setReactionPose = () => {
+    grete.x = hall.anchors.grete.x + (hasGreteSeenGregor() ? hallwayReactionStep : 0);
+    clerk.x = hall.anchors.clerk.x + (hasClerkSeenGregor() ? hallwayReactionStep : 0);
+  };
+  setReactionPose();
+  const hallwayLabels = new Set([metamorphosisHallwayPicture.id,
+    metamorphosisHallwayGrete.id, metamorphosisHallwayClerk.id]);
+  const active = () => narration.labels.opened.some(({ label }) => hallwayLabels.has(label));
   const run = async (action: () => Promise<unknown>) => {
     if (busy || disposed) return;
     busy = true;
@@ -26,8 +40,26 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
       range: hallwayInteractionRange, execute: () => {
         void run(() => narration.call(metamorphosisHallwayPicture, {}));
       } },
+    { id: "grete", prompt: copy.hallwayGretePrompt, target: () => grete.position,
+      range: hallwayNpcRange, execute: () => {
+        void run(() => narration.call(metamorphosisHallwayGrete, {}));
+      } },
+    { id: "clerk", prompt: copy.hallwayClerkPrompt, target: () => clerk.position,
+      range: hallwayNpcRange, execute: () => {
+        void run(() => narration.call(metamorphosisHallwayClerk, {}));
+      } },
   ];
   const interactions = new SpatialInteractions(() => actor.position, actions);
+  const reactToGregor = () => {
+    if (!hasGreteSeenGregor() && interactions.inRange(() => grete.position, hallwayReactionRange)) {
+      markGreteSawGregor();
+      setReactionPose();
+    }
+    if (!hasClerkSeenGregor() && interactions.inRange(() => clerk.position, hallwayReactionRange)) {
+      markClerkSawGregor();
+      setReactionPose();
+    }
+  };
   const interact = () => {
     if (active()) {
       if (narration.canContinue) void run(() => narration.continue({}));
@@ -39,6 +71,7 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   const view = createMetamorphosisConversationView(surface.parentElement!, surface,
     { interact, advance: interact, choose: () => {} }, "Interacciones del pasillo");
   const render = () => {
+    reactToGregor();
     const isActive = active();
     const available = isActive ? undefined : interactions.available();
     const dialogue = isActive ? narration.dialogue : undefined;
@@ -46,7 +79,7 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
     const model = typeof character === "string" ?
       RegisteredCharacters.get<CharacterBaseModel, string>(character) : character;
     view.render({ active: isActive, available: !!available, busy,
-      prompt: available?.prompt ?? "Acércate a la puerta o al cuadro · E",
+      prompt: available?.prompt ?? "Explora el pasillo · E",
       speaker: model instanceof CharacterBaseModel ? model.name ?? "" : "",
       text: isActive ? [dialogue?.text ?? ""].flat().join(" ") : "",
       choices: [] });

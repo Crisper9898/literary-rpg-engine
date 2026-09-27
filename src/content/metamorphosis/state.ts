@@ -11,6 +11,8 @@ const FAMILY_RESPONSE = "metamorphosis.familyResponse";
 const CLERK_ARRIVAL_HEARD = "metamorphosis.clerkArrivalHeard";
 const CLERK_RESPONSE = "metamorphosis.clerkResponse";
 const CURRENT_SPACE = "metamorphosis.currentSpace";
+const GRETE_SAW_GREGOR = "metamorphosis.greteSawGregor";
+const CLERK_SAW_GREGOR = "metamorphosis.clerkSawGregor";
 export type GreteResponse = "stay" | "leave";
 export type FamilyResponse = "answered" | "silent";
 export type ClerkResponse = "explain" | "silent";
@@ -46,3 +48,7 @@ export const setClerkResponse = (response: ClerkResponse) => storage.set(CLERK_R
 export const currentSpace = (): MetamorphosisSpace =>
   storage.get<string>(CURRENT_SPACE) === "hallway" ? "hallway" : "room";
 export const setCurrentSpace = (space: MetamorphosisSpace) => storage.set(CURRENT_SPACE, space);
+export const hasGreteSeenGregor = () => storage.get<boolean>(GRETE_SAW_GREGOR) === true;
+export const markGreteSawGregor = () => storage.set(GRETE_SAW_GREGOR, true);
+export const hasClerkSeenGregor = () => storage.get<boolean>(CLERK_SAW_GREGOR) === true;
+export const markClerkSawGregor = () => storage.set(CLERK_SAW_GREGOR, true);

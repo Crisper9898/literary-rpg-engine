@@ -7,7 +7,12 @@ export const metamorphosisHallway = {
     roomDoor: { x: 370, y: 680 },
     picture: { x: 1280, y: 650 },
     arrival: { x: 560, y: 700 },
+    grete: { x: 760, y: 690 },
+    clerk: { x: 1070, y: 700 },
   },
 } as const satisfies WorldLayout;
 
 export const hallwayInteractionRange = 145;
+export const hallwayNpcRange = 105;
+export const hallwayReactionRange = 145;
+export const hallwayReactionStep = 42;

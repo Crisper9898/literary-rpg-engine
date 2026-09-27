@@ -202,6 +202,38 @@ prompts and no clipped dialogue. The pre-existing >500 kB bundle warning and
 slow software weather diagnostic (6.8–7.4 fps with weather, 9.6 without) are
 unchanged in scope.
 
+## Visible Metamorphosis hallway NPCs — 2026-09-27
+
+User-directed continuation of the first room-to-hallway transition. The
+pending Heart of Darkness art task remains the first unchecked Journey task;
+no other rooms or family characters were added.
+
+- [x] Place provisional, distinct Grete and office representative figures in
+  the existing hallway. Both stay at authored positions, have separate
+  proximity prompts and can be spoken to with `E`. The existing hallway
+  picture and room return remain available.
+- [x] On first approach, each NPC steps aside once. Pixi'VN storage records
+  `metamorphosis.greteSawGregor` and `metamorphosis.clerkSawGregor`; scene
+  reconstruction reapplies their poses, so save/restore neither loses nor
+  repeats the reaction. Generic `SpatialInteractions` provides proximity;
+  the autonomous routine controller is unnecessary for fixed actors.
+- [x] Pixi'VN labels give Grete a brief response conditioned on
+  `familyResponse` and her earlier stay/leave choice, and the representative
+  a two-line response conditioned on `clerkResponse`. No new choices or
+  parallel dialogue state were introduced.
+- [x] Browser-test both figures, distinct prompts, both reaction flags before
+  and after restore, both contextual dialogue paths and their restored
+  versions, and return to the room. Inspect the hallway, nearby prompts and
+  both dialogues at 800×600. Keep `src/engine/` untouched and run all Journey
+  regressions.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and production build. `npm run agent:e2e` passed 50/50 browser tests in
+14.5 minutes. At 800×600, both NPCs and their prompts are visible, Gregor
+does not overlap them at interaction distance, and the contextual dialogue
+fits the panel. The existing >500 kB bundle warning and software-weather
+diagnostic (7.3–7.7 fps with weather, 9.6 without) remain outside this task.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does
