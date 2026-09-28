@@ -50,6 +50,8 @@ export function inspectHallwayNpcs() {
   return {
     grete: actor(grete), clerk: actor(clerk),
     greteSawGregor: storage.get<boolean>("metamorphosis.greteSawGregor") === true,
+    greteReacted: storage.get<boolean>("metamorphosis.greteReacted") === true,
+    greteLeft: storage.get<boolean>("metamorphosis.greteLeft") === true,
     clerkSawGregor: storage.get<boolean>("metamorphosis.clerkSawGregor") === true,
     clerkLeaving: storage.get<boolean>("metamorphosis.clerkLeaving") === true,
     clerkLeft: storage.get<boolean>("metamorphosis.clerkLeft") === true,

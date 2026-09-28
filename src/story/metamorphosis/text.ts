@@ -14,6 +14,7 @@ export const metamorphosisText = {
   hallwayGreteAfterStay: "Dije que me quedaría cerca, Gregor. Cumpliré mi palabra.",
   hallwayGreteAfterLeave: "Pediste que me fuera. Volví cuando oí abrirse la puerta.",
   hallwayGreteOtherwise: "No voy a acercarme más por ahora, pero puedo escucharte.",
+  hallwayGreteAfterRetreat: "Estoy aquí, Gregor. Hablemos desde esta distancia.",
   hallwayClerkAfterExplain: "Dijo que estaba enfermo. Pero no esperaba verlo así, señor Samsa.",
   hallwayClerkAfterSilence: "Guardó silencio cuando le pregunté. Ahora comprendo que ocurre algo grave.",
   hallwayClerkFollowup: "Tendré que informar a la oficina. Mantengamos la calma.",

@@ -261,6 +261,40 @@ toward the marked exit without crossing the door or Gregor; dialogue and
 prompts remain legible. The existing >500 kB bundle warning and software
 weather diagnostic (7.0–7.1 fps with weather, 9.2 without) are unrelated.
 
+## Grete's physical hallway response — 2026-09-27
+
+User-directed Metamorphosis follow-up. The pending Journey art task remains
+unchanged; this work adds no room, character or engine behavior.
+
+- [x] After her existing hallway conversation, record
+  `metamorphosis.greteReacted` in Pixi'VN storage and reuse `attachNpcRoutine()`
+  for an authored retreat. Her earlier `stay`/`leave` choice decides whether she
+  remains available at a new position or leaves through the far exit. The
+  family `answered`/`silent` response changes the distance she keeps when she
+  stays and her first retreat stop when she leaves. No new choice was added.
+- [x] Grete pauses at (920,760) after `stay`/`answered` or (970,800) after
+  `stay`/`silent`, then offers only a brief follow-up line. After `leave`, she
+  steps back, moves below the representative along the lower edge of the
+  walkable floor and exits at (1560,760). On arrival, record
+  `metamorphosis.greteLeft` and remove her actor. Gregor keeps moving and the
+  representative's independent withdrawal remains unchanged.
+- [x] Reconstruct pre-conversation saves at Grete's initial pose. A save during
+  the walk settles at the authored final pose or absence; after completion,
+  save/restore and room-to-hallway re-entry preserve that result. This follows
+  the existing representative pattern without serializing a path.
+- [x] Browser-test both outcomes, the two `stay` distances, initial presence,
+  dialogue, visible movement, no repeated main dialogue, save phases, room
+  return, re-entry and Journey regressions. Review start, route, final poses,
+  prompts and dialogue at 800×600.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and production build. `npm run agent:e2e` passed 54/54 browser tests in
+16.6 minutes, including all Journey regressions. At 800×600 the start,
+retreat, lower-floor route, two waiting positions and absent-after-exit view
+remain readable; Grete no longer overlaps the representative while leaving.
+The provisional art, existing >500 kB bundle warning and software weather
+diagnostic (7.1–7.4 fps with weather, 9.4 without) remain outside this task.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does

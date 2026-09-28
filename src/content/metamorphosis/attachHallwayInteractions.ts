@@ -4,13 +4,16 @@ import { SpatialInteractions, type SpatialAction } from "../../engine/interactio
 import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey";
 import { attachNpcRoutine } from "../../engine/npc/attachNpcRoutine";
 import { metamorphosisHallway as hall, hallwayInteractionRange, hallwayReactionRange,
-  hallwayReactionStep, hallwayNpcRange, clerkDeparture } from "../../story/metamorphosis/hallway";
+  hallwayReactionStep, hallwayNpcRange, clerkDeparture, greteRetreat,
+  greteRetreatTarget } from "../../story/metamorphosis/hallway";
 import { metamorphosisText as copy } from "../../story/metamorphosis/text";
 import { createMetamorphosisConversationView } from "../../ui/metamorphosisConversationView";
 import { metamorphosisHallwayClerk, metamorphosisHallwayGrete,
+  metamorphosisHallwayGreteAfter,
   metamorphosisHallwayPicture } from "../labels/metamorphosis.label";
-import { hasClerkLeft, hasClerkLeaving, hasClerkSeenGregor, hasGreteSeenGregor,
-  markClerkLeft, markClerkSawGregor, markGreteSawGregor } from "./state";
+import { familyResponse, greteResponse, hasClerkLeft, hasClerkLeaving, hasClerkSeenGregor,
+  hasGreteLeft, hasGreteReacted, hasGreteSeenGregor,
+  markClerkLeft, markClerkSawGregor, markGreteLeft, markGreteSawGregor } from "./state";
 
 export function attachHallwayInteractions(presentation: Container, actor: Container,
   ticker: Ticker, surface: HTMLCanvasElement, returnToRoom: () => void) {
@@ -27,14 +30,40 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   };
   setGreteReactionPose();
   setClerkReactionPose();
+  const removeGrete = () => {
+    if (!grete.parent) return;
+    grete.parent.removeChild(grete);
+    grete.destroy({ children: true });
+  };
   const removeClerk = () => {
     if (!clerk.parent) return;
     clerk.parent.removeChild(clerk);
     clerk.destroy({ children: true });
   };
-  // Sound and renderer positions are transient. An in-flight save settles on restore.
+  // Renderer positions are transient. An in-flight save settles on restore.
+  const greteSettledOnRestore = hasGreteReacted();
+  const greteLeaves = greteResponse() === "leave";
+  const familyAnswered = familyResponse() === "answered";
+  if (hasGreteReacted() && greteLeaves && !hasGreteLeft()) markGreteLeft();
+  if (hasGreteLeft()) removeGrete();
+  else if (hasGreteReacted()) {
+    const target = greteRetreatTarget(false, familyAnswered);
+    grete.position.set(target.x, target.y);
+  }
   if (hasClerkLeaving() && !hasClerkLeft()) markClerkLeft();
   if (hasClerkLeft()) removeClerk();
+  let greteRetreatStarted = false;
+  let greteReady = greteSettledOnRestore && !hasGreteLeft();
+  const beginGreteRetreat = () => {
+    if (greteRetreatStarted || greteSettledOnRestore || !hasGreteReacted() || hasGreteLeft()) return;
+    greteRetreatStarted = true;
+    attachNpcRoutine(grete, ticker,
+      greteRetreat({ x: grete.x, y: grete.y }, greteLeaves, familyAnswered), (state) => {
+        if (state.mode !== "idle" || (greteLeaves && state.stopIndex !== 2)) return;
+        if (greteLeaves) { markGreteLeft(); removeGrete(); }
+        else greteReady = true;
+      });
+  };
   let retreatStarted = false;
   const beginRetreat = () => {
     if (retreatStarted || hasClerkLeft() || !hasClerkLeaving()) return;
@@ -46,7 +75,8 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
     });
   };
   const hallwayLabels = new Set([metamorphosisHallwayPicture.id,
-    metamorphosisHallwayGrete.id, metamorphosisHallwayClerk.id]);
+    metamorphosisHallwayGrete.id, metamorphosisHallwayGreteAfter.id,
+    metamorphosisHallwayClerk.id]);
   const active = () => narration.labels.opened.some(({ label }) => hallwayLabels.has(label));
   const run = async (action: () => Promise<unknown>) => {
     if (busy || disposed) return;
@@ -63,8 +93,10 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
         void run(() => narration.call(metamorphosisHallwayPicture, {}));
       } },
     { id: "grete", prompt: copy.hallwayGretePrompt, target: () => grete.position,
-      range: hallwayNpcRange, execute: () => {
-        void run(() => narration.call(metamorphosisHallwayGrete, {}));
+      range: hallwayNpcRange,
+      enabled: () => !hasGreteLeft() && (!hasGreteReacted() || greteReady), execute: () => {
+        void run(() => narration.call(hasGreteReacted() ?
+          metamorphosisHallwayGreteAfter : metamorphosisHallwayGrete, {}));
       } },
     { id: "clerk", prompt: copy.hallwayClerkPrompt, target: () => clerk.position,
       range: hallwayNpcRange, enabled: () => !hasClerkLeaving() && !hasClerkLeft(), execute: () => {
@@ -73,7 +105,8 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   ];
   const interactions = new SpatialInteractions(() => actor.position, actions);
   const reactToGregor = () => {
-    if (!hasGreteSeenGregor() && interactions.inRange(() => grete.position, hallwayReactionRange)) {
+    if (!hasGreteReacted() && !hasGreteSeenGregor() &&
+      interactions.inRange(() => grete.position, hallwayReactionRange)) {
       markGreteSawGregor();
       setGreteReactionPose();
     }
@@ -95,6 +128,7 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
     { interact, advance: interact, choose: () => {} }, "Interacciones del pasillo");
   const render = () => {
     reactToGregor();
+    beginGreteRetreat();
     beginRetreat();
     const isActive = active();
     const available = isActive ? undefined : interactions.available();
