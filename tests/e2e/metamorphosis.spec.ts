@@ -552,6 +552,129 @@ for (const path of [
   });
 }
 
+test("Gregor meets his father only after the hallway settles, then restores each encounter phase", async ({ page }, testInfo) => {
+  test.setTimeout(150_000);
+  await enterHallway(page, "2", "1", "1");
+  await page.setViewportSize({ width: 800, height: 600 });
+  const inspectNpc = () => useProbe<{
+    father: { x: number; y: number; facing: number } | null;
+    fatherArrived: boolean; fatherSpoken: boolean;
+    grete: { x: number } | null; greteReacted: boolean; clerkLeft: boolean;
+  }>(page, "inspectHallwayNpcs");
+  expect((await inspectNpc()).father).toBeNull();
+  await place(page, 1230, 730);
+  expect((await inspectNpc()).fatherArrived).toBe(false);
+  await page.screenshot({ path: testInfo.outputPath("father-before-prerequisites-800x600.png") });
+  await place(page, 1010, 700);
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Dijo que estaba enfermo");
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await expect.poll(async () => (await inspectNpc()).clerkLeft, { timeout: 15_000 }).toBe(true);
+  await place(page, 1230, 730);
+  expect((await inspectNpc()).fatherArrived).toBe(false);
+  await place(page, 700, 700);
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("No dijiste nada");
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await expect.poll(async () => (await inspectNpc()).greteReacted).toBe(true);
+  expect((await inspectNpc()).grete!.x).toBeLessThan(970);
+  await place(page, 1230, 730);
+  expect((await inspectNpc()).fatherArrived).toBe(false);
+  await expect.poll(async () => (await inspectNpc()).grete?.x).toBe(970);
+  expect((await inspectNpc()).father).toBeNull();
+  await place(page, 700, 700);
+  const beforeArrival = await useProbe<string>(page, "saveRoom");
+  await place(page, 1230, 730);
+  await expect.poll(async () => (await inspectNpc()).fatherArrived).toBe(true);
+  const entered = await inspectNpc();
+  expect(entered.father).not.toBeNull();
+  expect(entered.father!.x).toBeGreaterThan(1380);
+  expect(entered.fatherSpoken).toBe(false);
+  const duringEntry = await useProbe<string>(page, "saveRoom");
+  await page.screenshot({ path: testInfo.outputPath("father-entry-800x600.png") });
+  await page.keyboard.down("a");
+  await expect.poll(async () => (await useProbe<{ position: { x: number } }>(page, "inspectSpace")).position.x)
+    .toBeLessThan(1200);
+  await page.keyboard.up("a");
+  await expect.poll(async () => (await inspectNpc()).father?.x).toBeLessThan(entered.father!.x - 30);
+  await page.screenshot({ path: testInfo.outputPath("father-approach-800x600.png") });
+  await expect.poll(async () => (await inspectNpc()).father?.x).toBe(1380);
+  expect((await inspectNpc()).father?.facing).toBe(-1);
+  await page.screenshot({ path: testInfo.outputPath("father-waiting-800x600.png") });
+  const beforeSpeech = await useProbe<string>(page, "saveRoom");
+  await place(page, 1280, 745);
+  await expect(page.getByTestId("metamorphosis-prompt")).toContainText("padre");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Padre de Gregor");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Gregor");
+  await page.screenshot({ path: testInfo.outputPath("father-dialogue-800x600.png") });
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-speaker")).toHaveText("Gregor Samsa");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Vuelve a tu habitación");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-dialogue")).toBeHidden();
+  expect((await inspectNpc()).fatherSpoken).toBe(true);
+  const afterSpeech = await useProbe<string>(page, "saveRoom");
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Vuelve a tu habitación");
+  await page.keyboard.press("e");
+  await useProbe(page, "restoreSpace", beforeArrival);
+  expect((await inspectNpc()).father).toBeNull();
+  expect((await inspectNpc()).fatherArrived).toBe(false);
+  await place(page, 1230, 730);
+  await expect.poll(async () => (await inspectNpc()).fatherArrived).toBe(true);
+  await useProbe(page, "restoreSpace", duringEntry);
+  expect((await inspectNpc()).father).toEqual({ x: 1380, y: 760, facing: -1 });
+  expect((await inspectNpc()).fatherSpoken).toBe(false);
+  await useProbe(page, "restoreSpace", beforeSpeech);
+  expect((await inspectNpc()).father).toEqual({ x: 1380, y: 760, facing: -1 });
+  expect((await inspectNpc()).fatherSpoken).toBe(false);
+  await place(page, 1280, 745);
+  await page.keyboard.press("e");
+  await expect(page.getByTestId("metamorphosis-line")).toContainText("Gregor");
+  await useProbe(page, "restoreSpace", afterSpeech);
+  expect((await inspectNpc()).father).toEqual({ x: 1380, y: 760, facing: -1 });
+  expect((await inspectNpc()).fatherSpoken).toBe(true);
+  await place(page, 370, 680);
+  await page.keyboard.press("e");
+  expect(await useProbe<string>(page, "currentSpaceLayer")).toBe("room");
+  await place(page, 1480, 650);
+  await page.keyboard.press("e");
+  expect(await useProbe<string>(page, "currentSpaceLayer")).toBe("hallway");
+  expect((await inspectNpc()).father).toEqual({ x: 1380, y: 760, facing: -1 });
+  expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+});
+
+test("Grete's departure also unlocks the father's one-time arrival", async ({ page }) => {
+  test.setTimeout(120_000);
+  await enterHallway(page, "1", "1", "2");
+  const inspectNpc = () => useProbe<{
+    father: { x: number } | null; fatherArrived: boolean;
+    greteLeft: boolean; clerkLeft: boolean;
+  }>(page, "inspectHallwayNpcs");
+  await place(page, 700, 700);
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await expect.poll(async () => (await inspectNpc()).greteLeft, { timeout: 30_000 }).toBe(true);
+  await place(page, 1230, 730);
+  expect((await inspectNpc()).father).toBeNull();
+  await place(page, 1010, 700);
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await page.keyboard.press("e");
+  await expect.poll(async () => (await inspectNpc()).clerkLeft, { timeout: 15_000 }).toBe(true);
+  await place(page, 1230, 730);
+  await expect.poll(async () => (await inspectNpc()).fatherArrived).toBe(true);
+  await expect.poll(async () => (await inspectNpc()).father?.x).toBe(1380);
+  await place(page, 700, 700);
+  await place(page, 1230, 730);
+  expect((await inspectNpc()).father?.x).toBe(1380);
+});
+
 for (const path of [
   { family: "1", clerk: "1", grete: "1", greteLine: "Te oí responder",
     greteMemory: "Dije que me quedaría", clerkLine: "Dijo que estaba enfermo",

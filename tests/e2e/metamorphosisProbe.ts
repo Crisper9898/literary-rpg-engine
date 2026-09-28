@@ -45,10 +45,14 @@ export function inspectHallwayNpcs() {
   const layer = canvas.layers.get("metamorphosis-hallway");
   const grete = layer?.getChildByLabel("hallway-grete", true);
   const clerk = layer?.getChildByLabel("hallway-clerk", true);
+  const father = layer?.getChildByLabel("hallway-father", true);
   const actor = (npc: typeof grete) => npc ?
     { x: npc.x, y: npc.y, facing: npc.scale.x } : null;
   return {
     grete: actor(grete), clerk: actor(clerk),
+    father: father?.visible ? { ...actor(father), facing: father.getChildAt(0).scale.x } : null,
+    fatherArrived: storage.get<boolean>("metamorphosis.fatherArrived") === true,
+    fatherSpoken: storage.get<boolean>("metamorphosis.fatherSpoken") === true,
     greteSawGregor: storage.get<boolean>("metamorphosis.greteSawGregor") === true,
     greteReacted: storage.get<boolean>("metamorphosis.greteReacted") === true,
     greteLeft: storage.get<boolean>("metamorphosis.greteLeft") === true,

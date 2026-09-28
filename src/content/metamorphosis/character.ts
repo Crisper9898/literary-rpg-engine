@@ -1,5 +1,6 @@
 import { CharacterBaseModel, RegisteredCharacters } from "@drincs/pixi-vn";
 import { clerkIdentity, gregorIdentity, greteIdentity } from "../../story/metamorphosis/room";
+import { fatherIdentity } from "../../story/metamorphosis/hallway";
 
 export const gregor = new CharacterBaseModel(gregorIdentity.id, {
   name: gregorIdentity.name, color: gregorIdentity.color,
@@ -15,3 +16,8 @@ export const clerk = new CharacterBaseModel(clerkIdentity.id, {
   name: clerkIdentity.name, color: clerkIdentity.color,
 });
 RegisteredCharacters.add(clerk);
+
+export const father = new CharacterBaseModel(fatherIdentity.id, {
+  name: fatherIdentity.name, color: fatherIdentity.color,
+});
+RegisteredCharacters.add(father);

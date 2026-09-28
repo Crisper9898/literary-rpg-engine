@@ -54,7 +54,10 @@ export function createMetamorphosisHallway() {
     hall.anchors.grete.y, 0x826f58, 0x584336);
   const clerk = createHallwayPerson("hallway-clerk", "Oficina", hall.anchors.clerk.x,
     hall.anchors.clerk.y, 0x4b5561, 0x353b41);
-  layers.actors.addChild(actor, grete, clerk);
+  const father = createHallwayPerson("hallway-father", "Padre", hall.anchors.fatherEntry.x,
+    hall.anchors.fatherEntry.y, 0x493c3e, 0x92908a);
+  father.visible = false;
+  layers.actors.addChild(actor, grete, clerk, father);
   presentation.addChild(new Text({ text: "EL PASILLO\nLa metamorfosis",
     x: 155, y: 90, style: { fontFamily: "Georgia", fontSize: 47, fill: 0xe4d6c5 } }));
   presentation.addChild(new Text({ text: "WASD / FLECHAS · Camina     E · Interactúa y regresa",

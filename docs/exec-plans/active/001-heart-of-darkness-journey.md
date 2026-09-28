@@ -295,6 +295,38 @@ remain readable; Grete no longer overlaps the representative while leaving.
 The provisional art, existing >500 kB bundle warning and software weather
 diagnostic (7.1–7.4 fps with weather, 9.4 without) remain outside this task.
 
+## Gregor's father enters the hallway — 2026-09-27
+
+User-directed brief Metamorphosis transition. The pending Journey art task
+remains unchanged. This does not start the confrontation or apple episode.
+
+- [x] Keep the father hidden on initial hallway entry. After the representative
+  has left and Grete has finished her physical reaction, a fresh entry into a
+  small zone near the picture marks `metamorphosis.fatherArrived` in Pixi'VN
+  storage. Entering that zone before either condition does nothing. Gregor
+  remains controllable as the father walks in from the far doorway using the
+  existing NPC routine.
+- [x] At (1380,760), the father waits away from the room door, faces Gregor,
+  and offers a short three-line Pixi'VN exchange through `E`. Completing it
+  marks `metamorphosis.fatherSpoken`; later interactions have one short line.
+  No new choice, scene, engine mechanism or collision system was added.
+- [x] A pre-arrival save keeps the father hidden. A save during entry settles
+  him at the final position on restore, with the first dialogue still
+  available. Saves before and after talking preserve the appropriate dialogue
+  and prevent a second entrance. Room-to-hallway re-entry retains the actor.
+- [x] Browser-test prerequisite order, both Grete outcomes, one-time arrival,
+  continued movement, dialogue, all save phases, room return and Journey
+  regressions. Inspect entry, waiting positions and dialogue at 800×600.
+
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and production build. `npm run agent:e2e` passed 56/56 browser tests in
+17.9 minutes, including all Journey regressions. At 800×600, the hidden,
+entering and waiting states and the three-line dialogue are visible and
+legible. The father does not block the room door or overlap Grete; the two
+speakers remain distinguishable at the interaction point. Provisional art,
+the existing >500 kB bundle warning and slow software weather diagnostic
+(6.9–7.0 fps with weather, 9.3 without) remain outside this task.
+
 ## Journey audio listening diagnostics — 2026-09-26
 
 Baseline: `98656f2` on `journey-vertical-slice`. This focused listening aid does

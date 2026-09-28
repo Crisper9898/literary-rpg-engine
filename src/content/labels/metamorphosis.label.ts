@@ -1,8 +1,9 @@
 import { narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
 import { metamorphosisText as lines } from "../../story/metamorphosis/text";
-import { clerk, gregor, grete } from "../metamorphosis/character";
+import { clerk, father, gregor, grete } from "../metamorphosis/character";
 import { clerkResponse, familyResponse, greteResponse, hasSeenWindow,
-  markClerkArrivalHeard, markClerkLeaving, markFamilyActivityHeard, markGreteReacted, setClerkResponse,
+  markClerkArrivalHeard, markClerkLeaving, markFamilyActivityHeard, markFatherSpoken,
+  markGreteReacted, setClerkResponse,
   setFamilyResponse, setGreteResponse } from "../metamorphosis/state";
 import { showMetamorphosisSpace } from "../metamorphosis/showRoom";
 
@@ -138,6 +139,18 @@ export const metamorphosisHallwayClerk = newLabel("metamorphosis-hallway-clerk",
     lines.hallwayClerkAfterExplain : lines.hallwayClerkAfterSilence }; },
   () => { narration.dialogue = { character: clerk, text: lines.hallwayClerkFollowup }; },
   () => { markClerkLeaving(); close(); },
+]);
+
+export const metamorphosisHallwayFather = newLabel("metamorphosis-hallway-father", [
+  () => { narration.dialogue = { character: father, text: lines.hallwayFatherOpening }; },
+  () => { narration.dialogue = { character: gregor, text: lines.hallwayGregorToFather }; },
+  () => { narration.dialogue = { character: father, text: lines.hallwayFatherOrder }; },
+  () => { markFatherSpoken(); close(); },
+]);
+
+export const metamorphosisHallwayFatherAfter = newLabel("metamorphosis-hallway-father-after", [
+  () => { narration.dialogue = { character: father, text: lines.hallwayFatherAfter }; },
+  close,
 ]);
 
 export const metamorphosisStart = newLabel("metamorphosis-start", [

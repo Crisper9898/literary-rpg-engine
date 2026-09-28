@@ -4,16 +4,19 @@ import { SpatialInteractions, type SpatialAction } from "../../engine/interactio
 import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey";
 import { attachNpcRoutine } from "../../engine/npc/attachNpcRoutine";
 import { metamorphosisHallway as hall, hallwayInteractionRange, hallwayReactionRange,
-  hallwayReactionStep, hallwayNpcRange, clerkDeparture, greteRetreat,
+  hallwayReactionStep, hallwayNpcRange, fatherArrivalRange, fatherArrival,
+  clerkDeparture, greteRetreat,
   greteRetreatTarget } from "../../story/metamorphosis/hallway";
 import { metamorphosisText as copy } from "../../story/metamorphosis/text";
 import { createMetamorphosisConversationView } from "../../ui/metamorphosisConversationView";
 import { metamorphosisHallwayClerk, metamorphosisHallwayGrete,
-  metamorphosisHallwayGreteAfter,
+  metamorphosisHallwayGreteAfter, metamorphosisHallwayFather,
+  metamorphosisHallwayFatherAfter,
   metamorphosisHallwayPicture } from "../labels/metamorphosis.label";
 import { familyResponse, greteResponse, hasClerkLeft, hasClerkLeaving, hasClerkSeenGregor,
-  hasGreteLeft, hasGreteReacted, hasGreteSeenGregor,
-  markClerkLeft, markClerkSawGregor, markGreteLeft, markGreteSawGregor } from "./state";
+  hasFatherArrived, hasFatherSpoken, hasGreteLeft, hasGreteReacted, hasGreteSeenGregor,
+  markClerkLeft, markClerkSawGregor, markFatherArrived, markGreteLeft,
+  markGreteSawGregor } from "./state";
 
 export function attachHallwayInteractions(presentation: Container, actor: Container,
   ticker: Ticker, surface: HTMLCanvasElement, returnToRoom: () => void) {
@@ -21,7 +24,8 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   let disposed = false;
   const grete = presentation.getChildByLabel("hallway-grete", true);
   const clerk = presentation.getChildByLabel("hallway-clerk", true);
-  if (!grete || !clerk) throw new Error("The hallway needs both authored NPC actors.");
+  const father = presentation.getChildByLabel("hallway-father", true);
+  if (!grete || !clerk || !father) throw new Error("The hallway needs its authored NPC actors.");
   const setGreteReactionPose = () => {
     grete.x = hall.anchors.grete.x + (hasGreteSeenGregor() ? hallwayReactionStep : 0);
   };
@@ -52,6 +56,26 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   }
   if (hasClerkLeaving() && !hasClerkLeft()) markClerkLeft();
   if (hasClerkLeft()) removeClerk();
+  let fatherReady = hasFatherArrived();
+  const faceFatherTowardGregor = () => {
+    // Flip only the silhouette, so the name beneath him stays readable.
+    father.getChildAt(0).scale.x = actor.x < father.x ? -1 : 1;
+  };
+  if (fatherReady) {
+    father.visible = true;
+    father.position.set(hall.anchors.fatherStop.x, hall.anchors.fatherStop.y);
+    faceFatherTowardGregor();
+  }
+  let fatherEntryStarted = false;
+  const beginFatherEntry = () => {
+    if (fatherEntryStarted || fatherReady || !hasFatherArrived()) return;
+    fatherEntryStarted = true;
+    father.visible = true;
+    attachNpcRoutine(father, ticker, fatherArrival(), (state) => {
+      faceFatherTowardGregor();
+      if (state.mode === "idle") fatherReady = true;
+    });
+  };
   let greteRetreatStarted = false;
   let greteReady = greteSettledOnRestore && !hasGreteLeft();
   const beginGreteRetreat = () => {
@@ -76,7 +100,8 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
   };
   const hallwayLabels = new Set([metamorphosisHallwayPicture.id,
     metamorphosisHallwayGrete.id, metamorphosisHallwayGreteAfter.id,
-    metamorphosisHallwayClerk.id]);
+    metamorphosisHallwayClerk.id, metamorphosisHallwayFather.id,
+    metamorphosisHallwayFatherAfter.id]);
   const active = () => narration.labels.opened.some(({ label }) => hallwayLabels.has(label));
   const run = async (action: () => Promise<unknown>) => {
     if (busy || disposed) return;
@@ -102,8 +127,27 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
       range: hallwayNpcRange, enabled: () => !hasClerkLeaving() && !hasClerkLeft(), execute: () => {
         void run(() => narration.call(metamorphosisHallwayClerk, {}));
       } },
+    { id: "father", prompt: copy.hallwayFatherPrompt, target: () => father.position,
+      range: hallwayNpcRange, priority: 1,
+      enabled: () => hasFatherArrived() && fatherReady, execute: () => {
+        void run(() => narration.call(hasFatherSpoken() ?
+          metamorphosisHallwayFatherAfter : metamorphosisHallwayFather, {}));
+      } },
   ];
   const interactions = new SpatialInteractions(() => actor.position, actions);
+  let fatherZoneArmed = false;
+  const updateFatherArrival = () => {
+    if (hasFatherArrived()) return;
+    const prerequisites = hasClerkLeft() && hasGreteReacted() &&
+      (hasGreteLeft() || (greteResponse() !== "leave" && greteReady));
+    if (!prerequisites) { fatherZoneArmed = false; return; }
+    const inZone = interactions.inRange(() => hall.anchors.fatherTrigger, fatherArrivalRange);
+    if (!inZone) fatherZoneArmed = true;
+    else if (fatherZoneArmed && !active()) {
+      markFatherArrived();
+      beginFatherEntry();
+    }
+  };
   const reactToGregor = () => {
     if (!hasGreteReacted() && !hasGreteSeenGregor() &&
       interactions.inRange(() => grete.position, hallwayReactionRange)) {
@@ -130,6 +174,8 @@ export function attachHallwayInteractions(presentation: Container, actor: Contai
     reactToGregor();
     beginGreteRetreat();
     beginRetreat();
+    updateFatherArrival();
+    beginFatherEntry();
     const isActive = active();
     const available = isActive ? undefined : interactions.available();
     const dialogue = isActive ? narration.dialogue : undefined;
