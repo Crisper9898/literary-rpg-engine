@@ -38,6 +38,7 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
     await page.evaluate(() => window.pixiVN.start("start", {}));
     expect(await inspect()).toEqual(expected);
     await expect(page.locator("#root canvas")).toHaveCount(1);
+    await expect(page.getByTestId("journey-controls-hint")).toHaveCount(1);
   }
 
   for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {
@@ -50,6 +51,18 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
         box.x >= -1 && box.y >= -1 && box.x + box.width <= viewport.width + 1 &&
         box.y + box.height <= viewport.height + 1;
     }).toBe(true);
+    const hint = page.getByTestId("journey-controls-hint");
+    await expect(hint).toBeVisible();
+    const readability = await hint.evaluate((element) => {
+      const fontSize = Number.parseFloat(getComputedStyle(element).fontSize);
+      const bounds = element.getBoundingClientRect();
+      const canvasBounds = document.querySelector("#root canvas")!.getBoundingClientRect();
+      return { fontSize, insideCanvas: bounds.left >= canvasBounds.left - 1 &&
+        bounds.right <= canvasBounds.right + 1 && bounds.top >= canvasBounds.top - 1 &&
+        bounds.bottom <= canvasBounds.bottom + 1 };
+    });
+    expect(readability.fontSize).toBeGreaterThanOrEqual(12);
+    expect(readability.insideCanvas).toBe(true);
     await page.screenshot({ path: testInfo.outputPath(`deck-${viewport.width}.png`) });
   }
   expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);

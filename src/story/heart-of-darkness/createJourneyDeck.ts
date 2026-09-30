@@ -52,7 +52,6 @@ export function createJourneyDeck() {
   const kicker = text("chapter-kicker", "I  /  EL VIAJE", 160, 125, 18, art.brass);
   const title = text("deck-title", "Heart of Darkness", 155, 160, 58, art.paper, true);
   const subtitle = text("deck-subtitle", "Una voz entre el vapor y la orilla", 160, 245, 22, art.mist, true);
-  text("blockout-note", "WASD / FLECHAS · Camina     E · Habla y continúa     1 / 2 · Responde", 160, 993, 17, art.paper);
   const player = layers.actors.getChildByLabel("playerSpawn");
   if (!player) throw new Error("Journey deck is missing its player marker.");
   return { presentation, player, world: layers.root, deckhand, layers,

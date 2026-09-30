@@ -39,8 +39,16 @@ export function createJourneyConversationView(root: HTMLElement, surface: HTMLCa
   const status = document.createElement("p");
   status.className = "journey-dialogue-status";
   status.setAttribute("role", "status");
+  const controlsHint = document.createElement("p");
+  controlsHint.className = "journey-controls-hint";
+  controlsHint.dataset.testid = "journey-controls-hint";
+  for (const label of ["WASD / FLECHAS · Camina", "E · Habla y continúa", "1 / 2 · Responde"]) {
+    const item = document.createElement("span");
+    item.textContent = label;
+    controlsHint.append(item);
+  }
   panel.append(speaker, text, controls, status);
-  hud.append(prompt, panel);
+  hud.append(prompt, panel, controlsHint);
   root.append(hud);
 
   const bind = (button: HTMLButtonElement, action: () => void, signal = listeners.signal) => {

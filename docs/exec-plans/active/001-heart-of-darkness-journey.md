@@ -65,6 +65,23 @@ Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
 
+## Vertical-slice QA: control-legibility pass — 2026-09-30
+
+The first-pass illustrated assets still await separate production and approval.
+As a bounded part of the pending browser QA, Journey's control legend was moved
+from a 17-unit Pixi canvas label (about 7 px at 800×600) to a story-owned DOM
+overlay. The legend now stays at least 12 CSS px at both target resolutions,
+within the canvas frame, and is recreated only once on scene re-entry. This
+does not complete the full vertical-slice QA or the pending art task. The
+weather diagnostic remains about 7 fps with fog and 8.6 fps with fog hidden
+under the software renderer; fog textures and sprites are already reused, so
+no speculative engine or weather refactor was made.
+Final validation: `npm run agent:check` passed typecheck, 89/89 unit tests
+in 19 files and build. The relevant conversation and deck E2E suite passed
+4/4; after the final spacing adjustment, the deck E2E passed again (1/1).
+Fresh 1366×768 and 800×600 captures confirm the grouped controls remain
+inside the canvas and clear of the actor silhouettes and interaction prompt.
+
 ## Deck encounter visual rescue — 2026-09-28
 
 The selected vertical slice is the walk-and-talk encounter beside the cargo

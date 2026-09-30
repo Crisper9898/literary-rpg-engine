@@ -9,6 +9,25 @@
   container-type: inline-size;
 }
 .journey-conversation [hidden] { display: none; }
+.journey-controls-hint {
+  position: absolute;
+  left: 5%;
+  bottom: 2%;
+  max-width: 90%;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+  row-gap: .2em;
+  margin: 0;
+  padding: .4em .65em;
+  color: #eee5cf;
+  background: #111d1cc9;
+  border-left: 2px solid #b89b65;
+  font: 600 clamp(12px, 1.05cqw, 16px)/1.35 Arial, sans-serif;
+  letter-spacing: .025em;
+  text-wrap: balance;
+}
 .journey-dialogue-panel, .journey-talk-prompt {
   position: absolute;
   right: 5%;
