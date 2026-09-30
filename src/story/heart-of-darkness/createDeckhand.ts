@@ -1,4 +1,4 @@
-import { Container, Graphics, Text } from "pixi.js";
+import { Container, Graphics } from "pixi.js";
 import type { NpcRoutineState } from "../../engine/npc/NpcRoutineController";
 import { deckhandIdentity } from "./deckhand";
 import { journeyVisual as art } from "./journeyVisual";
@@ -44,10 +44,6 @@ export function createDeckhand() {
   const nose = new Graphics({ label: "deckhand-nose" }).poly([7, -1, 17, 3, 6, 6]).fill(0x9c8a70);
   head.addChild(nose);
   body.addChild(head);
-  const name = new Text({ label: "deckhand-name", text: deckhandIdentity.name, y: 22,
-    style: { fontFamily: "Georgia", fontSize: 18, fill: art.paper } });
-  name.anchor.set(0.5, 0);
-  actor.addChild(name);
 
   return { actor, pose(state: NpcRoutineState, elapsedMS: number) {
     const walking = state.isMoving;

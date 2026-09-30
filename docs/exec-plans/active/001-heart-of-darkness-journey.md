@@ -57,6 +57,7 @@ configuration.
 - [x] Add basic zone-aware ambience/audio transition.
 - [x] Add save/restore smoke coverage for relevant world state.
 - [x] Rescue the Marlow/deckhand/cargo encounter as one visually directed, inked scene.
+- [x] QA and polish the current inked slice at both target resolutions.
 - [ ] Replace placeholders with first-pass art direction assets.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
@@ -64,6 +65,24 @@ configuration.
 Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
+
+## Current inked-slice QA — 2026-09-30
+
+The full browser suite passed before and after the polish change (56/56 each
+time). Fresh deck, conversation-choice and deep-fog captures at 1366×768 and
+800×600 were inspected. The river, cargo, both characters and dialogue choices
+remain visible; the UI is inside the frame and the fog does not obscure input.
+Small actor name tags on the deck were removed: at 800×600 they were too small
+to read and the sailor's tag crossed the working rope. Character identity
+continues through Pixi'VN dialogue and the approach prompt; no engine or
+gameplay code changed. Browser staging coverage now checks that those tags are
+absent. The encounter art brief was corrected to reserve space for the actual
+upper-left dialogue panel and to describe 800×600's fitted 16:9 canvas, not a
+4:3 crop. `npm run agent:check` passed TypeScript, 89/89 unit tests and build.
+The software-renderer diagnostic remains about 6.9–7 fps with fog versus 8.5
+fps without it; the existing bundle-size warning also remains. This QA covers
+the current inked slice. Repeat visual QA after approved illustration assets
+replace the placeholders; neither remaining plan task is complete yet.
 
 ## Vertical-slice QA: control-legibility pass — 2026-09-30
 

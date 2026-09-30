@@ -30,7 +30,7 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
     return inspectJourneyStaging();
   });
   expect(art).toEqual({ inkedRiver: true, inkedDeck: true, riverBeat: true,
-    cargoBeat: true, foregroundRail: true, marlowHeight: expect.any(Number),
+    cargoBeat: true, foregroundRail: true, noActorNameTags: true, marlowHeight: expect.any(Number),
     deckhandHeight: expect.any(Number) });
   expect(art.marlowHeight).toBeGreaterThan(90);
   expect(art.deckhandHeight).toBeGreaterThan(90);

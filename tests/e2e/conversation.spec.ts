@@ -60,7 +60,7 @@ test("proximity, walking, hearing range and a complete PixiVN conversation coexi
     const url = "/tests/e2e/deckProbe.ts";
     return (await import(url)).inspectJourneyBeat();
   }))
-    .toMatchObject({ river: 0.72, cargo: 0, title: 0.3, playerName: 0, deckhandName: 0 });
+    .toMatchObject({ river: 0.72, cargo: 0, title: 0.3 });
   await page.keyboard.down("a");
   await expect(page.getByTestId("dialogue-continue")).toBeDisabled({ timeout: 12_000 });
   await page.keyboard.up("a");
@@ -113,7 +113,7 @@ test("mouse choices preserve movement and dialogue fits both supported viewports
     const url = "/tests/e2e/deckProbe.ts";
     return (await import(url)).inspectJourneyBeat();
   }))
-    .toMatchObject({ river: 0.12, cargo: 0.8, title: 0.3, playerName: 0, deckhandName: 0 });
+    .toMatchObject({ river: 0.12, cargo: 0.8, title: 0.3 });
   await expect(page.locator("canvas")).toBeFocused();
   await expect.poll(() => playerX(page)).toBeLessThan(before - 30);
   await page.keyboard.up("a");

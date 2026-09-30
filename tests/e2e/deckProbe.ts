@@ -32,6 +32,7 @@ export function inspectJourneyStaging() {
     foregroundRail: foreground.getChildByLabel("deck-fittings") instanceof Graphics,
     marlowHeight: player.getChildByLabel("marlow-art")?.height ?? 0,
     deckhandHeight: deckhand.getChildByLabel("deckhand-body")?.height ?? 0,
+    noActorNameTags: !player.getChildByLabel("marlow-name") && !deckhand.getChildByLabel("deckhand-name"),
   };
 }
 
@@ -39,15 +40,10 @@ export function inspectJourneyBeat() {
   const scene = canvas.layers.get("journey-deck")!;
   const world = scene.getChildByLabel("world") as Container;
   const ground = world.getChildByLabel("ground") as Container;
-  const actors = world.getChildByLabel("actors") as Container;
-  const player = actors.getChildByLabel("playerSpawn") as Container;
-  const deckhand = actors.getChildByLabel("journey-deckhand") as Container;
   return {
     river: ground.getChildByLabel("river-beat-light")!.alpha,
     cargo: ground.getChildByLabel("cargo-beat-light")!.alpha,
     title: scene.getChildByLabel("deck-title")!.alpha,
-    playerName: player.getChildByLabel("marlow-name")!.alpha,
-    deckhandName: deckhand.getChildByLabel("deckhand-name")!.alpha,
   };
 }
 

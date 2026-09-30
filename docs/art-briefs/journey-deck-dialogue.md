@@ -10,9 +10,9 @@ Marlow approaches a working sailor beside the cargo while the steamer continues 
 Coordinated background, middle-distance bank, foreground ship fittings, and two character animation sheets. Deliver separate layers so existing parallax, weather, camera and actor movement remain live. The current code-drawn ink composition defines the blocking until these pieces are approved.
 
 ## Composition
-- Camera/framing: 1920×1080 logical world; preserve a 16:9 safe frame and a central 4:3 crop. View Marlow and the sailor at human scale on the same deck plane, cargo to their right, open water and shore behind.
+- Camera/framing: 1920×1080 logical world in a 16:9 canvas. At an 800×600 browser viewport, the canvas is fitted at 800×450 with letterbox space above and below; compose for that smaller displayed size without relying on a 4:3 crop. View Marlow and the sailor at human scale on the same deck plane, cargo to their right, open water and shore behind.
 - Character position: feet near world y=760; sprites may move independently across the walkable deck. Do not bake characters into background art.
-- Negative space reserved for UI: upper-right 35% of the frame and a narrow margin near the bottom for controls. The river must remain readable behind translucent dialogue, not hide its entire surface.
+- Negative space reserved for UI: upper-left 34% of the canvas for the active dialogue panel, upper-right 35% for the approach prompt, and a narrow margin near the bottom for controls. Keep faces, hands, cargo markings and key river details clear of those regions. The river must remain readable around the translucent dialogue, not hide its entire surface.
 - Foreground elements: inked rail, hanging line and occasional dark vegetation silhouette, on transparent layers with deliberate occlusion of lower legs.
 - Midground elements: angular deck planks, cabin, coiled rope and marked cargo in the same perspective and line weight.
 - Background elements: broad current with broken reflections, a near bank and a distant compressed ridge, each separate and horizontally tileable where movement requires it.
@@ -34,7 +34,7 @@ Coordinated background, middle-distance bank, foreground ship fittings, and two 
 ## Technical output
 - Resolution/aspect ratio: background plates 1920×1080 minimum, with tileable river/bank segments 1920 logical pixels wide; layered transparent PNG/WebP for foreground and actors.
 - Transparent background: yes for bank/foreground/actor sheets; no for distant sky plate.
-- Safe crop zones: all essential faces, cargo and interaction props inside the central 4:3 region; keep the upper-right dialogue region low in visual detail.
+- Safe crop zones: keep essential faces, cargo and interaction props legible when the entire 16:9 canvas is displayed at 800×450 CSS pixels. Leave low-detail space behind the upper-left dialogue panel and the upper-right approach prompt.
 
 ## Forbidden
 Photorealism, glossy 3D look, fashion portrait pose, generic fantasy concept art, plastic skin, random accessories, fake text, mixed visual styles, over-detailed noise. Do not paint foreground plants into the sky plate or bake a dialogue panel into any image.

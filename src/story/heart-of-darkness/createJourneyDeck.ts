@@ -33,12 +33,8 @@ export function createJourneyDeck() {
     .poly([-18, -111, 13, -111, 18, -103, -15, -103]).fill(art.ink)
     .poly([-8, -79, 0, -67, 8, -80]).fill(art.paper)
     .moveTo(4, -94).lineTo(11, -91).stroke({ color: art.ink, width: 2 }));
-  const name = new Text({ label: "marlow-name", text: "Marlow",
-    style: { fontFamily: "Georgia", fontSize: 18, fill: art.paper } });
-  name.anchor.set(0.5, 0);
-  name.y = 22;
   marker.addChild(new Graphics().ellipse(11, 5, 38, 9).fill({ color: art.ink, alpha: 0.58 })
-    .ellipse(-5, 2, 18, 3).fill({ color: art.ember, alpha: 0.14 }), marlow, name);
+    .ellipse(-5, 2, 18, 3).fill({ color: art.ember, alpha: 0.14 }), marlow);
   layers.actors.addChild(marker);
   const deckhand = createDeckhand();
   layers.actors.addChild(deckhand.actor);
@@ -61,8 +57,5 @@ export function createJourneyDeck() {
       kicker.alpha = alpha;
       title.alpha = alpha;
       subtitle.alpha = alpha;
-      name.alpha = beat === "voyage" ? 1 : 0;
-      const deckhandName = deckhand.actor.getChildByLabel("deckhand-name");
-      if (deckhandName) deckhandName.alpha = beat === "voyage" ? 1 : 0;
     } } };
 }
