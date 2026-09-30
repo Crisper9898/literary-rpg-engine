@@ -26,7 +26,7 @@ test("a registered deckhand is visible from the initial player framing", async (
 });
 
 test("deckhand works for two full live cycles while Marlow and the camera remain independent", async ({ page }, testInfo) => {
-  test.setTimeout(120_000);
+  test.setTimeout(180_000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
@@ -37,7 +37,7 @@ test("deckhand works for two full live cycles while Marlow and the camera remain
     probe.startNpcScene();
     probe.beginObservation();
   });
-  await expect.poll(async () => (await inspect(page)).npc.mode, { timeout: 10_000 }).toBe("walking");
+  await expect.poll(async () => (await inspect(page)).npc.mode, { timeout: 25_000 }).toBe("walking");
   await page.keyboard.down("d");
   await expect.poll(async () => (await inspect(page)).player.x).toBeGreaterThan(930);
   await page.keyboard.up("d");

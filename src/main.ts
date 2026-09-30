@@ -9,6 +9,8 @@ if (!root) {
   throw new Error("Missing #root mount element");
 }
 
+const selected = selectedStory(window.location.search);
+
 await Game.init(root, {
   width: 1920,
   height: 1080,
@@ -25,7 +27,6 @@ Game.onEnd(async () => {
   // The vertical slice will replace this with its end-screen transition.
 });
 
-const selected = selectedStory(window.location.search);
 const selector = document.createElement("nav");
 selector.className = "story-selector";
 selector.setAttribute("aria-label", "Elegir obra");

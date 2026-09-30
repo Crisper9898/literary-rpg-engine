@@ -6,11 +6,12 @@ import { createJourneyConversationView } from "../../ui/journeyConversationView"
 import { journeyConversation } from "../labels/journeyConversation.label";
 import { SpatialInteractions, type SpatialAction } from "../../engine/interaction/SpatialInteractions";
 import { bindInteractionKey } from "../../engine/interaction/bindInteractionKey";
+import { journeyVisualBeat, type JourneyVisualBeat } from "../../story/heart-of-darkness/journeyVisual";
 
 /** Spatial/input adapter only: no copied dialogue cursor, choices, history or flags. */
 export function attachJourneyConversation(presentation: Container, player: Container,
   npc: NpcRoutineController, ticker: Ticker, surface: HTMLCanvasElement,
-  inspection?: SpatialAction) {
+  inspection?: SpatialAction, setVisualBeat?: (beat: JourneyVisualBeat) => void) {
   const root = surface.parentElement!;
   const listeners = new AbortController();
   let disposed = false;
@@ -62,7 +63,9 @@ export function attachJourneyConversation(presentation: Container, player: Conta
     const character = dialogue?.character;
     const model = typeof character === "string" ? RegisteredCharacters.get<CharacterBaseModel, string>(character) : character;
     const speaker = model instanceof CharacterBaseModel ? model.name : "";
-    view.render({ active: isActive, inRange: isActive ? inRange() : !!available, busy, error,
+    const beat = journeyVisualBeat(isActive, [dialogue?.text ?? ""].flat().join(" "));
+    setVisualBeat?.(beat);
+    view.render({ active: isActive, inRange: isActive ? inRange() : !!available, busy, error, beat,
       prompt: available?.prompt ?? "Acércate al marinero · E para hablar",
       speaker: speaker ?? "", text: [dialogue?.text ?? ""].flat().join(" "),
       choices: isActive ? (narration.choices.list ?? []).map((choice) => [choice.text].flat().join(" ")) : [],

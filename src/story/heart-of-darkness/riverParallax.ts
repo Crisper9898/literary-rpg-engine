@@ -3,6 +3,13 @@ import { Graphics } from "pixi.js";
 // Authored placeholder tiles: all filled shorelines meet at equal heights on
 // both ends. Only scenery travels; the vessel and its fittings stay in the world.
 const period = 1920;
+// Compress the upper landscape into an inked horizon, leaving a broad passage
+// of visible water behind the ship rather than a thin decorative stripe.
+const riverFraming = (draw: () => Graphics) => () => {
+  const tile = draw();
+  tile.scale.y = 0.82;
+  return tile;
+};
 
 function distantRidge(): Graphics {
   return new Graphics({ label: "distant-ridge-art" })
@@ -22,15 +29,19 @@ function farVegetation(): Graphics {
       1010, 451, 1215, 445, 1410, 453, 1600, 443, 1770, 450,
       1920, 447, 1920, 490, 0, 490]).fill(0x203b36);
   for (const [x, y, size] of [
-    [90, 433, 25], [190, 439, 19], [355, 418, 30], [440, 429, 22],
-    [600, 438, 23], [790, 414, 31], [910, 432, 21], [1080, 427, 25],
-    [1230, 417, 31], [1360, 436, 22], [1540, 420, 29], [1695, 436, 21],
-    [1820, 427, 25],
+    [90, 433, 25], [250, 440, 16], [355, 418, 30], [485, 430, 18],
+    [655, 441, 20], [790, 414, 31], [970, 433, 18], [1080, 427, 25],
+    [1280, 417, 31], [1450, 439, 19], [1580, 420, 29], [1760, 436, 22],
+    [1850, 427, 25],
   ]) {
-    art.poly([x - 4, 473, x - 2, y - 8, x + 4, y - 10, x + 6, 473])
-      .fill(0x203b36)
-      .ellipse(x, y, size * 1.6, size * 0.7).fill(0x233f38)
-      .ellipse(x - size * 0.4, y - size * 0.4, size, size * 0.55).fill(0x233f38);
+    art.poly([x - 4, 473, x - 3, y - 10, x + 3, y - 8, x + 6, 473])
+      .fill(0x172e2a)
+      .poly([x - size * 1.5, y + 4, x - size * 1.2, y - size * 0.25,
+        x - size * 0.9, y - size * 0.48, x - size * 0.6, y - size * 0.42,
+        x - size * 0.35, y - size * 0.8, x, y - size * 0.74,
+        x + size * 0.25, y - size * 0.95, x + size * 0.55, y - size * 0.5,
+        x + size * 0.9, y - size * 0.45, x + size * 1.4, y + 6])
+      .fill(0x233f38);
   }
   return art;
 }
@@ -106,9 +117,9 @@ function foregroundReeds(): Graphics {
 
 /** Units/second toward the stern; camera depth is independent of voyage speed. */
 export const journeyRiverLayers = [
-  { id: "distant-ridge", period, speed: 5, depth: { x: 0.08, y: 1 }, placement: "environment", createTile: distantRidge },
-  { id: "far-vegetation", period, speed: 14, depth: { x: 0.25, y: 1 }, placement: "environment", createTile: farVegetation },
-  { id: "near-bank", period, speed: 30, depth: { x: 0.5, y: 1 }, placement: "environment", createTile: nearBank },
-  { id: "river-current", period, speed: 58, depth: { x: 0.8, y: 1 }, placement: "environment", createTile: riverSurface },
+  { id: "distant-ridge", period, speed: 5, depth: { x: 0.08, y: 1 }, placement: "environment", createTile: riverFraming(distantRidge) },
+  { id: "far-vegetation", period, speed: 14, depth: { x: 0.25, y: 1 }, placement: "environment", createTile: riverFraming(farVegetation) },
+  { id: "near-bank", period, speed: 30, depth: { x: 0.5, y: 1 }, placement: "environment", createTile: riverFraming(nearBank) },
+  { id: "river-current", period, speed: 58, depth: { x: 0.8, y: 1 }, placement: "environment", createTile: riverFraming(riverSurface) },
   { id: "foreground-reeds", period, speed: 90, depth: { x: 1.15, y: 1 }, placement: "foreground", createTile: foregroundReeds },
 ] as const;

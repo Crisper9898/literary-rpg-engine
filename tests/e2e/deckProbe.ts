@@ -1,8 +1,9 @@
 import { canvas } from "@drincs/pixi-vn";
-import { UPDATE_PRIORITY, type Container, type Ticker } from "pixi.js";
+import { Graphics, UPDATE_PRIORITY, type Container, type Ticker } from "pixi.js";
 
 // Served only by Vite during E2E, never imported into the application bundle.
 export function inspectDeck() {
+  if (!document.querySelector("#root canvas")) return null;
   const layer = canvas.layers.get("journey-deck");
   if (!layer) return null;
   const world = layer.getChildByLabel("world") as Container;
@@ -11,6 +12,42 @@ export function inspectDeck() {
     layers: world.children.map((child) => child.label),
     actors: actors.children.map((child) => ({ id: child.label, x: child.x, y: child.y })),
     title: layer.getChildByLabel("deck-title")?.label,
+  };
+}
+
+export function inspectJourneyStaging() {
+  const scene = canvas.layers.get("journey-deck")!;
+  const world = scene.getChildByLabel("world") as Container;
+  const actors = world.getChildByLabel("actors") as Container;
+  const environment = world.getChildByLabel("environment") as Container;
+  const player = actors.getChildByLabel("playerSpawn") as Container;
+  const deckhand = actors.getChildByLabel("journey-deckhand") as Container;
+  const ground = world.getChildByLabel("ground") as Container;
+  const foreground = world.getChildByLabel("foreground") as Container;
+  return {
+    inkedRiver: environment.getChildByLabel("river-base") instanceof Graphics,
+    inkedDeck: ground.getChildByLabel("deck-surface") instanceof Graphics,
+    riverBeat: ground.getChildByLabel("river-beat-light") instanceof Graphics,
+    cargoBeat: ground.getChildByLabel("cargo-beat-light") instanceof Graphics,
+    foregroundRail: foreground.getChildByLabel("deck-fittings") instanceof Graphics,
+    marlowHeight: player.getChildByLabel("marlow-art")?.height ?? 0,
+    deckhandHeight: deckhand.getChildByLabel("deckhand-body")?.height ?? 0,
+  };
+}
+
+export function inspectJourneyBeat() {
+  const scene = canvas.layers.get("journey-deck")!;
+  const world = scene.getChildByLabel("world") as Container;
+  const ground = world.getChildByLabel("ground") as Container;
+  const actors = world.getChildByLabel("actors") as Container;
+  const player = actors.getChildByLabel("playerSpawn") as Container;
+  const deckhand = actors.getChildByLabel("journey-deckhand") as Container;
+  return {
+    river: ground.getChildByLabel("river-beat-light")!.alpha,
+    cargo: ground.getChildByLabel("cargo-beat-light")!.alpha,
+    title: scene.getChildByLabel("deck-title")!.alpha,
+    playerName: player.getChildByLabel("marlow-name")!.alpha,
+    deckhandName: deckhand.getChildByLabel("deckhand-name")!.alpha,
   };
 }
 

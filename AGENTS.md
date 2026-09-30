@@ -88,3 +88,71 @@ Read the relevant instructions and plan after this summary; explicit user scope
 takes precedence over the next task printed by the command.
 
 The architecture is approved for implementation with Pixi'VN as the foundation.
+
+<!-- ART_DIRECTOR_ADDENDUM_V1 -->
+# ART DIRECTION ADDENDUM — Literary RPG Engine
+
+These rules are mandatory for tasks touching visuals, scene composition, UI, character sprites, backgrounds, lighting, transitions, or asset integration.
+
+## North-star benchmark
+The existing visual presentation of **La metamorfosis** is the minimum acceptable quality bar. Do not replace its strongest visual ideas with generic AI-looking assets. The target is to equal or exceed it in cohesion, atmosphere, staging, readability, and narrative intent.
+
+The game must feel like a handcrafted literary graphic novel, not a collage of unrelated AI images.
+
+## Core rule
+**Codex is the integrator and visual systems engineer, not the illustrator.**
+
+Never solve an art problem by dropping a random generated PNG into a scene. If a required asset does not exist, create a precise art brief in `docs/art-briefs/` using `docs/ASSET_BRIEF_TEMPLATE.md` and do not substitute a random placeholder unless the user explicitly approves one.
+
+## Shared studio language
+- 2D graphic-novel / illustrated-theatre presentation.
+- Hand-painted or inked backgrounds with deliberate composition.
+- Strong silhouette design and controlled limited palettes.
+- High contrast, cinematic motivated lighting.
+- Slightly exaggerated expressions and poses.
+- Characters must feel drawn for the same game as their environments.
+- UI must feel editorial, literary and cinematic rather than app-like.
+- Every visual element must reinforce the current narrative beat.
+
+Never use photorealistic cut-out people over illustrated backgrounds, glossy 3D aesthetics, inconsistent line weights, floating ungrounded PNGs, arbitrary character scale, fake text inside generated images, mixed art styles, plastic skin, over-detailed fabric, random accessories, or generic AI concept-art assets.
+
+## Story identities
+### La metamorfosis
+Black, dirty ivory, tobacco brown, muted gray, blood red. Claustrophobic expressionism, domestic horror, doors, shadows, intrusive silhouettes and oppressive geometry. Existing strong art is protected.
+
+### Frankenstein
+Charcoal, midnight blue, cold cyan/electric blue, oxidized bronze and candle amber. Romantic Gothic, obsession, sublime nature and scientific sacrilege. The Creature must be tragic and expressive, never a generic zombie.
+
+### Heart of Darkness
+Soot black, aged paper, swamp green, muddy ochre, fog gray and ember orange. Oppressive heat, uncertainty and river-as-labyrinth. Fog, reflections, vegetation silhouettes and distant fires.
+
+## Scene composition
+For every major scene:
+1. Establish foreground, midground and background when appropriate.
+2. Place the focal character for the narrative beat, not from a fixed template.
+3. Use lighting and contrast to direct attention.
+4. Ground characters with contact shadow, occlusion, environmental overlap or compatible lighting.
+5. Do not cover important environmental storytelling with UI.
+6. Dialogue UI should normally occupy about the lower 20–28% of desktop frames.
+7. Avoid repeating `background + character pasted on right + black dialogue box` as a universal layout.
+8. When emotion changes, create a visual change: framing, crop, lighting, pose, overlay or background state.
+
+## Technical integration
+Before modifying visuals, audit current assets, dimensions, references, layout, layer order and responsive behavior at 1366x768 and 800x600. Do not hardcode story art into `src/engine/`. Prefer story/scene visual manifests or configuration.
+
+## Visual QA gate
+A scene is not finished until visually checked at 1366x768 and 800x600. Reject it if the character feels pasted on, styles clash, focal point is unclear, UI competes with the art, scaling creates awkward empty zones, characters crop accidentally, or the scene is less atmospheric than the La metamorfosis benchmark.
+
+## Visual-refactor workflow
+1. Audit first.
+2. Diagnose the five largest visual problems.
+3. Select one representative scene as the vertical slice.
+4. Refactor that scene only.
+5. Capture and inspect both target resolutions.
+6. Compare against the benchmark.
+7. Only then propagate the visual system.
+8. Run existing unit/build/E2E checks before committing.
+9. Create one coherent local commit; do not push unless explicitly requested.
+
+See `docs/ART_BIBLE.md`, `docs/VISUAL_QA_CHECKLIST.md`, and `docs/ASSET_BRIEF_TEMPLATE.md`.
+<!-- /ART_DIRECTOR_ADDENDUM_V1 -->

@@ -12,39 +12,60 @@
 .journey-dialogue-panel, .journey-talk-prompt {
   position: absolute;
   right: 5%;
-  top: 10%;
-  width: 40%;
+  top: 7%;
+  width: 35%;
   box-sizing: border-box;
   pointer-events: auto;
 }
 .journey-dialogue-panel {
-  padding: clamp(12px, 1.8cqw, 28px);
+  left: 5%;
+  right: auto;
+  width: 34%;
+  padding: clamp(12px, 1.5cqw, 22px);
   color: #eee5cf;
-  background: linear-gradient(115deg, #182726f7, #101b1eeb);
-  border: 1px solid #b9af7b66;
-  border-left: 3px solid #c3ac79;
-  border-radius: 2px 22px 3px 14px;
-  box-shadow: 0 12px 35px #050b0d66;
+  background: linear-gradient(125deg, #192b28f0, #111d1ced);
+  border: 1px solid #b89b6580;
+  border-left: 2px solid #b89b65;
+  border-radius: 1px;
+  box-shadow: 12px 16px 0 #101d1c55;
+}
+.journey-dialogue-panel::before {
+  content: "I   /   LA CUBIERTA";
+  display: block;
+  padding-bottom: .7em;
+  margin-bottom: .8em;
+  color: #b89b65;
+  border-bottom: 1px solid #b89b6577;
+  font: 600 clamp(10px, .9cqw, 13px) Georgia, serif;
+  letter-spacing: .16em;
+}
+.journey-conversation[data-beat="river"] .journey-dialogue-panel {
+  border-left-color: #aab7a1;
+  background: linear-gradient(125deg, #1b3434f0, #111d1ced);
+}
+.journey-conversation[data-beat="cargo"] .journey-dialogue-panel {
+  border-left-color: #d18853;
+  background: linear-gradient(125deg, #302c24f0, #111d1ced);
 }
 .journey-dialogue-panel h2 {
-  margin: 0 0 .65em;
+  margin: 0 0 .45em;
   color: #cfc093;
   font: 600 clamp(12px, 1.25cqw, 18px) Arial, sans-serif;
   letter-spacing: .1em;
 }
 .journey-dialogue-text {
-  margin: 0 0 1em;
-  font: clamp(14px, 1.55cqw, 22px)/1.5 Georgia, serif;
+  margin: 0 0 .75em;
+  font: clamp(14px, 1.45cqw, 20px)/1.42 Georgia, serif;
 }
-.journey-dialogue-controls { display: grid; gap: 7px; }
+.journey-dialogue-controls { display: grid; gap: 5px; }
 .journey-conversation button {
-  padding: .65em .85em;
+  padding: .52em .7em;
   text-align: left;
   color: #eee5cf;
   font: clamp(12px, 1.15cqw, 16px)/1.35 Arial, sans-serif;
-  background: #243834e8;
-  border: 1px solid #9baa8355;
-  border-radius: 3px 9px 3px 7px;
+  background: #243834d9;
+  border: 1px solid #9baa8366;
+  border-radius: 0;
   cursor: pointer;
 }
 .journey-conversation button:enabled:hover { background: #3c5043; border-color: #c3ac79; }
@@ -54,4 +75,12 @@
   margin: 1em 0 0;
   color: #b4c1b4;
   font: clamp(11px, .95cqw, 14px)/1.4 Arial, sans-serif;
+}
+@media (max-width: 850px) {
+  .journey-dialogue-panel { top: 4%; padding: 9px 11px; }
+  .journey-dialogue-panel::before { padding-bottom: .35em; margin-bottom: .4em; }
+  .journey-dialogue-panel h2 { margin-bottom: .2em; }
+  .journey-dialogue-text { margin-bottom: .35em; line-height: 1.3; }
+  .journey-conversation button { padding: .32em .55em; }
+  .journey-dialogue-status { margin-top: .4em; }
 }

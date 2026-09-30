@@ -37,7 +37,8 @@ export function inspectWeather() {
     sharedTextures: new Set(textures).size,
     textureId: textures[0].uid,
     textureWidth: textures[0].width,
-    titleUnaffected: title.parent === presentation && title.alpha === 1 && presentation.children.indexOf(world) < presentation.children.indexOf(title),
+    titleLayered: title.parent === presentation && presentation.children.indexOf(world) < presentation.children.indexOf(title),
+    titleAlpha: title.alpha,
   };
 }
 

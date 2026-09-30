@@ -24,6 +24,16 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
     title: "deck-title",
   };
   expect(await inspect()).toEqual(expected);
+  const art = await page.evaluate(async () => {
+    const probeUrl = "/tests/e2e/deckProbe.ts";
+    const { inspectJourneyStaging } = await import(probeUrl);
+    return inspectJourneyStaging();
+  });
+  expect(art).toEqual({ inkedRiver: true, inkedDeck: true, riverBeat: true,
+    cargoBeat: true, foregroundRail: true, marlowHeight: expect.any(Number),
+    deckhandHeight: expect.any(Number) });
+  expect(art.marlowHeight).toBeGreaterThan(90);
+  expect(art.deckhandHeight).toBeGreaterThan(90);
   for (let attempt = 0; attempt < 2; attempt++) {
     await page.evaluate(() => window.pixiVN.start("start", {}));
     expect(await inspect()).toEqual(expected);

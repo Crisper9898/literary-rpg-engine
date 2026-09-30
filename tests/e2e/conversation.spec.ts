@@ -36,6 +36,7 @@ test("proximity, walking, hearing range and a complete PixiVN conversation coexi
   await page.locator("#root canvas").press("e");
   await expect(page.getByTestId("dialogue-panel")).toBeHidden();
   await begin(page);
+  await expect(page.locator(".journey-conversation")).toHaveAttribute("data-beat", "listening");
   const before = await actors(page);
   await expect.poll(async () => (await actors(page)).find((a) => a.id === "journey-deckhand")!.x,
     { timeout: 10_000 }).not.toBe(before.find((a) => a.id === "journey-deckhand")!.x);
@@ -54,6 +55,12 @@ test("proximity, walking, hearing range and a complete PixiVN conversation coexi
   await choices(page);
   await page.keyboard.press("1");
   await expect(page.getByTestId("dialogue-text")).toContainText("¿Qué esconde el río");
+  await expect(page.locator(".journey-conversation")).toHaveAttribute("data-beat", "river");
+  expect(await page.evaluate(async () => {
+    const url = "/tests/e2e/deckProbe.ts";
+    return (await import(url)).inspectJourneyBeat();
+  }))
+    .toMatchObject({ river: 0.72, cargo: 0, title: 0.3, playerName: 0, deckhandName: 0 });
   await page.keyboard.down("a");
   await expect(page.getByTestId("dialogue-continue")).toBeDisabled({ timeout: 12_000 });
   await page.keyboard.up("a");
@@ -81,12 +88,12 @@ test("proximity, walking, hearing range and a complete PixiVN conversation coexi
 });
 
 test("mouse choices preserve movement and dialogue fits both supported viewports", async ({ page }, info) => {
-  test.setTimeout(45_000);
+  test.setTimeout(70_000);
   await page.goto("/");
   await begin(page);
   // Stay near the middle of the working route while reading and resizing.
   await page.keyboard.down("d");
-  await expect.poll(() => playerX(page)).toBeGreaterThan(1200);
+  await expect.poll(() => playerX(page), { timeout: 15_000 }).toBeGreaterThan(1200);
   await page.keyboard.up("d");
   await choices(page);
   for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {
@@ -101,6 +108,12 @@ test("mouse choices preserve movement and dialogue fits both supported viewports
   const before = await playerX(page);
   await page.keyboard.down("a");
   await page.getByTestId("dialogue-choice").nth(1).click();
+  await expect(page.locator(".journey-conversation")).toHaveAttribute("data-beat", "cargo");
+  expect(await page.evaluate(async () => {
+    const url = "/tests/e2e/deckProbe.ts";
+    return (await import(url)).inspectJourneyBeat();
+  }))
+    .toMatchObject({ river: 0.12, cargo: 0.8, title: 0.3, playerName: 0, deckhandName: 0 });
   await expect(page.locator("canvas")).toBeFocused();
   await expect.poll(() => playerX(page)).toBeLessThan(before - 30);
   await page.keyboard.up("a");

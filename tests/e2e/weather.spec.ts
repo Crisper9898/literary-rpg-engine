@@ -81,7 +81,8 @@ test("clear, humid and deep fog remain gradual and leave dialogue usable at both
     const state = (await inspect(page))!;
     expect(state.fog[0].alpha).toBeGreaterThan(previousAlpha);
     previousAlpha = state.fog[0].alpha;
-    expect(state.titleUnaffected).toBe(true);
+    expect(state.titleLayered).toBe(true);
+    expect(state.titleAlpha).toBe(0.3);
     for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {
       await page.setViewportSize(viewport);
       const panel = (await page.getByTestId("dialogue-panel").boundingBox())!;

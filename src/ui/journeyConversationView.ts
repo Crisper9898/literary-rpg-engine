@@ -1,4 +1,5 @@
 import "./journeyConversation.css";
+import type { JourneyVisualBeat } from "../story/heart-of-darkness/journeyVisual";
 
 export interface ConversationViewState {
   prompt: string;
@@ -9,6 +10,7 @@ export interface ConversationViewState {
   inRange: boolean;
   busy: boolean;
   error?: string;
+  beat: JourneyVisualBeat;
 }
 
 /** Presentation only. Canonical dialogue and choices stay in Pixi'VN. */
@@ -52,6 +54,7 @@ export function createJourneyConversationView(root: HTMLElement, surface: HTMLCa
   let buttons: HTMLButtonElement[] = [];
   return {
     render(state: ConversationViewState) {
+      hud.dataset.beat = state.beat;
       prompt.hidden = state.active;
       const promptText = state.error ? `${state.error} · E para reintentar` : state.prompt;
       if (prompt.textContent !== promptText) prompt.textContent = promptText;

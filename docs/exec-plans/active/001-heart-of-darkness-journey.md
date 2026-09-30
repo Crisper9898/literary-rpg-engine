@@ -56,6 +56,7 @@ configuration.
 - [x] Add one meaningful environmental interaction that changes a later dialogue line.
 - [x] Add basic zone-aware ambience/audio transition.
 - [x] Add save/restore smoke coverage for relevant world state.
+- [x] Rescue the Marlow/deckhand/cargo encounter as one visually directed, inked scene.
 - [ ] Replace placeholders with first-pass art direction assets.
 - [ ] Run complete vertical-slice browser QA and polish pass.
 
@@ -63,6 +64,36 @@ configuration.
 Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
+
+## Deck encounter visual rescue — 2026-09-28
+
+The selected vertical slice is the walk-and-talk encounter beside the cargo
+with the moving river in view. Its previous uncommitted painted backdrop,
+photoreal-grain planks and two cutout people were rejected for incompatible
+style and removed from runtime. A story-owned palette/manifest now directs
+inked sky, wider river passage, separate moving banks, ship planes, shadowed
+full-body silhouettes, foreground rail/line and editorial dialogue treatment.
+The existing movement, NPC routine, parallax, fog, camera and Pixi'VN dialogue
+remain unchanged in ownership. During the river answer the water gains a pale
+glimmer; during the cargo answer the crate takes a warm edge. The large chapter
+title and actor labels recede while dialogue is active, and the panel moves to
+the left so Marlow, the sailor and cargo remain visible at 800×600. The
+coordinated future illustration requirements are in
+`docs/art-briefs/journey-deck-dialogue.md`; no unapproved generated image was
+substituted. This does not mark final illustrated assets or general art polish
+complete. The 1366×768 and 800×600 deck, dialogue-choice and deep-fog captures
+were reviewed: no clipped controls or actor silhouettes, dialogue stays above
+the moving sailor at 800×600, and the river remains the broad background.
+Validation: `npm run agent:check` passed TypeScript, 89/89 unit tests in 19
+files and the Vite build. The relevant joint `npm run agent:e2e --` suite
+(deck, conversation, NPC, parallax, weather) passed 11/11 in 7.3 minutes
+after the unused image-preload test helper was removed.
+The wider suite had passed 54/56 before two test assumptions were corrected:
+the NPC idle transition needs a larger wall-clock window under the already
+known slow software fog renderer, and the title now deliberately fades during
+dialogue. Both failed tests passed again, including within the joint suite.
+The existing >500 kB bundle notice and software fog diagnostic (about 7 fps
+with weather) remain outside this visual-slice scope.
 
 ## La metamorfosis portability scene — 2026-09-26
 
