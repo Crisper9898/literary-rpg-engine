@@ -65,6 +65,17 @@ configuration.
 No unchecked Journey task remains in this plan. The separate human listening
 review of environmental audio is not part of the visual milestone.
 
+## Journey Deck visual handoff — 2026-10-01
+
+The current eleven-piece SVG composition is frozen as a technical reference for
+external final-art production. `docs/art-handoff/journey-deck/` contains clean
+1366×768 and 800×600 master captures, live dialogue and deep-atmosphere captures,
+an eleven-piece contact sheet and `ART-HANDOFF.md` with exact manifest placement,
+frame pivots, parallax depths, layer order and a replacement contract. This
+documentation task made no runtime, SVG, manifest or engine changes. The prior
+"finished SVG" milestone means the code-authored set was completed and tested;
+it does **not** mean the external final-art replacement has been produced.
+
 ## Code-authored deck art — 2026-09-30
 
 The eleven slots in `journeyArtAssets.ts` now load eleven finished, coordinated
