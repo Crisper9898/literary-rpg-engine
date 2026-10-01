@@ -1,12 +1,15 @@
 import { Graphics } from "pixi.js";
+import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
+import { journeyArtAssets, type JourneyArtAsset } from "./journeyArtAssets";
 
 // Authored placeholder tiles: all filled shorelines meet at equal heights on
 // both ends. Only scenery travels; the vessel and its fittings stay in the world.
 const period = 1920;
 // Compress the upper landscape into an inked horizon, leaving a broad passage
 // of visible water behind the ship rather than a thin decorative stripe.
-const riverFraming = (draw: () => Graphics) => () => {
-  const tile = draw();
+const riverFraming = (asset: JourneyArtAsset, draw: () => Graphics) => () => {
+  const tile = createVisualAssetSlot({ label: `${asset}-art`,
+    source: journeyArtAssets[asset], fallback: draw, cacheFallback: true }).container;
   tile.scale.y = 0.82;
   return tile;
 };
@@ -20,7 +23,13 @@ function distantRidge(): Graphics {
     .poly([0, 422, 140, 412, 300, 427, 445, 399, 650, 414, 805, 427,
       975, 416, 1110, 399, 1310, 417, 1480, 411, 1690, 434,
       1820, 415, 1920, 422, 1920, 474, 0, 474])
-    .fill(0x2c4643);
+    .fill(0x2c4643)
+    .poly([0, 438, 330, 424, 720, 440, 1040, 430, 1450, 442, 1920, 434,
+      1920, 463, 0, 463]).fill({ color: 0x142f2d, alpha: 0.22 })
+    .moveTo(120, 410).lineTo(270, 408)
+    .moveTo(990, 399).lineTo(1135, 398)
+    .moveTo(1560, 405).lineTo(1700, 404)
+      .stroke({ color: 0x879280, width: 2, alpha: 0.11 });
 }
 
 function farVegetation(): Graphics {
@@ -42,6 +51,8 @@ function farVegetation(): Graphics {
         x + size * 0.25, y - size * 0.95, x + size * 0.55, y - size * 0.5,
         x + size * 0.9, y - size * 0.45, x + size * 1.4, y + 6])
       .fill(0x233f38);
+    art.moveTo(x - size * 0.45, y + 11).lineTo(x + size * 0.4, y + 12)
+      .stroke({ color: 0x7c8b77, width: 1.5, alpha: 0.11 });
   }
   return art;
 }
@@ -68,6 +79,8 @@ function nearBank(): Graphics {
     // Broken muddy reflections tie the silhouette to the water surface.
     art.poly([x - size, 513, x + size, 511, x + size * 0.5, 516,
       x - size * 0.6, 517]).fill({ color: 0x71806b, alpha: 0.18 });
+    art.moveTo(x - size * 0.65, 524).lineTo(x + size * 0.25, 522)
+      .stroke({ color: 0x9dad91, width: 2, alpha: 0.11 });
   }
   return art;
 }
@@ -117,9 +130,11 @@ function foregroundReeds(): Graphics {
 
 /** Units/second toward the stern; camera depth is independent of voyage speed. */
 export const journeyRiverLayers = [
-  { id: "distant-ridge", period, speed: 5, depth: { x: 0.08, y: 1 }, placement: "environment", createTile: riverFraming(distantRidge) },
-  { id: "far-vegetation", period, speed: 14, depth: { x: 0.25, y: 1 }, placement: "environment", createTile: riverFraming(farVegetation) },
-  { id: "near-bank", period, speed: 30, depth: { x: 0.5, y: 1 }, placement: "environment", createTile: riverFraming(nearBank) },
-  { id: "river-current", period, speed: 58, depth: { x: 0.8, y: 1 }, placement: "environment", createTile: riverFraming(riverSurface) },
-  { id: "foreground-reeds", period, speed: 90, depth: { x: 1.15, y: 1 }, placement: "foreground", createTile: foregroundReeds },
+  { id: "distant-ridge", period, speed: 5, depth: { x: 0.08, y: 1 }, placement: "environment", createTile: riverFraming("distantRidge", distantRidge) },
+  { id: "far-vegetation", period, speed: 14, depth: { x: 0.25, y: 1 }, placement: "environment", createTile: riverFraming("farVegetation", farVegetation) },
+  { id: "near-bank", period, speed: 30, depth: { x: 0.5, y: 1 }, placement: "environment", createTile: riverFraming("nearBank", nearBank) },
+  { id: "river-current", period, speed: 58, depth: { x: 0.8, y: 1 }, placement: "environment", createTile: riverFraming("riverCurrent", riverSurface) },
+  { id: "foreground-reeds", period, speed: 90, depth: { x: 1.15, y: 1 }, placement: "foreground", createTile: () =>
+    createVisualAssetSlot({ label: "foreground-reeds-art", source: journeyArtAssets.foregroundReeds,
+      fallback: foregroundReeds, cacheFallback: true }).container },
 ] as const;

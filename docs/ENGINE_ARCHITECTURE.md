@@ -57,6 +57,25 @@ save file format. The Journey uses this for player coordinates, unwrapped
 travel distance and smoothed atmosphere progress. The engine knows none of
 those keys or what they mean.
 
+## Replaceable scene art
+
+`src/ui/visualAssetSlot.ts` is a presentation-only Pixi container. A work
+provides a `VisualSource` (URL, logical dimensions, placement, optional clip or
+sheet frames with pixel pivots) and a synchronous vector fallback. The fallback
+is visible immediately; an approved image replaces it after loading. A failed
+or late load leaves the fallback in place. The slot is destroyed with its scene.
+It does not own movement, parallax, camera, interactions or narrative state.
+
+Journey keeps its eleven authored sources in
+`src/story/heart-of-darkness/journeyArtAssets.ts`. Its five scrolling strips
+continue to use the existing parallax controller; the slots are only their
+tile artwork. Deck, cargo and actor slots occupy the existing world layers.
+`src/ui/attachActorDepth.ts` orders actors by their feet on each tick so crossing
+them changes overlap naturally. It can be reused by another work without
+importing Journey. To replace an approved plate, add its URL and update only
+that work's manifest/frame map. Keep geometry and dialogue out of the image;
+preserve the same dimensions, registration and transparent layer separation.
+
 ## Environmental audio
 
 `src/engine/audio/SpatialAudioController.ts` is a scene-neutral mixer. Supply a

@@ -66,6 +66,46 @@ Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
 
+## Programmatic art integration — 2026-09-30
+
+The eleven coordinated pieces in `docs/art-briefs/journey-deck-dialogue.md`
+now have story-owned manifest entries and distinct vector fallbacks. Sky/water,
+ridge, far vegetation, near bank, current, reeds, deck/cabin, fittings, cargo,
+Marlow and the sailor remain playable without external illustration. The
+fallbacks share the ink, swamp, ochre and ember palette; additional broken
+water values, plank wear, cabin glazing, warm spill and rope-work gestures give
+the ship and cast more common light and material. Feet-based actor painter
+order, contact/cast shadows and foreground rail overlap anchor the characters
+on the deck. The sailor's coiling rope is visible at his hands during that
+routine. The existing camera, parallax, fog, conversation, NPC and interaction
+controllers remain unchanged; no `src/engine/` file was edited.
+
+`journeyArtAssets.ts` records plate sizes, the current water mask and sheet
+frames/pivots. `src/ui/visualAssetSlot.ts` is a neutral image/fallback loader:
+approved art can replace a slot by configuring its URL and, if needed, frame
+metadata in story content. Static light and contact cues stay in the scene.
+The eleven authored illustrations are still needed to achieve final material
+texture and expressive character poses; therefore the first-pass art task and
+complete vertical-slice polish task remain **unchecked**. The brief is still
+the art handoff. Browser captures at 1366×768 and 800×600 and the full E2E
+suite are the QA gate for this provisional integration.
+
+The initial unmasked vector pass slowed the software renderer and exposed
+movement/camera timeouts. Caching only immutable fallback plates and applying
+the water clip only to loaded images restored the prior performance range;
+no movement or camera thresholds were relaxed. The isolated diagnostic measured
+7.3–7.5 fps with fog and 9.5 fps without. During the full suite it measured
+6.3/8.2 fps, in line with the existing slow software-rendering limitation.
+Final `npm run agent:check` passed TypeScript, 96/96 unit tests in 22 files and
+the production build (the existing >500 kB chunk warning remains). Final
+`npm run agent:e2e` passed 56/56 in 19.2 minutes, including both works,
+dialogue, NPC, parallax, save/restore and weather. Fresh deck, choice and
+deep-fog captures at 1366×768 and 800×600 were inspected: no actor, cargo,
+choice or control is cut off; dialogue and the sailor's work remain readable.
+The coherent limited palette and depth now work as a provisional set, but
+the cast and materials still read as simplified vector theatre compared with
+fully authored illustration. This visual difference is the remaining art task.
+
 ## First-pass art handoff — 2026-09-30
 
 No approved visual asset files are present in the repository. The existing

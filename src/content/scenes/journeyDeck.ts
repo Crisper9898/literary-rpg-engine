@@ -16,6 +16,7 @@ import { attachSpatialAudio } from "../../engine/audio/attachSpatialAudio";
 import { journeyAudioLayers, registerJourneyAudioAssets } from "../../story/heart-of-darkness/journeyAudio";
 import { attachJourneyAudioDiagnostics } from "./attachJourneyAudioDiagnostics";
 import { attachMarlowArt } from "../../story/heart-of-darkness/attachMarlowArt";
+import { attachActorDepth } from "../../ui/attachActorDepth";
 
 const DECK_LAYER = "journey-deck";
 
@@ -26,7 +27,7 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     canvas.layers.remove(DECK_LAYER);
     previous.destroy({ children: true });
   }
-  const { presentation, player, world, deckhand, layers, visual } = createJourneyDeck();
+  const { presentation, player, world, deckhand, layers, visual, marlowVisual } = createJourneyDeck();
   canvas.layers.add(DECK_LAYER, presentation);
   const surface = canvas.app.canvas as HTMLCanvasElement;
   surface.tabIndex = 0;
@@ -36,8 +37,9 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     bounds: journeyDeck.walkableArea,
     ...marlowMovement,
   }, journeyPlayerPosition);
-  attachMarlowArt(player, canvas.app.ticker);
+  attachMarlowArt(player, canvas.app.ticker, marlowVisual.setState);
   const npc = attachNpcRoutine(deckhand.actor, canvas.app.ticker, deckhandRoutine, deckhand.pose);
+  attachActorDepth(layers.actors, canvas.app.ticker, [player, deckhand.actor]);
   const camera = attachWorldCamera(world, canvas.app.ticker, {
     world: journeyDeck.size,
     viewport: journeyDeck.size,

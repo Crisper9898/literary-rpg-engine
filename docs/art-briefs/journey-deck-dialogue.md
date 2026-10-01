@@ -61,6 +61,34 @@ leaves illustrated actors on code-drawn or stylistically incompatible plates.
 Final files may use a different format after approval; that changes only this
 story's asset paths and composition, never `src/engine/`.
 
+## Runtime handoff and provisional status
+
+All eleven pieces now have distinct replaceable slots in
+`src/story/heart-of-darkness/journeyArtAssets.ts`. Until coordinated art is
+approved, each slot draws an ink-and-wash vector composition in the same scene.
+No unapproved image is silently substituted. Add a `url` to a manifest entry
+only after its plate passes the assembled-scene review. The reusable
+`createVisualAssetSlot()` helper in `src/ui/` loads it asynchronously, keeps the
+vector art on failure, and removes late loads when the scene is destroyed.
+
+The first nine entries use 1920×1080 logical plates at world origin. Moving
+strips must keep both horizontal edges seamless. `riverCurrent` is clipped to
+the water band (x 0–1920, y 500–1080). The current ridge, vegetation, near-bank
+and current tiles are compressed vertically to 82% by the story composition;
+deliver art for that assembled height or adjust only that composition when
+reviewing a coordinated set. Deck and cargo remain in world coordinates. The
+foreground fittings overlap actor feet, while contact shadows and warm cabin
+light are independent runtime cues that remain after an art swap.
+
+Both sheets have 160×160 source frames in one horizontal row. Marlow uses
+idle/walkA/walkB (sheet width 480); the sailor uses idle/walkA/walkB/coilA/
+coilB/cargo/lookout (sheet width 1120). Every frame pivots at source pixel
+(80, 142), centered on the floor contact point; the visible figure should
+occupy roughly the upper 110 pixels above that point, matching the current
+character scale. Do not paint a cast shadow into a frame. The engine receives
+only the active frame state and a generic feet-based draw order; character
+positions, task poses and Pixi'VN dialogue are unchanged.
+
 ## Composition
 - Camera/framing: 1920×1080 logical world in a 16:9 canvas. At an 800×600 browser viewport, the canvas is fitted at 800×450 with letterbox space above and below; compose for that smaller displayed size without relying on a 4:3 crop. View Marlow and the sailor at human scale on the same deck plane, cargo to their right, open water and shore behind.
 - Character position: feet near world y=760; sprites may move independently across the walkable deck. Do not bake characters into background art.

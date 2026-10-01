@@ -34,9 +34,29 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
     deckhandHeight: expect.any(Number) });
   expect(art.marlowHeight).toBeGreaterThan(90);
   expect(art.deckhandHeight).toBeGreaterThan(90);
+  const depth: { id: string; y: number; zIndex: number }[] = await page.evaluate(async () => {
+    const url = "/tests/e2e/deckProbe.ts";
+    const { inspectJourneyDepth } = await import(url);
+    return inspectJourneyDepth();
+  });
+  expect(depth.map(({ id }) => id)).toEqual(["journey-deckhand", "playerSpawn"]);
+  expect(depth.every(({ y, zIndex }) => y === zIndex)).toBe(true);
+  const artSlots = await page.evaluate(async () => {
+    const url = "/tests/e2e/deckProbe.ts";
+    const { inspectJourneyArtSlots } = await import(url);
+    return inspectJourneyArtSlots();
+  });
+  expect(Object.keys(artSlots)).toHaveLength(11);
+  expect(Object.values(artSlots).every(Boolean)).toBe(true);
   for (let attempt = 0; attempt < 2; attempt++) {
     await page.evaluate(() => window.pixiVN.start("start", {}));
     expect(await inspect()).toEqual(expected);
+    const rebuiltSlots = await page.evaluate(async () => {
+      const url = "/tests/e2e/deckProbe.ts";
+      const { inspectJourneyArtSlots } = await import(url);
+      return inspectJourneyArtSlots();
+    });
+    expect(rebuiltSlots).toEqual(artSlots);
     await expect(page.locator("#root canvas")).toHaveCount(1);
     await expect(page.getByTestId("journey-controls-hint")).toHaveCount(1);
   }

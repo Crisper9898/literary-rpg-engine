@@ -10,9 +10,45 @@ export function inspectDeck() {
   const actors = world.getChildByLabel("actors") as Container;
   return {
     layers: world.children.map((child) => child.label),
-    actors: actors.children.map((child) => ({ id: child.label, x: child.x, y: child.y })),
+    actors: ["playerSpawn", "journey-deckhand"].map((id) => {
+      const child = actors.getChildByLabel(id)!;
+      return { id, x: child.x, y: child.y };
+    }),
     title: layer.getChildByLabel("deck-title")?.label,
   };
+}
+
+export function inspectJourneyDepth() {
+  const scene = canvas.layers.get("journey-deck")!;
+  const world = scene.getChildByLabel("world") as Container;
+  const actors = world.getChildByLabel("actors") as Container;
+  return actors.children.map((actor) => ({ id: actor.label, y: actor.y, zIndex: actor.zIndex }));
+}
+
+export function inspectJourneyArtSlots() {
+  const scene = canvas.layers.get("journey-deck")!;
+  const world = scene.getChildByLabel("world") as Container;
+  const environment = world.getChildByLabel("environment") as Container;
+  const ground = world.getChildByLabel("ground") as Container;
+  const actors = world.getChildByLabel("actors") as Container;
+  const foreground = world.getChildByLabel("foreground") as Container;
+  const moving = (parent: Container, id: string) =>
+    (parent.getChildByLabel(`parallax-${id}`) as Container)?.children[0] as Container | undefined;
+  const slots: [string, Container | null | undefined, string][] = [
+    ["skyWater", environment.getChildByLabel("river-base"), "river-base"],
+    ["distantRidge", moving(environment, "distant-ridge"), "distantRidge-art"],
+    ["farVegetation", moving(environment, "far-vegetation"), "farVegetation-art"],
+    ["nearBank", moving(environment, "near-bank"), "nearBank-art"],
+    ["riverCurrent", moving(environment, "river-current"), "riverCurrent-art"],
+    ["foregroundReeds", moving(foreground, "foreground-reeds"), "foreground-reeds-art"],
+    ["deckBase", ground.getChildByLabel("deck-surface"), "deck-surface"],
+    ["deckFittings", foreground.getChildByLabel("deck-fittings"), "deck-fittings"],
+    ["cargo", ground.getChildByLabel("cargo-art"), "cargo-art"],
+    ["marlowSheet", actors.getChildByLabel("playerSpawn")?.getChildByLabel("marlow-art"), "marlow-art"],
+    ["deckhandSheet", actors.getChildByLabel("journey-deckhand")?.getChildByLabel("deckhand-body"), "deckhand-body"],
+  ];
+  return Object.fromEntries(slots.map(([key, container, label]) => [key,
+    !!container?.getChildByLabel(`${label}-fallback`)?.visible]));
 }
 
 export function inspectJourneyStaging() {
@@ -25,11 +61,12 @@ export function inspectJourneyStaging() {
   const ground = world.getChildByLabel("ground") as Container;
   const foreground = world.getChildByLabel("foreground") as Container;
   return {
-    inkedRiver: environment.getChildByLabel("river-base") instanceof Graphics,
-    inkedDeck: ground.getChildByLabel("deck-surface") instanceof Graphics,
+    inkedRiver: environment.getChildByLabel("river-base")?.getChildByLabel("river-base-fallback") instanceof Graphics,
+    inkedDeck: ground.getChildByLabel("deck-surface")?.getChildByLabel("deck-surface-fallback")
+      ?.getChildByLabel("deck-surface") instanceof Graphics,
     riverBeat: ground.getChildByLabel("river-beat-light") instanceof Graphics,
     cargoBeat: ground.getChildByLabel("cargo-beat-light") instanceof Graphics,
-    foregroundRail: foreground.getChildByLabel("deck-fittings") instanceof Graphics,
+    foregroundRail: foreground.getChildByLabel("deck-fittings")?.getChildByLabel("deck-fittings-fallback") instanceof Graphics,
     marlowHeight: player.getChildByLabel("marlow-art")?.height ?? 0,
     deckhandHeight: deckhand.getChildByLabel("deckhand-body")?.height ?? 0,
     noActorNameTags: !player.getChildByLabel("marlow-name") && !deckhand.getChildByLabel("deckhand-name"),

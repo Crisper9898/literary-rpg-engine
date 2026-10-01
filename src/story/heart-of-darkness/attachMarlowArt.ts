@@ -1,7 +1,8 @@
 import { type Container, type Ticker, UPDATE_PRIORITY } from "pixi.js";
 
 /** Small presentation-only gait layered over the existing movement controller. */
-export function attachMarlowArt(actor: Container, ticker: Ticker): void {
+export function attachMarlowArt(actor: Container, ticker: Ticker,
+  setArtState: (state: "idle" | "walkA" | "walkB") => void = () => {}): void {
   const sprite = actor.getChildByLabel("marlow-art") as Container;
   const scale = sprite.scale.y;
   let previous = { x: actor.x, y: actor.y };
@@ -14,6 +15,7 @@ export function attachMarlowArt(actor: Container, ticker: Ticker): void {
     if (Math.abs(dx) > 0.05) facing = Math.sign(dx);
     elapsedMS += frame.deltaMS;
     const gait = moving ? Math.sin(elapsedMS * 0.019) : 0;
+    setArtState(moving ? (gait >= 0 ? "walkA" : "walkB") : "idle");
     sprite.scale.x = scale * facing;
     sprite.y = moving ? -Math.abs(gait) * 2 : 0;
     sprite.rotation = moving ? Math.max(-0.045, Math.min(0.045, dx * 0.003)) : 0;
