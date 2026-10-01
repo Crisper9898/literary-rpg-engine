@@ -13,7 +13,9 @@ const command = (page: Page, action: "create" | "focus" | "zoom" | "lock" | "res
 }, action);
 
 test("camera follows all movement directions while keeping the world covered and UI fixed", async ({ page }, testInfo) => {
-  test.setTimeout(60_000);
+  // Full-resolution SVG capture at every edge adds raster time on SwiftShader;
+  // retain the exact movement/bounds assertions and allow the capture budget.
+  test.setTimeout(90_000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");

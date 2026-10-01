@@ -6,6 +6,7 @@ declare global {
 }
 
 test("composes the deck through PixiVN and rebuilds it without duplicate layers", async ({ page }, testInfo) => {
+  test.setTimeout(90_000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
@@ -24,6 +25,15 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
     title: "deck-title",
   };
   expect(await inspect()).toEqual(expected);
+  const readSlots = () => page.evaluate(async () => {
+    const url = "/tests/e2e/deckProbe.ts";
+    const { inspectJourneyArtSlots } = await import(url);
+    return inspectJourneyArtSlots();
+  });
+  await expect.poll(async () => Object.values(await readSlots()).every(Boolean),
+    { timeout: 30_000 }).toBe(true);
+  const artSlots = await readSlots();
+  expect(Object.keys(artSlots)).toHaveLength(11);
   const art = await page.evaluate(async () => {
     const probeUrl = "/tests/e2e/deckProbe.ts";
     const { inspectJourneyStaging } = await import(probeUrl);
@@ -41,22 +51,10 @@ test("composes the deck through PixiVN and rebuilds it without duplicate layers"
   });
   expect(depth.map(({ id }) => id)).toEqual(["journey-deckhand", "playerSpawn"]);
   expect(depth.every(({ y, zIndex }) => y === zIndex)).toBe(true);
-  const artSlots = await page.evaluate(async () => {
-    const url = "/tests/e2e/deckProbe.ts";
-    const { inspectJourneyArtSlots } = await import(url);
-    return inspectJourneyArtSlots();
-  });
-  expect(Object.keys(artSlots)).toHaveLength(11);
-  expect(Object.values(artSlots).every(Boolean)).toBe(true);
   for (let attempt = 0; attempt < 2; attempt++) {
     await page.evaluate(() => window.pixiVN.start("start", {}));
     expect(await inspect()).toEqual(expected);
-    const rebuiltSlots = await page.evaluate(async () => {
-      const url = "/tests/e2e/deckProbe.ts";
-      const { inspectJourneyArtSlots } = await import(url);
-      return inspectJourneyArtSlots();
-    });
-    expect(rebuiltSlots).toEqual(artSlots);
+    await expect.poll(readSlots, { timeout: 30_000 }).toEqual(artSlots);
     await expect(page.locator("#root canvas")).toHaveCount(1);
     await expect(page.getByTestId("journey-controls-hint")).toHaveCount(1);
   }

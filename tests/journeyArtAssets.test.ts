@@ -6,9 +6,18 @@ describe("Journey's replaceable art contract", () => {
     expect(Object.keys(journeyArtAssets)).toHaveLength(11);
     for (const key of ["distantRidge", "farVegetation", "nearBank", "riverCurrent", "foregroundReeds"] as const) {
       expect(journeyArtAssets[key].width).toBe(1920);
-      expect(journeyArtAssets[key].height).toBe(1080);
+      expect(journeyArtAssets[key].y + journeyArtAssets[key].height).toBeLessThanOrEqual(1080);
     }
-    expect(journeyArtAssets.riverCurrent.clip).toEqual({ x: 0, y: 500, width: 1920, height: 580 });
+    for (const [name, source] of Object.entries(journeyArtAssets)) {
+      expect(source.url, `${name} must resolve to a story-owned plate`)
+        .toMatch(/^\/assets\/art\/journey-deck\/.+\.svg$/);
+    }
+  });
+
+  it("keeps transparent plates cropped to their painted bounds for software rendering", () => {
+    const staticPlates = Object.values(journeyArtAssets).slice(0, 9);
+    const pixels = staticPlates.reduce((sum, plate) => sum + plate.width * plate.height, 0);
+    expect(pixels).toBeLessThan(7_000_000);
   });
 
   it("shares a foot registration point across every actor frame", () => {

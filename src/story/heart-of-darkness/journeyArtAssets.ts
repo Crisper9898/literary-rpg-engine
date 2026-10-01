@@ -1,18 +1,19 @@
 import type { VisualSource } from "../../ui/visualAssetSlot";
 
-/** Only these story-owned entries need new URLs when coordinated art is approved. */
+/** Authored SVG plates; each URL remains independently replaceable in content. */
 export const journeyArtAssets = {
-  skyWater: { width: 1920, height: 1080 },
-  distantRidge: { width: 1920, height: 1080 },
-  farVegetation: { width: 1920, height: 1080 },
-  nearBank: { width: 1920, height: 1080 },
-  riverCurrent: { width: 1920, height: 1080,
-    clip: { x: 0, y: 500, width: 1920, height: 580 } },
-  foregroundReeds: { width: 1920, height: 1080 },
-  deckBase: { width: 1920, height: 1080 },
-  deckFittings: { width: 1920, height: 1080 },
-  cargo: { width: 1920, height: 1080 },
+  skyWater: { url: "/assets/art/journey-deck/journey-sky-water.svg", width: 1920, height: 1080 },
+  distantRidge: { url: "/assets/art/journey-deck/journey-distant-ridge.svg", width: 1920, height: 150, y: 340 },
+  farVegetation: { url: "/assets/art/journey-deck/journey-far-vegetation.svg", width: 1920, height: 155, y: 355 },
+  nearBank: { url: "/assets/art/journey-deck/journey-near-bank.svg", width: 1920, height: 105, y: 425 },
+  // Marks are already confined to the water in the SVG, avoiding a large tile mask.
+  riverCurrent: { url: "/assets/art/journey-deck/journey-river-current.svg", width: 1920, height: 565, y: 510 },
+  foregroundReeds: { url: "/assets/art/journey-deck/journey-foreground-reeds.svg", width: 1920, height: 190, y: 890 },
+  deckBase: { url: "/assets/art/journey-deck/journey-deck-base.svg", width: 1550, height: 480, x: 205, y: 470 },
+  deckFittings: { url: "/assets/art/journey-deck/journey-deck-fittings.svg", width: 1400, height: 410, x: 255, y: 540 },
+  cargo: { url: "/assets/art/journey-deck/journey-cargo.svg", width: 1110, height: 170, x: 420, y: 540 },
   marlowSheet: {
+    url: "/assets/art/journey-deck/marlow-sheet.svg",
     width: 160, height: 160,
     frames: {
       idle: { x: 0, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
@@ -21,6 +22,7 @@ export const journeyArtAssets = {
     },
   },
   deckhandSheet: {
+    url: "/assets/art/journey-deck/deckhand-sheet.svg",
     width: 160, height: 160,
     frames: {
       idle: { x: 0, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },

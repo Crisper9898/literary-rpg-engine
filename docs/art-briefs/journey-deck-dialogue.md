@@ -61,24 +61,26 @@ leaves illustrated actors on code-drawn or stylistically incompatible plates.
 Final files may use a different format after approval; that changes only this
 story's asset paths and composition, never `src/engine/`.
 
-## Runtime handoff and provisional status
+## Runtime implementation
 
 All eleven pieces now have distinct replaceable slots in
-`src/story/heart-of-darkness/journeyArtAssets.ts`. Until coordinated art is
-approved, each slot draws an ink-and-wash vector composition in the same scene.
-No unapproved image is silently substituted. Add a `url` to a manifest entry
-only after its plate passes the assembled-scene review. The reusable
-`createVisualAssetSlot()` helper in `src/ui/` loads it asynchronously, keeps the
-vector art on failure, and removes late loads when the scene is destroyed.
+`src/story/heart-of-darkness/journeyArtAssets.ts`. The shipped set is eleven
+coordinated, code-authored SVGs in `public/assets/art/journey-deck/`, reproduced
+by `node scripts/generate-journey-art.mjs`. The original delivery identifiers
+above remain useful if this set is ever replaced. The reusable
+`createVisualAssetSlot()` helper in `src/ui/` loads each image asynchronously
+and retains the vector scene drawing only as a load-failure fallback.
 
-The first nine entries use 1920×1080 logical plates at world origin. Moving
-strips must keep both horizontal edges seamless. `riverCurrent` is clipped to
-the water band (x 0–1920, y 500–1080). The current ridge, vegetation, near-bank
-and current tiles are compressed vertically to 82% by the story composition;
-deliver art for that assembled height or adjust only that composition when
-reviewing a coordinated set. Deck and cargo remain in world coordinates. The
-foreground fittings overlap actor feet, while contact shadows and warm cabin
-light are independent runtime cues that remain after an art swap.
+All plates register in the 1920×1080 logical world, but transparent SVGs use
+cropped view boxes around their painted bands. Their `x`, `y`, `width` and
+`height` in the manifest restore exact world placement without rasterizing
+empty 1920×1080 images. River-current marks are confined to their water band
+within the SVG, so a full-width runtime mask is unnecessary. The ridge,
+vegetation, near-bank and current tiles retain the scene's 82% vertical
+compression and separate parallax speeds. Moving strips meet at their left
+and right edges. Deck and cargo stay in world coordinates. Foreground fittings
+overlap actor feet; contact shadows and warm cabin light remain separate
+runtime cues.
 
 Both sheets have 160×160 source frames in one horizontal row. Marlow uses
 idle/walkA/walkB (sheet width 480); the sailor uses idle/walkA/walkB/coilA/

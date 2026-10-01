@@ -58,15 +58,51 @@ configuration.
 - [x] Add save/restore smoke coverage for relevant world state.
 - [x] Rescue the Marlow/deckhand/cargo encounter as one visually directed, inked scene.
 - [x] QA and polish the current inked slice at both target resolutions.
-- [ ] Replace placeholders with first-pass art direction assets.
-- [ ] Run complete vertical-slice browser QA and polish pass.
+- [x] Replace placeholders with first-pass art direction assets.
+- [x] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-Replace placeholders with first-pass art direction assets. The zone-aware audio
-infrastructure is complete and its provisional loops are audible; final sound
-design remains separate from this art task.
+No unchecked Journey task remains in this plan. The separate human listening
+review of environmental audio is not part of the visual milestone.
 
-## Programmatic art integration — 2026-09-30
+## Code-authored deck art — 2026-09-30
+
+The eleven slots in `journeyArtAssets.ts` now load eleven finished, coordinated
+SVG plates from `public/assets/art/journey-deck/`. The deterministic art source
+is `scripts/generate-journey-art.mjs`; there is no external-art dependency or
+new runtime system. Marlow has aligned idle/walk frames; the sailor has aligned
+idle/walk/rope-work/cargo/lookout frames. Shared ink edges, muted directional
+light, clothing folds and the existing contact shadows attach them to the
+wooden deck. The rope is drawn through the sailor's hands while coiling. The
+deck/cabin, cargo, fittings, sky/water, ridge, two banks, moving current and
+reeds share one palette and layered value hierarchy. The existing beat lights,
+parallax, fog, camera, NPC, dialogue and save/restore implementations were
+unchanged. `src/engine/` was not edited.
+
+Transparent SVGs have cropped view boxes and world offsets in the story
+manifest, preserving the exact 1920×1080 composition while reducing rasterized
+pixels. An initial full-canvas SVG pass fell to about 3.8 fps with fog in the
+software renderer and caused movement waits to fail. The cropped version
+measured 7.0–7.3 fps with fog and 9.0–9.2 without in targeted runs, close to
+the previous vector-set diagnostic; the full suite measured 6.2/8.4/6.8 fps.
+No movement, dialogue or camera assertion was relaxed. The camera test's
+overall deadline alone was extended from 60 to 90 seconds for its six
+full-resolution screenshots on SwiftShader.
+
+The final `npm run agent:check` passed TypeScript, 97/97 unit tests in 22 files
+and the production build. `npm run agent:e2e` passed 56/56 in 19.4 minutes.
+Deck, dialogue-choice and deep-fog captures at 1366×768 and 800×600 were
+inspected against La metamorfosis: both figures, hands/rope, cargo, river,
+choices and controls remain legible and uncropped. The existing >500 kB main
+bundle warning and slow software fog rendering remain. At 800×600, actor
+figures display at roughly 50 CSS pixels of painted height; this limits fine
+facial acting, so silhouette, clothing and body pose carry expression. The
+SVG set is the shipped art for this slice, while the manifest still allows a
+future replacement without gameplay or engine edits.
+
+## Programmatic art integration — prior checkpoint, 2026-09-30
+
+Historical status below is superseded by the completed SVG pass above.
 
 The eleven coordinated pieces in `docs/art-briefs/journey-deck-dialogue.md`
 now have story-owned manifest entries and distinct vector fallbacks. Sky/water,
@@ -106,7 +142,9 @@ The coherent limited palette and depth now work as a provisional set, but
 the cast and materials still read as simplified vector theatre compared with
 fully authored illustration. This visual difference is the remaining art task.
 
-## First-pass art handoff — 2026-09-30
+## First-pass art handoff — prior checkpoint, 2026-09-30
+
+Historical status below is superseded by the completed SVG pass above.
 
 No approved visual asset files are present in the repository. The existing
 `docs/art-briefs/journey-deck-dialogue.md` now specifies eleven coordinated

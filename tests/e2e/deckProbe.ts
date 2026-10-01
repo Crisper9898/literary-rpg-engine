@@ -1,5 +1,5 @@
 import { canvas } from "@drincs/pixi-vn";
-import { Graphics, UPDATE_PRIORITY, type Container, type Ticker } from "pixi.js";
+import { Graphics, Sprite, UPDATE_PRIORITY, type Container, type Ticker } from "pixi.js";
 
 // Served only by Vite during E2E, never imported into the application bundle.
 export function inspectDeck() {
@@ -48,7 +48,8 @@ export function inspectJourneyArtSlots() {
     ["deckhandSheet", actors.getChildByLabel("journey-deckhand")?.getChildByLabel("deckhand-body"), "deckhand-body"],
   ];
   return Object.fromEntries(slots.map(([key, container, label]) => [key,
-    !!container?.getChildByLabel(`${label}-fallback`)?.visible]));
+    container?.getChildByLabel(`${label}-image`) instanceof Sprite &&
+      !container?.getChildByLabel(`${label}-fallback`)?.visible]));
 }
 
 export function inspectJourneyStaging() {
@@ -61,12 +62,11 @@ export function inspectJourneyStaging() {
   const ground = world.getChildByLabel("ground") as Container;
   const foreground = world.getChildByLabel("foreground") as Container;
   return {
-    inkedRiver: environment.getChildByLabel("river-base")?.getChildByLabel("river-base-fallback") instanceof Graphics,
-    inkedDeck: ground.getChildByLabel("deck-surface")?.getChildByLabel("deck-surface-fallback")
-      ?.getChildByLabel("deck-surface") instanceof Graphics,
+    inkedRiver: environment.getChildByLabel("river-base")?.getChildByLabel("river-base-image") instanceof Sprite,
+    inkedDeck: ground.getChildByLabel("deck-surface")?.getChildByLabel("deck-surface-image") instanceof Sprite,
     riverBeat: ground.getChildByLabel("river-beat-light") instanceof Graphics,
     cargoBeat: ground.getChildByLabel("cargo-beat-light") instanceof Graphics,
-    foregroundRail: foreground.getChildByLabel("deck-fittings")?.getChildByLabel("deck-fittings-fallback") instanceof Graphics,
+    foregroundRail: foreground.getChildByLabel("deck-fittings")?.getChildByLabel("deck-fittings-image") instanceof Sprite,
     marlowHeight: player.getChildByLabel("marlow-art")?.height ?? 0,
     deckhandHeight: deckhand.getChildByLabel("deckhand-body")?.height ?? 0,
     noActorNameTags: !player.getChildByLabel("marlow-name") && !deckhand.getChildByLabel("deckhand-name"),
