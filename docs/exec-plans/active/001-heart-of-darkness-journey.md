@@ -66,6 +66,24 @@ Replace placeholders with first-pass art direction assets. The zone-aware audio
 infrastructure is complete and its provisional loops are audible; final sound
 design remains separate from this art task.
 
+## First-pass art handoff — 2026-09-30
+
+No approved visual asset files are present in the repository. The existing
+`docs/art-briefs/journey-deck-dialogue.md` now specifies eleven coordinated
+delivery pieces for the current encounter, including the five independent
+river depths, deck/foreground separation, cargo and aligned character sheets.
+Three checked-in browser captures show the current blocking at 800×600,
+dialogue at 1366×768 and deep fog at 800×600. They are layout references,
+not candidate final art. The brief includes scene coordinates, seam/pivot
+requirements and acceptance checks. No runtime art was replaced, no new
+image was invented, and this task remains open until the coordinated assets
+are produced and approved. Once supplied, integrate them only in Journey
+story/content composition, then rerun the full visual/browser gate.
+`npm run agent:check` passed TypeScript, 89/89 unit tests and build for this
+documentation-only handoff. The unchanged runtime was last validated by the
+full 56/56 E2E suite in the preceding inked-slice QA commit; no browser code
+changed in this handoff.
+
 ## Current inked-slice QA — 2026-09-30
 
 The full browser suite passed before and after the polish change (56/56 each

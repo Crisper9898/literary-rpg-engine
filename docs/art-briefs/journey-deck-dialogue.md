@@ -9,6 +9,58 @@ Marlow approaches a working sailor beside the cargo while the steamer continues 
 ## Production role
 Coordinated background, middle-distance bank, foreground ship fittings, and two character animation sheets. Deliver separate layers so existing parallax, weather, camera and actor movement remain live. The current code-drawn ink composition defines the blocking until these pieces are approved.
 
+## Blocking references
+These captures document the current staging and UI safe areas, **not** a finished
+illustration style to imitate pixel for pixel:
+
+- [Deck at 800×600](reference/journey-deck-800.png): initial actor scale, cabin,
+  rope, cargo and the fitted 16:9 frame.
+- [Conversation at 1366×768](reference/journey-dialogue-1366.png): left dialogue
+  panel, two actors, cargo and the broad water passage.
+- [Deep fog at 800×600](reference/journey-deep-fog-800.png): silhouettes and UI
+  must remain distinguishable through the deepest atmosphere.
+
+## Coherent first-pass delivery
+Supply one coordinated set, with the same palette, light direction and ink
+treatment. The names below are delivery identifiers, not existing runtime paths;
+no file should be wired into the game before the set passes visual review.
+
+| Piece | Delivery file | Separation and registration |
+| --- | --- | --- |
+| Sky and dark water base | `journey-sky-water.webp` | Opaque 1920×1080 plate; leave moving currents to their own layer. |
+| Distant ridge | `journey-distant-ridge.webp` | Transparent 1920-pixel-wide, horizontally seamless strip. |
+| Far vegetation | `journey-far-vegetation.webp` | Transparent 1920-pixel-wide, horizontally seamless strip. |
+| Near bank | `journey-near-bank.webp` | Transparent 1920-pixel-wide, horizontally seamless strip. |
+| Current marks | `journey-river-current.webp` | Transparent 1920-pixel-wide, horizontally seamless water detail. |
+| Foreground reeds | `journey-foreground-reeds.webp` | Transparent 1920-pixel-wide, horizontally seamless near-water silhouettes. |
+| Deck plane and cabin | `journey-deck-base.webp` | Separate deck/cabin art on a transparent 1920×1080 plate; no actors or UI. |
+| Fittings and foreground rail | `journey-deck-fittings.webp` | Transparent plate with rail/lines able to overlap actor feet. |
+| Cargo and tally | `journey-cargo.webp` | Transparent prop; leave the tally's lettering blank for runtime text. |
+| Marlow | `marlow-sheet.webp` | Transparent aligned idle/walk frames with a documented common foot pivot. |
+| Sailor | `deckhand-sheet.webp` | Transparent aligned idle/walk/work/turn frames with a documented common foot pivot. |
+
+For each moving strip, the left and right edges must meet without a visible
+seam. Keep each parallax depth separate: the current scene moves ridge, far
+vegetation, near bank, current and reeds at different rates. The deck and cargo
+stay fixed in the world while the river travels. Character sheets must keep
+their feet at the same registration point in every frame, so movement and NPC
+routine poses do not jump. Include a small frame map with frame bounds, foot
+pivot and intended facing for each sheet. Runtime typography, dialogue,
+interaction prompts, fog and light changes remain in code; do not bake them
+into any image.
+
+The current geometry provides reference coordinates, not a demand for exact
+tracing: world 1920×1080; walkable deck x=400–1520, y=660–860; Marlow starts
+at (650, 760); the sailor's work station is around (1080, 740); the cargo sits
+around x=1390–1515 and y=552–675. Preserve the same readable relationships
+through camera follow, not just in a single still frame.
+
+Acceptance requires checking the assembled set at 1366×768 and 800×600 in
+idle, dialogue-choice and deep-fog beats. Reject a partial replacement that
+leaves illustrated actors on code-drawn or stylistically incompatible plates.
+Final files may use a different format after approval; that changes only this
+story's asset paths and composition, never `src/engine/`.
+
 ## Composition
 - Camera/framing: 1920×1080 logical world in a 16:9 canvas. At an 800×600 browser viewport, the canvas is fitted at 800×450 with letterbox space above and below; compose for that smaller displayed size without relying on a 4:3 crop. View Marlow and the sailor at human scale on the same deck plane, cargo to their right, open water and shore behind.
 - Character position: feet near world y=760; sprites may move independently across the walkable deck. Do not bake characters into background art.
