@@ -46,6 +46,9 @@ export function createJourneyDeck() {
     .moveTo(4, -94).lineTo(11, -91).stroke({ color: art.ink, width: 2 }));
   const marlowVisual = createVisualAssetSlot({ label: "marlow-art",
     source: journeyArtAssets.marlowSheet, fallback: () => marlowFallback });
+  marlowVisual.container.scale.set(1.32);
+  marker.addChild(new Graphics({ label: "fire-cast-shadow", alpha: 0 })
+    .poly([-18, 0, 18, 0, 165, 110, 105, 110]).fill(0x030809));
   marker.addChild(new Graphics().poly([-20, 0, 20, 0, 86, 15, 30, 18])
       .fill({ color: art.ink, alpha: 0.16 })
     .ellipse(11, 5, 38, 9).fill({ color: art.ink, alpha: 0.58 })
@@ -66,7 +69,7 @@ export function createJourneyDeck() {
   const player = layers.actors.getChildByLabel("playerSpawn");
   if (!player) throw new Error("Journey deck is missing its player marker.");
   return { presentation, player, world: layers.root, deckhand, layers, marlowVisual,
-    visual: { setBeat(beat: Parameters<typeof visual.setBeat>[0]) {
+    visual: { setProgress: visual.setProgress, setBeat(beat: Parameters<typeof visual.setBeat>[0]) {
       visual.setBeat(beat);
       const alpha = beat === "voyage" ? 1 : 0.3;
       kicker.alpha = alpha;

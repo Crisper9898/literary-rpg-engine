@@ -21,6 +21,7 @@ export function mountWeather(controlled = false) {
   scene = showJourneyDeck(controlled ? { progress: () => progress } : {});
 }
 export function setWeatherProgress(value: number) { progress = value; }
+export function frameJourneyArt() { scene.camera.focus({ x: 960, y: 650 }); }
 export function inspectWeather() {
   const current = nodes();
   if (!current || current.fog.some((layer) => !layer)) return null;

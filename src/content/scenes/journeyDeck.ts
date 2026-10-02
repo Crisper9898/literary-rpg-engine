@@ -1,4 +1,5 @@
 import { canvas } from "@drincs/pixi-vn";
+import { Container } from "pixi.js";
 import { createJourneyDeck } from "../../story/heart-of-darkness/createJourneyDeck";
 import { journeyCamera, journeyDeck, marlowMovement } from "../../story/heart-of-darkness/deck";
 import { attachPlayerMovement } from "../../engine/movement/attachPlayerMovement";
@@ -17,6 +18,9 @@ import { journeyAudioLayers, registerJourneyAudioAssets } from "../../story/hear
 import { attachJourneyAudioDiagnostics } from "./attachJourneyAudioDiagnostics";
 import { attachMarlowArt } from "../../story/heart-of-darkness/attachMarlowArt";
 import { attachActorDepth } from "../../ui/attachActorDepth";
+import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
+import { journeyArtStage, journeyArtVariants, type JourneyActorMood } from "../../story/heart-of-darkness/journeyArtStages";
+import { attachJourneyEmbers } from "../../story/heart-of-darkness/journeyEmbers";
 
 const DECK_LAYER = "journey-deck";
 
@@ -37,7 +41,8 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     bounds: journeyDeck.walkableArea,
     ...marlowMovement,
   }, journeyPlayerPosition);
-  attachMarlowArt(player, canvas.app.ticker, marlowVisual.setState);
+  let actorMood: JourneyActorMood = "neutral";
+  attachMarlowArt(player, canvas.app.ticker, marlowVisual.setState, () => actorMood);
   const npc = attachNpcRoutine(deckhand.actor, canvas.app.ticker, deckhandRoutine, deckhand.pose);
   attachActorDepth(layers.actors, canvas.app.ticker, [player, deckhand.actor]);
   const camera = attachWorldCamera(world, canvas.app.ticker, {
@@ -54,10 +59,47 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
     }, definition.id === "near-bank" ? journeyVoyageDistance : undefined).controller;
   });
   const voyage = river[journeyRiverLayers.findIndex((layer) => layer.id === "near-bank")];
+  const burningBank = attachParallaxLayer(layers.environment, canvas.app.ticker, camera, {
+    id: "burning-bank", period: journeyDeck.size.width, speed: 30,
+    depth: { x: .5, y: 1 },
+    reference: { x: journeyDeck.size.width / 2, y: journeyDeck.size.height / 2 },
+    createTile: () => createVisualAssetSlot({ label: "burning-bank-art",
+      source: journeyArtVariants.burningBank, fallback: () => new Container() }).container,
+  }).layer;
+  burningBank.alpha = 0;
   // A scene/navigation director may supply progress; otherwise follow actual bank travel.
   const atmosphere = attachJourneyAtmosphere(layers, canvas.app.ticker, camera,
     options.progress ?? (() => voyage.distance / journeyWeather.routeDistance),
     options.progress ? undefined : journeyAtmosphereProgress);
+  const embers = attachJourneyEmbers(layers.foreground, canvas.app.ticker);
+  const updateArt = () => {
+    const stage = journeyArtStage(atmosphere.progress);
+    visual.setProgress(stage);
+    burningBank.alpha = stage.fire;
+    burningBank.visible = stage.fire > .001;
+    actorMood = stage.mood;
+    deckhand.setMood(stage.mood);
+    embers.setIntensity(stage.fire);
+    player.getChildByLabel("fire-cast-shadow")!.alpha = stage.fire * .45;
+    deckhand.actor.getChildByLabel("fire-cast-shadow")!.alpha = stage.fire * .45;
+    for (const id of ["distant-ridge", "far-vegetation", "near-bank"]) {
+      const bank = layers.environment.getChildByLabel(`parallax-${id}`)!;
+      bank.tint = stage.landTint;
+      bank.alpha = 1 - stage.fire * .98;
+      bank.visible = stage.fire < .995;
+    }
+    const current = layers.environment.getChildByLabel("parallax-river-current")!;
+    current.alpha = 1 - stage.fire;
+    current.visible = stage.fire < .999;
+    current.tint = stage.landTint;
+    // Surface fog gives way to the fire's reflected light; dense shore smoke
+    // lives in the burning-bank illustration and the existing distant fog.
+    layers.environment.getChildByLabel("parallax-weather-riverFog")!.alpha =
+      atmosphere.state.riverFog * (1 - stage.fire * .7);
+  };
+  updateArt();
+  canvas.app.ticker.add(updateArt, undefined, -4);
+  presentation.once("destroyed", () => canvas.app.ticker.remove(updateArt));
   registerJourneyAudioAssets();
   const audio = attachSpatialAudio(presentation, canvas.app.ticker, surface, {
     namespace: DECK_LAYER, listener: () => ({ x: player.x, y: player.y }),

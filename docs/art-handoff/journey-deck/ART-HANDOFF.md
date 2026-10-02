@@ -1,5 +1,10 @@
 # Journey Deck — visual replacement handoff
 
+Historical SVG handoff. The user subsequently approved a new authoritative
+illustrated direction; see [ILLUSTRATED-ASSETS.md](ILLUSTRATED-ASSETS.md) for the
+current WebP manifests, dimensions, actor frames and stage variants. The images
+and tables below preserve the earlier composition checkpoint.
+
 This package freezes the **current composition**, not the final drawing style. The eleven SVGs in `public/assets/art/journey-deck/` are technical references for staging, registration, overlap, palette and motion. Produce replacement art outside this pass, then swap one URL at a time in `src/story/heart-of-darkness/journeyArtAssets.ts`. No change to `src/engine/`, gameplay or narrative state is required.
 
 ## Frame references

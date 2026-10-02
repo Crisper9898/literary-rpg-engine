@@ -12,21 +12,31 @@ const command = (page: Page, action: "create" | "focus" | "zoom" | "lock" | "res
   cameraCommand(action);
 }, action);
 
+const artworkReady = (page: Page) => expect.poll(async () => page.evaluate(async () => {
+  const url = "/tests/e2e/deckProbe.ts";
+  const probe = await import(url);
+  const stage = probe.inspectJourneyArtProgress();
+  return Object.values(probe.inspectJourneyArtSlots()).every(Boolean) &&
+    stage.nightLoaded && stage.fireLoaded && stage.bankLoaded && stage.deckFireLoaded;
+}), { timeout: 30_000 }).toBe(true);
+
 test("camera follows all movement directions while keeping the world covered and UI fixed", async ({ page }, testInfo) => {
-  // Full-resolution SVG capture at every edge adds raster time on SwiftShader;
-  // retain the exact movement/bounds assertions and allow the capture budget.
+  // Wait for illustrated plates before sampling camera behavior. SwiftShader
+  // and the world's deliberate 50ms tick cap need more wall time, not looser
+  // position, coverage or velocity assertions (velocity is tested over frames).
   test.setTimeout(90_000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
+  await artworkReady(page);
   const initial = (await inspect(page))!;
   expect(initial.zoom).toBeGreaterThan(1);
   await page.locator("#root canvas").focus();
   await page.screenshot({ path: testInfo.outputPath("camera-start.png") });
 
   await page.keyboard.down("d");
-  await expect.poll(async () => (await inspect(page))!.player.x).toBeGreaterThan(850);
+  await expect.poll(async () => (await inspect(page))!.player.x, { timeout: 10_000 }).toBeGreaterThan(850);
   await page.keyboard.up("d");
   const horizontal = (await inspect(page))!;
   expect(horizontal.center.x).toBeGreaterThan(initial.center.x);
@@ -34,14 +44,14 @@ test("camera follows all movement directions while keeping the world covered and
   await page.screenshot({ path: testInfo.outputPath("camera-horizontal.png") });
 
   await page.keyboard.down("w");
-  await expect.poll(async () => (await inspect(page))!.player.y).toBeLessThan(710);
+  await expect.poll(async () => (await inspect(page))!.player.y, { timeout: 10_000 }).toBeLessThan(710);
   await page.keyboard.up("w");
   expect((await inspect(page))!.center.y).toBeLessThan(horizontal.center.y);
 
   const beforeDiagonal = (await inspect(page))!;
   await page.keyboard.down("s");
   await page.keyboard.down("d");
-  await expect.poll(async () => (await inspect(page))!.player.y).toBeGreaterThan(800);
+  await expect.poll(async () => (await inspect(page))!.player.y, { timeout: 10_000 }).toBeGreaterThan(800);
   await page.keyboard.up("s");
   await page.keyboard.up("d");
   const diagonal = (await inspect(page))!;
@@ -85,20 +95,21 @@ test("camera follows all movement directions while keeping the world covered and
 
 test("scripted focus and zoom can lock independently of movement then return to Marlow", async ({ page }, testInfo) => {
   // Includes several eased camera moves and scene rebuilds on the software renderer.
-  test.setTimeout(45_000);
+  test.setTimeout(90_000);
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
   await command(page, "create");
+  await artworkReady(page);
   await command(page, "focus");
-  await expect.poll(async () => (await inspect(page))!.center.x).toBeGreaterThan(1198);
+  await expect.poll(async () => (await inspect(page))!.center.x, { timeout: 10_000 }).toBeGreaterThan(1198);
   await command(page, "zoom");
-  await expect.poll(async () => (await inspect(page))!.zoom).toBeGreaterThan(1.799);
+  await expect.poll(async () => (await inspect(page))!.zoom, { timeout: 10_000 }).toBeGreaterThan(1.799);
   await page.screenshot({ path: testInfo.outputPath("camera-focus-zoom.png") });
   await command(page, "lock");
   const locked = (await inspect(page))!;
   await page.locator("#root canvas").focus();
   await page.keyboard.down("d");
-  await expect.poll(async () => (await inspect(page))!.player.x).toBeGreaterThan(850);
+  await expect.poll(async () => (await inspect(page))!.player.x, { timeout: 10_000 }).toBeGreaterThan(850);
   await page.keyboard.up("d");
   expect((await inspect(page))!.center).toEqual(locked.center);
   expect((await inspect(page))!.zoom).toBe(locked.zoom);
@@ -106,7 +117,7 @@ test("scripted focus and zoom can lock independently of movement then return to 
   await expect.poll(async () => {
     const state = (await inspect(page))!;
     return Math.abs(state.center.x - state.player.x);
-  }).toBeLessThan(2);
+  }, { timeout: 10_000 }).toBeLessThan(2);
   await page.screenshot({ path: testInfo.outputPath("camera-resume.png") });
 
   // Re-entry must dispose the old adapter even if its director is still referenced.
@@ -119,7 +130,7 @@ test("scripted focus and zoom can lock independently of movement then return to 
   expect(newState.player).toEqual({ x: 650, y: 760 });
   expect(newState.zoom).toBe(1.5);
   await page.keyboard.down("d");
-  await expect.poll(async () => (await inspect(page))!.player.x).toBeGreaterThan(720);
+  await expect.poll(async () => (await inspect(page))!.player.x, { timeout: 10_000 }).toBeGreaterThan(720);
   await page.keyboard.up("d");
   const detached = await page.evaluate(async () => {
     const probeUrl = "/tests/e2e/cameraProbe.ts";

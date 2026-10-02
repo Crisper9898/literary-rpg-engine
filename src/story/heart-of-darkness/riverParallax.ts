@@ -2,15 +2,11 @@ import { Graphics } from "pixi.js";
 import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 import { journeyArtAssets, type JourneyArtAsset } from "./journeyArtAssets";
 
-// Authored placeholder tiles: all filled shorelines meet at equal heights on
-// both ends. Only scenery travels; the vessel and its fittings stay in the world.
+// Only scenery travels; the vessel and its fittings stay in the world.
 const period = 1920;
-// Compress the upper landscape into an inked horizon, leaving a broad passage
-// of visible water behind the ship rather than a thin decorative stripe.
 const riverFraming = (asset: JourneyArtAsset, draw: () => Graphics) => () => {
   const tile = createVisualAssetSlot({ label: `${asset}-art`,
     source: journeyArtAssets[asset], fallback: draw, cacheFallback: true }).container;
-  tile.scale.y = 0.82;
   return tile;
 };
 

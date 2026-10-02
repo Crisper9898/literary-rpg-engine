@@ -20,7 +20,9 @@ async function checkTravel(page: Page) {
 }
 
 test("the river keeps traveling at five depths while idle, reading and choosing", async ({ page }, info) => {
-  test.setTimeout(45_000);
+  // Three full live-frame samples, walking and captures on SwiftShader.
+  // Keep every speed assertion/sample; allow the final choice-stage sample.
+  test.setTimeout(90_000);
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
   expect((await inspect(page))!.layers).toHaveLength(5);
@@ -48,8 +50,9 @@ test("the river keeps traveling at five depths while idle, reading and choosing"
 });
 
 test("tiles cover pans, zooms and both resolutions, and scene re-entry disposes every old layer", async ({ page }, info) => {
-  // Preserve all live-frame samples and screenshots as weather adds rendering work.
-  test.setTimeout(65_000);
+  // Both viewports, four pan/zoom captures and a final sample after rebuilding.
+  // Preserve all live-frame samples and exact tile coverage assertions.
+  test.setTimeout(120_000);
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
   for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {

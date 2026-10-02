@@ -62,8 +62,42 @@ configuration.
 - [x] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-No unchecked Journey task remains in this plan. The separate human listening
-review of environmental audio is not part of the visual milestone.
+The authoritative illustrated Journey Deck milestone is validated. No further
+implementation task is scheduled in this milestone; do not automatically expand
+to another scene or narrative task.
+The separate human listening review of environmental audio remains independent.
+
+## Authoritative illustrated Journey Deck — 2026-10-01
+
+- [x] Replace the eleven runtime SVG slots with modular, coordinated illustrated WebP art using the three user references.
+- [x] Preserve movement, camera follow, interaction areas, dialogue, state, audio and the story selector; keep `src/engine/` intact.
+- [x] Add distance-driven dusk, jungle, deep-night and fire presentation on the existing atmosphere progress, with separate night/fire sky-water, burning shore and floor-reflection variants.
+- [x] Second visual pass: correct cabin registration, rear-rail occlusion, actor scale, contact/cast shadows and floor-only firelight; add concern/alarm poses and pooled embers.
+- [x] Inspect final stage and dialogue captures at 1366×768 and 800×600 against the authoritative references and La metamorfosis.
+- [x] Complete `agent:check` and the full `agent:e2e`; prepare one coherent milestone change set for commit.
+
+Current asset map, progression thresholds, production provenance and technical
+limits: `docs/art-handoff/journey-deck/ILLUSTRATED-ASSETS.md`. The earlier SVG
+art and handoff are retained as historical references, not the runtime style.
+
+Ten inspected captures are retained in the handoff's `illustrated-qa/` folder:
+four voyage stages plus active dialogue at both resolutions. Cabin windows are
+not crossed by the rear rail, the figures have contact and projected shadows,
+water remains visible, and dialogue/choices fit the 800×600 presentation. At
+that resolution the small full-body figures convey emotion primarily through
+pose and silhouette rather than portrait-level facial detail. Walking remains
+two-frame animation. Flames/smoke are illustrated planes, with live embers.
+
+`agent:check` passed TypeScript, 98 tests in 22 files and build (the existing
+602.12 kB main-chunk warning remains). The first complete browser pass had
+55/57 passes: the two parallax tests exhausted global time budgets during their
+final samples. Budgets were corrected without weakening assertions; both
+passed in the isolated rerun (2.0 minutes). The final complete `agent:e2e` passed
+57/57 in 23.2 minutes, including both works, dialogue/choices, independent NPCs,
+parallax, atmosphere, optional cargo interaction, audio and Pixi'VN save/restore.
+Total automated coverage is 155 tests (98 unit + 57 browser). Validation closed
+on 2026-10-02. The final software-renderer weather diagnostic measured 4.4–5.8 fps; general renderer
+optimization is outside this art milestone. `src/engine/` remains unchanged.
 
 ## Journey Deck visual handoff — 2026-10-01
 

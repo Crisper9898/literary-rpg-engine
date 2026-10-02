@@ -39,7 +39,8 @@ test("live WASD and arrow diagonals have the same speed as cardinal movement", a
 });
 
 test("Marlow walks, stops, stays on deck and clears held keys on restart", async ({ page }, testInfo) => {
-  test.setTimeout(45_000);
+  // Includes four full deck crossings, focus changes and scene recreation.
+  test.setTimeout(90_000);
   await page.goto("/");
   const surface = page.locator("#root canvas");
   await expect.poll(() => position(page)).toMatchObject({ x: 650, y: 760 });

@@ -52,6 +52,35 @@ export function inspectJourneyArtSlots() {
       !container?.getChildByLabel(`${label}-fallback`)?.visible]));
 }
 
+export function inspectJourneyArtProgress() {
+  const scene = canvas.layers.get("journey-deck");
+  if (!scene) return null;
+  const world = scene.getChildByLabel("world") as Container;
+  const environment = world.getChildByLabel("environment") as Container;
+  const ground = world.getChildByLabel("ground") as Container;
+  const sky = environment.getChildByLabel("journey-night-sky") as Container;
+  const fireSky = environment.getChildByLabel("journey-fire-sky") as Container;
+  const bank = environment.getChildByLabel("parallax-burning-bank") as Container;
+  const deckFire = ground.getChildByLabel("journey-fire-deck-reflection") as Container;
+  const actors = world.getChildByLabel("actors") as Container;
+  const marlow = actors.getChildByLabel("playerSpawn")!.getChildByLabel("marlow-art") as Container;
+  const marlowImage = marlow.getChildByLabel("marlow-art-image") as Sprite;
+  return {
+    activeSkies: [environment.getChildByLabel("river-base")!, sky, fireSky]
+      .filter((plate) => plate.visible).length,
+    night: sky.alpha,
+    fire: fireSky.alpha,
+    bank: bank.alpha,
+    deckFire: deckFire.alpha,
+    marlowFrame: marlowImage?.texture.frame.x,
+    nightLoaded: sky.getChildByLabel("journey-night-sky-image") instanceof Sprite,
+    fireLoaded: fireSky.getChildByLabel("journey-fire-sky-image") instanceof Sprite,
+    bankLoaded: bank.children.some((tile) =>
+      tile.getChildByLabel("burning-bank-art-image") instanceof Sprite),
+    deckFireLoaded: deckFire.getChildByLabel("journey-fire-deck-reflection-image") instanceof Sprite,
+  };
+}
+
 export function inspectJourneyStaging() {
   const scene = canvas.layers.get("journey-deck")!;
   const world = scene.getChildByLabel("world") as Container;

@@ -4,10 +4,13 @@ import { deckhandIdentity } from "./deckhand";
 import { journeyVisual as art } from "./journeyVisual";
 import { journeyArtAssets } from "./journeyArtAssets";
 import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
+import type { JourneyActorMood } from "./journeyArtStages";
 
 /** Inked deck worker: individual limbs keep the existing rope/cargo/lookout tasks legible. */
 export function createDeckhand() {
   const actor = new Container({ label: deckhandIdentity.id });
+  actor.addChild(new Graphics({ label: "fire-cast-shadow", alpha: 0 })
+    .poly([-18, 0, 18, 0, 165, 110, 105, 110]).fill(0x030809));
   actor.addChild(new Graphics({ label: "deckhand-contact-shadow" })
     .poly([-21, 1, 20, 1, 88, 16, 24, 18]).fill({ color: art.ink, alpha: 0.15 })
     .ellipse(7, 6, 38, 9).fill({ color: art.ink, alpha: 0.58 })
@@ -16,6 +19,8 @@ export function createDeckhand() {
   const visual = createVisualAssetSlot({ label: "deckhand-body",
     source: journeyArtAssets.deckhandSheet, fallback: () => bodyFallback });
   const body = visual.container;
+  body.scale.set(1.32);
+  let mood: JourneyActorMood = "neutral";
   actor.addChild(body);
   const leg = (x: number) => {
     const part = new Graphics({ x, y: -20 })
@@ -64,7 +69,7 @@ export function createDeckhand() {
   head.addChild(nose);
   bodyFallback.addChild(head);
 
-  return { actor, pose(state: NpcRoutineState, elapsedMS: number) {
+  return { actor, setMood(next: JourneyActorMood) { mood = next; }, pose(state: NpcRoutineState, elapsedMS: number) {
     const walking = state.isMoving;
     const stride = walking ? Math.sin(state.elapsedMS * 0.013) : 0;
     const working = state.mode === "idle";
@@ -74,9 +79,10 @@ export function createDeckhand() {
     const gesture = Math.sin(state.elapsedMS * 0.006);
     workRope.alpha = coiling ? 0.9 : 0;
     workRope.y = coiling ? gesture * 2 : 0;
-    visual.setState(walking ? (stride >= 0 ? "walkA" : "walkB") :
+    visual.setState(walking ? (stride >= 0 ? "walkA" : "walkB") : mood === "alarm" ? "alarm" :
       coiling ? (gesture >= 0 ? "coilA" : "coilB") : checking ? "cargo" :
-        lookout ? "lookout" : "idle");
+        lookout ? "lookout" : mood === "concern" ? "concern" : "idle");
+    if (Math.abs(state.facing.x) > .2) body.scale.x = Math.sign(state.facing.x) * body.scale.y;
     const blend = elapsedMS === 0 ? 1 : -Math.expm1(-12 * elapsedMS / 1000);
     const ease = (from: number, to: number) => from + (to - from) * blend;
     leftLeg.rotation = ease(leftLeg.rotation, stride * 0.25);

@@ -3,6 +3,7 @@ import type { createWorldLayers } from "../../engine/world/createWorldLayers";
 import { journeyDeck } from "./deck";
 import { journeyVisual as art, type JourneyVisualBeat } from "./journeyVisual";
 import { journeyArtAssets } from "./journeyArtAssets";
+import { journeyArtVariants, type journeyArtStage } from "./journeyArtStages";
 import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 
 /** A single ink-and-wash theatre set; traveling river silhouettes remain separate. */
@@ -37,9 +38,17 @@ export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>) {
     [220, 570, 100], [1720, 593, 120]]) {
     background.ellipse(x, y, size, 5).fill({ color: art.paper, alpha: 0.09 });
   }
-  layers.environment.addChild(createVisualAssetSlot({ label: "river-base",
+  const duskSky = createVisualAssetSlot({ label: "river-base",
     source: journeyArtAssets.skyWater, fallback: () => background,
-    cacheFallback: true }).container);
+    cacheFallback: true }).container;
+  layers.environment.addChild(duskSky);
+  const nightSky = createVisualAssetSlot({ label: "journey-night-sky",
+    source: journeyArtVariants.nightSkyWater, fallback: () => new Container() }).container;
+  const fireSky = createVisualAssetSlot({ label: "journey-fire-sky",
+    source: journeyArtVariants.fireSkyWater, fallback: () => new Container() }).container;
+  nightSky.alpha = 0;
+  fireSky.alpha = 0;
+  layers.environment.addChild(nightSky, fireSky);
 
   const deck = new Graphics({ label: "deck-surface" })
     .poly([270, 620, 1610, 620, 1740, 755, 1610, 935, 300, 935, 220, 850])
@@ -88,9 +97,17 @@ export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>) {
       .fill({ color: art.ember, alpha: 0.07 });
   const deckFallback = new Container();
   deckFallback.addChild(deck, cabin);
+  // Rear fittings sit behind the cabin; front fittings still occlude the floor.
+  layers.ground.addChild(createVisualAssetSlot({ label: "deck-rear-fittings",
+    source: { ...journeyArtAssets.deckFittings, clip: { x: 255, y: 540, width: 1400, height: 200 } },
+    fallback: () => new Container() }).container);
   layers.ground.addChild(createVisualAssetSlot({ label: "deck-surface",
     source: journeyArtAssets.deckBase, fallback: () => deckFallback,
     cacheFallback: true }).container);
+  const fireDeck = createVisualAssetSlot({ label: "journey-fire-deck-reflection",
+    source: journeyArtVariants.deckFireReflection, fallback: () => new Container() }).container;
+  fireDeck.alpha = 0;
+  layers.ground.addChild(fireDeck);
   // These lighting cues are separate from replaceable plates and survive art swaps.
   layers.ground.addChild(new Graphics({ label: "cabin-ambient-light" })
     .poly([386, 564, 431, 564, 685, 823, 336, 829])
@@ -113,6 +130,7 @@ export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>) {
   rope.moveTo(21, 0).lineTo(34, -14).stroke({ color: 0xb29a70, width: 3 });
   rope.moveTo(-21, 2).bezierCurveTo(-43, -14, -43, -31, -16, -39)
     .stroke({ color: 0xb29a70, width: 2, alpha: 0.85 });
+  rope.alpha = .22;
   layers.ground.addChild(rope);
   const cargo = new Graphics({ label: "cargo-crate" })
     .ellipse(1456, 678, 92, 15).fill({ color: art.ink, alpha: 0.42 })
@@ -151,11 +169,24 @@ export function drawDeckScenery(layers: ReturnType<typeof createWorldLayers>) {
   fittings.moveTo(1520, 565).bezierCurveTo(1590, 680, 1480, 760, 1570, 908)
     .stroke({ color: art.ink, width: 5, alpha: 0.75 });
   layers.foreground.addChild(createVisualAssetSlot({ label: "deck-fittings",
-    source: journeyArtAssets.deckFittings, fallback: () => fittings,
+    source: { ...journeyArtAssets.deckFittings, clip: { x: 255, y: 740, width: 1400, height: 210 } },
+    fallback: () => fittings,
     cacheFallback: true }).container);
   layers.foreground.addChild(new Text({ label: "cargo-mark", text: "DEST.\n——",
-    x: 430, y: 580, style: { fontFamily: "Arial", fontSize: 12, fill: 0xd0bea0 } }));
-  return { setBeat(beat: JourneyVisualBeat) {
+    x: 430, y: 606, style: { fontFamily: "Arial", fontSize: 12, fill: 0xd0bea0 } }));
+  return { setProgress(stage: ReturnType<typeof journeyArtStage>) {
+    duskSky.visible = stage.night + stage.fire < .999;
+    // During night-to-fire, night is the opaque backing for the fire crossfade.
+    // Alpha zero alone still incurs render work; explicitly hide unused plates.
+    nightSky.alpha = stage.fire > 0 ? 1 : stage.night;
+    nightSky.visible = stage.night > .001 && stage.fire < .999;
+    fireSky.alpha = stage.fire;
+    fireSky.visible = stage.fire > .001;
+    fireDeck.alpha = stage.fire;
+    fireDeck.visible = stage.fire > .001;
+    layers.ground.tint = stage.groundTint;
+    layers.actors.tint = stage.actorTint;
+  }, setBeat(beat: JourneyVisualBeat) {
     riverLight.alpha = beat === "river" ? 0.72 : beat === "listening" ? 0.28 : 0.12;
     cargoLight.alpha = beat === "cargo" ? 0.8 : 0;
   } };

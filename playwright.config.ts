@@ -5,6 +5,10 @@ export default defineConfig({
   // Canvas tests share the GPU/software renderer. Run one browser at a time so
   // resource contention does not turn movement's stall cap into travel timeouts.
   workers: 1,
+  // Illustrated scene crossfades run on SwiftShader in CI. The world caps each
+  // tick at 50ms, so wall-clock waits need room for real rendered frames.
+  // Velocity/diagonals are still asserted against measured simulation frames.
+  expect: { timeout: 10_000 },
   use: {
     baseURL: "http://127.0.0.1:5173",
   },
