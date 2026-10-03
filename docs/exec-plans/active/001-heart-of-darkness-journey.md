@@ -62,9 +62,42 @@ configuration.
 - [x] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-The approved Journey Deck technical polish is complete. No additional scene,
-redesign or narrative task is started by this milestone.
+The abandoned wood station (part II) is complete and validated; the approved
+Journey Deck is frozen. The next narrative event is the fog-bound approach and
+attack, not another Deck redesign or software-renderer optimization.
 The separate human listening review of environmental audio remains independent.
+
+## Abandoned wood station — 2026-10-03
+
+Base: `cf89772102e8c7c184c84442543eb8b918d5f3a3`. The approved visual tag is
+retained unchanged; this task builds on the technical-polish commit, without
+resetting the branch to an older renderer.
+
+- [x] Inspect existing Heart of Darkness content and establish the next missing episode from Conrad's part II.
+- [x] Compose a separate riverside landing using existing movement, camera, NPC, interaction, weather and audio systems.
+- [x] Unlock spatial disembarkation after completing the existing deckhand exchange; preserve all four Deck stages and assets.
+- [x] Add spatial fuel loading, optional warning and seamanship-book observations, and two approach decisions using Pixi'VN.
+- [x] Preserve scene, independent shore coordinates, evidence, decision and atmospheric progress through canonical Pixi'VN saves.
+- [x] Test both branches, ignored/examined evidence, choices during movement, saves before/after choice, return and clean restart.
+- [x] Review final 1366×768 and 800×600 captures and complete `agent:check` plus full `agent:e2e`.
+- [x] Commit and push this narrative milestone; preserve engine, Phaser stash and preexisting untracked files.
+
+Implementation and literary coverage: `docs/heart-of-darkness/WOOD-STATION.md`.
+The optional proceed branch is an adaptation; waiting for daylight corresponds
+to the novel's cautious approach. Neither fog-bound navigation nor the attack
+is marked implemented by this stop. No inventory or new save UI was added.
+
+Final `agent:check`: TypeScript, 104/104 unit tests in 25 files and build passed.
+Final complete `agent:e2e`: 65/65 tests in 19 files passed in 14.4 minutes,
+including all existing Metamorphosis, Deck, movement, camera, cargo, audio,
+parallax, weather and save/restore coverage. Total: 169 automated tests.
+Four new shore captures are retained in `docs/heart-of-darkness/wood-station-qa/`.
+Both sizes were visually inspected, as were the existing Deck's four stages and
+fire dialogue. No engine, original Deck art/animation source, renderer setting,
+Phaser stash or preexisting untracked file was modified.
+
+### Next narrative milestone (not started)
+- [ ] Implement the fog-bound approach and attack as a separately scoped playable episode, using the saved approach decision and existing evidence.
 
 ## Technical polish of the approved Journey Deck — 2026-10-02
 

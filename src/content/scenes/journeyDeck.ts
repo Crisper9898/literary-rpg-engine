@@ -22,6 +22,7 @@ import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 import { journeyArtStage, journeyArtVariants, type JourneyActorMood } from "../../story/heart-of-darkness/journeyArtStages";
 import { attachJourneyEmbers } from "../../story/heart-of-darkness/journeyEmbers";
 import { attachDisplayResolution } from "../../ui/attachDisplayResolution";
+import { currentJourneySpace, deckConversationCompleted, setJourneySpace } from "../state/woodStopState";
 
 const DECK_LAYER = "journey-deck";
 
@@ -109,7 +110,27 @@ export function showJourneyDeck(options: { progress?: () => number; displayResol
   });
   attachJourneyAudioDiagnostics(presentation, player, audio, canvas.app.ticker, surface);
   attachJourneyConversation(presentation, player, npc, canvas.app.ticker, surface,
-    createJourneyCargoInspection(), visual.setBeat);
+    createJourneyCargoInspection(), visual.setBeat, [{
+      id: "wood-stop-landing", prompt: "E · Desembarcar junto a la cabaña",
+      target: () => ({ x: 430, y: 850 }), range: 105, enabled: deckConversationCompleted,
+      execute: async () => {
+        setJourneySpace("wood-stop");
+        await showJourneySpace();
+      },
+    }]);
   surface.focus({ preventScroll: true });
   return { camera, npc, player, atmosphere, voyage, audio };
+}
+
+/** Content scene composition after entry or Pixi'VN restore; no parallel save format. */
+export async function showJourneySpace() {
+  for (const id of [DECK_LAYER, "journey-wood-stop"]) {
+    const old = canvas.layers.get(id);
+    if (old) { canvas.layers.remove(id); old.destroy({ children: true }); }
+  }
+  if (currentJourneySpace() === "wood-stop") {
+    const { showWoodStop } = await import("./showWoodStop");
+    return showWoodStop();
+  }
+  return showJourneyDeck();
 }

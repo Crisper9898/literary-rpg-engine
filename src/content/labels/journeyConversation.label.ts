@@ -2,6 +2,7 @@ import { narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
 import { deckConversation as lines } from "../../story/heart-of-darkness/conversation";
 import { hasInspectedCargoMark } from "../state/journeyState";
 import { journeyDeckhand, marlow } from "../characters";
+import { completeDeckConversation } from "../state/woodStopState";
 
 export const journeyRiverAnswer = newLabel("journey-talk-river", [
   () => { narration.dialogue = { character: marlow, text: lines.riverQuestion }; },
@@ -26,6 +27,7 @@ export const journeyConversation = newLabel("journey-talk", [
   },
   () => { narration.dialogue = { character: journeyDeckhand, text: lines.farewell }; },
   () => {
+    completeDeckConversation();
     narration.dialogue = undefined;
     narration.choices = undefined;
     // Return to the still-mounted deck without advancing/rebuilding its start step.

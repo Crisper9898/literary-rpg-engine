@@ -16,12 +16,13 @@ export interface ConversationViewState {
 /** Presentation only. Canonical dialogue and choices stay in Pixi'VN. */
 export function createJourneyConversationView(root: HTMLElement, surface: HTMLCanvasElement, actions: {
   interact(): void; advance(): void; choose(index: number): void;
-}) {
+}, options: { chapter?: string; ariaLabel?: string } = {}) {
   const listeners = new AbortController();
   let controlListeners = new AbortController();
   const hud = document.createElement("aside");
   hud.className = "journey-conversation";
-  hud.setAttribute("aria-label", "Conversación en la cubierta");
+  hud.setAttribute("aria-label", options.ariaLabel ?? "Conversación en la cubierta");
+  if (options.chapter) hud.style.setProperty("--journey-chapter", JSON.stringify(options.chapter));
   const prompt = document.createElement("button");
   prompt.dataset.testid = "talk-prompt";
   prompt.className = "journey-talk-prompt";

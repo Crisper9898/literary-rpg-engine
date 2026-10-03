@@ -11,7 +11,8 @@ import { journeyVisualBeat, type JourneyVisualBeat } from "../../story/heart-of-
 /** Spatial/input adapter only: no copied dialogue cursor, choices, history or flags. */
 export function attachJourneyConversation(presentation: Container, player: Container,
   npc: NpcRoutineController, ticker: Ticker, surface: HTMLCanvasElement,
-  inspection?: SpatialAction, setVisualBeat?: (beat: JourneyVisualBeat) => void) {
+  inspection?: SpatialAction, setVisualBeat?: (beat: JourneyVisualBeat) => void,
+  additionalActions: readonly SpatialAction[] = []) {
   const root = surface.parentElement!;
   const listeners = new AbortController();
   let disposed = false;
@@ -43,7 +44,7 @@ export function attachJourneyConversation(presentation: Container, player: Conta
       void run(() => narration.call(journeyConversation, {}));
     },
   };
-  interactions = new SpatialInteractions(() => player.position, inspection ? [inspection, talk] : [talk]);
+  interactions = new SpatialInteractions(() => player.position, [...(inspection ? [inspection] : []), talk, ...additionalActions]);
   const interact = () => {
     if (active()) { advance(); return; }
     if (disposed || busy) return;
@@ -57,6 +58,7 @@ export function attachJourneyConversation(presentation: Container, player: Conta
   };
   const view = createJourneyConversationView(root, surface, { interact, advance, choose });
   const render = () => {
+    if (disposed) return;
     const isActive = active();
     const available = isActive ? undefined : interactions.available();
     const dialogue = isActive ? narration.dialogue : undefined;
