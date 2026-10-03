@@ -62,9 +62,10 @@ configuration.
 - [x] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-The abandoned wood station (part II) is complete and validated; the approved
-Journey Deck is frozen. The next narrative event is the fog-bound approach and
-attack, not another Deck redesign or software-renderer optimization.
+The fog-bound approach and shore attack (part II) are implemented and validated;
+the approved Journey Deck is frozen. The next narrative milestone is the Inner
+Station and Russian trader, not another Deck redesign or software-renderer
+optimization. It is not started by this delivery.
 The separate human listening review of environmental audio remains independent.
 
 ## Abandoned wood station — 2026-10-03
@@ -96,8 +97,34 @@ Both sizes were visually inspected, as were the existing Deck's four stages and
 fire dialogue. No engine, original Deck art/animation source, renderer setting,
 Phaser stash or preexisting untracked file was modified.
 
-### Next narrative milestone (not started)
-- [ ] Implement the fog-bound approach and attack as a separately scoped playable episode, using the saved approach decision and existing evidence.
+## Fog-bound approach and shore attack — 2026-10-03
+
+Base: `7fc7cab6ebee07fddbae2f350d21a2dd59fd86bb`. The approved tag, four Deck
+stages, all Deck art/animation assets and `src/engine/` are retained unchanged.
+
+- [x] Implement the fog-bound approach and attack as a separately scoped playable episode, using the saved approach decision and existing evidence.
+- [x] Gate spatial helm entry after the hut return; preserve the existing landing/deck interactions.
+- [x] Add slow steering, channel bounds, three kinds of hazards, swept contact slowdowns and a player-operated whistle.
+- [x] Compose layered mist, water cues, briefly occluded bank figures, arrows, impact traces, smoke and crew reactions.
+- [x] Stage the helmsman's loss with matched standing/fallen art, a brief saved interruption and Marlow's reaction; no gore or shooting controls.
+- [x] Queue Pixi narration once and preserve navigation, position, decision, seen lines, loss, helm mode and atmosphere in canonical saves.
+- [x] Test both hut decisions, pre/during/post attack and active-line restoration, independent walking, contact, cleanup and both resolutions.
+- [x] Complete final full regression gate, retain and inspect all eight captures, and prepare the milestone delivery.
+
+Implementation, canonical/ adapted literary coverage, controls, source provenance,
+save contract and limitations: `docs/heart-of-darkness/FOG-APPROACH.md`.
+Final `agent:check`: TypeScript, 112/112 unit tests in 28 files and build passed.
+Final complete `agent:e2e`: 69/69 tests in 21 files passed in 16.1 minutes, exit 0.
+Total: 181 automated tests. All eight final captures are retained and visually
+inspected in `docs/heart-of-darkness/fog-approach-qa/`; the existing Deck fire
+dialogue and Metamorphosis room/hallway captures were inspected for regression.
+Both viewport sizes retain complete text/buttons, crew, wheel and water view.
+No engine, original Deck assets/animation, renderer, Metamorphosis source,
+approved checkpoint, Phaser stash or preexisting untracked file was modified.
+No Inner Station arrival is implemented by this episode.
+
+### Following narrative milestone (not started)
+- [ ] Implement arrival at the Inner Station and the Russian trader as a separately scoped playable episode.
 
 ## Technical polish of the approved Journey Deck — 2026-10-02
 

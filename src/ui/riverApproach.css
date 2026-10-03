@@ -1,0 +1,15 @@
+/* Only this navigation episode changes the editorial frame. Deck stays frozen. */
+.approach-conversation .journey-dialogue-panel { width: 31%; top: 6%; }
+.approach-conversation .journey-dialogue-status { display: none; }
+.approach-conversation .journey-dialogue-panel::before { content: "II / EL CANAL CERRADO"; }
+.approach-navigation-status {
+  position: absolute; right: 5%; bottom: 13%; max-width: 42%;
+  padding: .55em .8em; margin: 0; pointer-events: none;
+  color: #d4d6c3; background: #101c20df; border-right: 2px solid #7b918a;
+  font: clamp(12px, 1.1vw, 16px)/1.5 Georgia, serif; white-space: pre-line;
+}
+@media (max-width: 850px) {
+  .approach-conversation .journey-dialogue-panel { width: 36%; left: 3%; top: 3%; }
+  .approach-conversation .journey-dialogue-text { font-size: 13px; }
+  .approach-navigation-status { font-size: 12px; bottom: 13%; right: 3%; max-width: 45%; }
+}

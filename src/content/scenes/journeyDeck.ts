@@ -22,7 +22,7 @@ import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 import { journeyArtStage, journeyArtVariants, type JourneyActorMood } from "../../story/heart-of-darkness/journeyArtStages";
 import { attachJourneyEmbers } from "../../story/heart-of-darkness/journeyEmbers";
 import { attachDisplayResolution } from "../../ui/attachDisplayResolution";
-import { currentJourneySpace, deckConversationCompleted, setJourneySpace } from "../state/woodStopState";
+import { currentJourneySpace, deckConversationCompleted, setJourneySpace, approachDecision, woodStopDeparted } from "../state/woodStopState";
 
 const DECK_LAYER = "journey-deck";
 
@@ -117,6 +117,11 @@ export function showJourneyDeck(options: { progress?: () => number; displayResol
         setJourneySpace("wood-stop");
         await showJourneySpace();
       },
+    }, {
+      id: "approach-helm", prompt: "E · Reanudar el viaje desde el timón",
+      target: () => ({ x: 900, y: 748 }), range: 85,
+      enabled: () => woodStopDeparted() && !!approachDecision(),
+      execute: async () => { setJourneySpace("approach"); await showJourneySpace(); },
     }]);
   surface.focus({ preventScroll: true });
   return { camera, npc, player, atmosphere, voyage, audio };
@@ -124,13 +129,17 @@ export function showJourneyDeck(options: { progress?: () => number; displayResol
 
 /** Content scene composition after entry or Pixi'VN restore; no parallel save format. */
 export async function showJourneySpace() {
-  for (const id of [DECK_LAYER, "journey-wood-stop"]) {
+  for (const id of [DECK_LAYER, "journey-wood-stop", "journey-approach"]) {
     const old = canvas.layers.get(id);
     if (old) { canvas.layers.remove(id); old.destroy({ children: true }); }
   }
   if (currentJourneySpace() === "wood-stop") {
     const { showWoodStop } = await import("./showWoodStop");
     return showWoodStop();
+  }
+  if (currentJourneySpace() === "approach") {
+    const { showRiverApproach } = await import("./showRiverApproach");
+    return showRiverApproach();
   }
   return showJourneyDeck();
 }

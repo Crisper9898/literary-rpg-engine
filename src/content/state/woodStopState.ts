@@ -3,8 +3,11 @@ import { createPixiStorageCheckpoint } from "../../engine/world/createPixiStorag
 import type { Point } from "../../engine/movement/MovementController";
 
 export type ApproachDecision = "wait" | "proceed";
-export const currentJourneySpace = () => storage.get<string>("journey.currentSpace") === "wood-stop" ? "wood-stop" : "deck";
-export const setJourneySpace = (space: "deck" | "wood-stop") => storage.set("journey.currentSpace", space);
+export const currentJourneySpace = () => {
+  const value = storage.get<string>("journey.currentSpace");
+  return value === "wood-stop" || value === "approach" ? value : "deck";
+};
+export const setJourneySpace = (space: "deck" | "wood-stop" | "approach") => storage.set("journey.currentSpace", space);
 export const deckConversationCompleted = () => storage.get<boolean>("journey.deckConversationCompleted") === true;
 export const completeDeckConversation = () => storage.set("journey.deckConversationCompleted", true);
 export const woodLoaded = () => storage.get<boolean>("journey.woodLoaded") === true;

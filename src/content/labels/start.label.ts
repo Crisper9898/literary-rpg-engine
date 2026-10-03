@@ -4,7 +4,7 @@ export const startLabel = newLabel("start", [
   async () => {
     // Stop the old world writing checkpoints before yielding for scene code.
     // Game.start has reset storage; a live old ticker must not populate it again.
-    for (const id of ["journey-deck", "journey-wood-stop"]) {
+    for (const id of ["journey-deck", "journey-wood-stop", "journey-approach"]) {
       const previous = canvas.layers.get(id);
       if (previous) { canvas.layers.remove(id); previous.destroy({ children: true }); }
     }
