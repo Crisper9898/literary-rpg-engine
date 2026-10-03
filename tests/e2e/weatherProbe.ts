@@ -16,9 +16,10 @@ function nodes() {
   return { presentation, world, fog };
 }
 
-export function mountWeather(controlled = false) {
+export function mountWeather(controlled = false, fullResolution = false) {
   progress = 0;
-  scene = showJourneyDeck(controlled ? { progress: () => progress } : {});
+  scene = showJourneyDeck({ ...(controlled ? { progress: () => progress } : {}),
+    displayResolution: !fullResolution });
 }
 export function setWeatherProgress(value: number) { progress = value; }
 export function frameJourneyArt() { scene.camera.focus({ x: 960, y: 650 }); }

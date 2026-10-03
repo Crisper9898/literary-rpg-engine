@@ -8,6 +8,7 @@ const inspect = (page: Page) => page.evaluate(async () => {
 test("P shows live Journey audio values without interrupting movement or dialogue", async ({ page }, testInfo) => {
   test.setTimeout(70_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await expect.poll(() => page.locator("#root canvas").count()).toBe(1);
   await page.evaluate(async () => {
     const url = "/tests/e2e/audioProbe.ts";

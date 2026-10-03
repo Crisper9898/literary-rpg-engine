@@ -21,11 +21,12 @@ import { attachActorDepth } from "../../ui/attachActorDepth";
 import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 import { journeyArtStage, journeyArtVariants, type JourneyActorMood } from "../../story/heart-of-darkness/journeyArtStages";
 import { attachJourneyEmbers } from "../../story/heart-of-darkness/journeyEmbers";
+import { attachDisplayResolution } from "../../ui/attachDisplayResolution";
 
 const DECK_LAYER = "journey-deck";
 
 /** Rebuild transient scenery on label entry; Pixi'VN remains the canvas owner. */
-export function showJourneyDeck(options: { progress?: () => number } = {}) {
+export function showJourneyDeck(options: { progress?: () => number; displayResolution?: boolean } = {}) {
   const previous = canvas.layers.get(DECK_LAYER);
   if (previous) {
     canvas.layers.remove(DECK_LAYER);
@@ -34,6 +35,7 @@ export function showJourneyDeck(options: { progress?: () => number } = {}) {
   const { presentation, player, world, deckhand, layers, visual, marlowVisual } = createJourneyDeck();
   canvas.layers.add(DECK_LAYER, presentation);
   const surface = canvas.app.canvas as HTMLCanvasElement;
+  if (options.displayResolution !== false) attachDisplayResolution(presentation, canvas.app.renderer, surface);
   surface.tabIndex = 0;
   surface.setAttribute("aria-label", "Heart of Darkness: mueve a Marlow con WASD o las flechas");
   attachPlayerMovement(player, canvas.app.ticker, surface, {

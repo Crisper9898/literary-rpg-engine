@@ -1,10 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const useProbe = <T>(page: Page, method: string, value?: unknown) => page.evaluate(async ({ method, value }) => {
+const useProbe = async <T>(page: Page, method: string, value?: unknown) => {
+  if (method === "mountRoom") await expect(page.getByTestId("metamorphosis-prompt")).toBeVisible();
+  return page.evaluate(async ({ method, value }) => {
   const url = "/tests/e2e/metamorphosisProbe.ts";
   const probe = await import(url);
   return (probe as Record<string, (...args: unknown[]) => T>)[method](...(value === undefined ? [] : [value]));
-}, { method, value });
+  }, { method, value });
+};
 const place = (page: Page, x: number, y = 700) => page.evaluate(async ({ x, y }) => {
   const url = "/tests/e2e/metamorphosisProbe.ts";
   (await import(url)).placeGregor(x, y);
@@ -135,6 +138,15 @@ test("Gregor moves, interacts with window and door, and restores position, flags
   await place(page, 1290, 650);
   await page.keyboard.press("e");
   await expect(page.getByTestId("metamorphosis-line")).toContainText("lluvia");
+  // A fresh lazy entry must not let the old scene repopulate reset storage.
+  await page.keyboard.down("a");
+  await page.evaluate(() => window.pixiVN.start("metamorphosis-start", {}));
+  await expect(page.getByTestId("metamorphosis-prompt")).toBeVisible();
+  const fresh = await useProbe<{ space: string; position: { x: number; y: number }; windowSeen: boolean }>(page, "inspectSpace");
+  expect(fresh.space).toBe("room");
+  expect(fresh.position).toEqual({ x: 960, y: 730 });
+  expect(fresh.windowSeen).toBe(false);
+  await page.keyboard.up("a");
   expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
 });
 

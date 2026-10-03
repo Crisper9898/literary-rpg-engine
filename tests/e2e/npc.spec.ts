@@ -30,6 +30,7 @@ test("deckhand works for two full live cycles while Marlow and the camera remain
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await expect(page.locator("#root canvas")).toBeVisible();
   await page.evaluate(async () => {
     const moduleUrl = "/tests/e2e/npcProbe.ts";

@@ -16,6 +16,8 @@ async function approach(page: Page) {
   finally { await page.keyboard.up(key); }
 }
 async function begin(page: Page) {
+  // Canvas creation precedes the lazy scene; wait for its actual input UI.
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await approach(page);
   await page.keyboard.press("e");
   await expect(page.getByTestId("dialogue-text")).toContainText("amarras");

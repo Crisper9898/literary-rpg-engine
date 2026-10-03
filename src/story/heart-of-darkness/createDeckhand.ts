@@ -5,6 +5,7 @@ import { journeyVisual as art } from "./journeyVisual";
 import { journeyArtAssets } from "./journeyArtAssets";
 import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 import type { JourneyActorMood } from "./journeyArtStages";
+import { JourneyWalkCycle } from "./JourneyWalkCycle";
 
 /** Inked deck worker: individual limbs keep the existing rope/cargo/lookout tasks legible. */
 export function createDeckhand() {
@@ -21,6 +22,8 @@ export function createDeckhand() {
   const body = visual.container;
   body.scale.set(1.32);
   let mood: JourneyActorMood = "neutral";
+  const walk = new JourneyWalkCycle(78);
+  let previousX = 0, previousY = 0;
   actor.addChild(body);
   const leg = (x: number) => {
     const part = new Graphics({ x, y: -20 })
@@ -71,6 +74,9 @@ export function createDeckhand() {
 
   return { actor, setMood(next: JourneyActorMood) { mood = next; }, pose(state: NpcRoutineState, elapsedMS: number) {
     const walking = state.isMoving;
+    const distance = Math.hypot(actor.x - previousX, actor.y - previousY);
+    const gait = walk.advance(walking && distance < 100 ? distance : 0);
+    previousX = actor.x; previousY = actor.y;
     const stride = walking ? Math.sin(state.elapsedMS * 0.013) : 0;
     const working = state.mode === "idle";
     const coiling = working && state.activity === "coil-rope";
@@ -79,7 +85,7 @@ export function createDeckhand() {
     const gesture = Math.sin(state.elapsedMS * 0.006);
     workRope.alpha = coiling ? 0.9 : 0;
     workRope.y = coiling ? gesture * 2 : 0;
-    visual.setState(walking ? (stride >= 0 ? "walkA" : "walkB") : mood === "alarm" ? "alarm" :
+    visual.setState(walking ? `walk${gait.frame}` : mood === "alarm" ? "alarm" :
       coiling ? (gesture >= 0 ? "coilA" : "coilB") : checking ? "cargo" :
         lookout ? "lookout" : mood === "concern" ? "concern" : "idle");
     if (Math.abs(state.facing.x) > .2) body.scale.x = Math.sign(state.facing.x) * body.scale.y;
@@ -89,8 +95,8 @@ export function createDeckhand() {
     rightLeg.rotation = ease(rightLeg.rotation, -stride * 0.25);
     leftArm.rotation = ease(leftArm.rotation, coiling ? -0.55 + gesture * 0.3 : checking ? -1.5 : -stride * 0.2);
     rightArm.rotation = ease(rightArm.rotation, coiling ? 0.55 - gesture * 0.3 : checking ? 1.6 : lookout ? 2.4 : stride * 0.2);
-    body.y = ease(body.y, walking ? -Math.abs(stride) * 2 : coiling ? gesture : 0);
-    body.rotation = ease(body.rotation, coiling ? gesture * 0.025 : 0);
+    body.y = ease(body.y, walking ? gait.lift : coiling ? gesture : 0);
+    body.rotation = ease(body.rotation, walking ? gait.sway : coiling ? gesture * 0.025 : 0);
     head.x = ease(head.x, state.facing.x * 2);
     nose.scale.x = state.facing.x < -0.2 ? -1 : 1;
   } };

@@ -25,6 +25,36 @@ export function inspectJourneyDepth() {
   return actors.children.map((actor) => ({ id: actor.label, y: actor.y, zIndex: actor.zIndex }));
 }
 
+export function inspectJourneySurface() {
+  const renderer = canvas.app.renderer;
+  const surface = canvas.app.canvas as HTMLCanvasElement;
+  const bounds = surface.getBoundingClientRect();
+  return { logical: [renderer.screen.width, renderer.screen.height],
+    pixels: [surface.width, surface.height], display: [bounds.width, bounds.height],
+    ratio: devicePixelRatio };
+}
+
+/** Sample actual sprite cells while both actors move; never synthesize gait state. */
+export function sampleJourneyWalk(frames = 72) {
+  const world = canvas.layers.get("journey-deck")!.getChildByLabel("world") as Container;
+  const actors = world.getChildByLabel("actors") as Container;
+  const image = (id: string, label: string) => actors.getChildByLabel(id)!
+    .getChildByLabel(label)!.getChildByLabel(`${label}-image`) as Sprite;
+  const player = image("playerSpawn", "marlow-art");
+  const npc = image("journey-deckhand", "deckhand-body");
+  const playerCells = new Set<number>(), npcCells = new Set<number>();
+  return new Promise<{ player: number[]; npc: number[] }>((resolve, reject) => {
+    let count = 0;
+    const cleanup = () => { canvas.app.ticker.remove(sample); clearTimeout(timeout); };
+    const sample = () => {
+      playerCells.add(player.texture.frame.x); npcCells.add(npc.texture.frame.x);
+      if (++count === frames) { cleanup(); resolve({ player: [...playerCells], npc: [...npcCells] }); }
+    };
+    const timeout = setTimeout(() => { cleanup(); reject(new Error("Walk sampling timed out")); }, 20_000);
+    canvas.app.ticker.add(sample, undefined, UPDATE_PRIORITY.LOW);
+  });
+}
+
 export function inspectJourneyArtSlots() {
   const scene = canvas.layers.get("journey-deck")!;
   const world = scene.getChildByLabel("world") as Container;

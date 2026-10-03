@@ -69,11 +69,13 @@ async function askSailorAboutCargo(page: Page) {
 test("inspected tally survives PixiVN export/restore and changes later dialogue", async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await inspectCargoTally(page);
   const serialized = await save(page);
   expect(JSON.parse(serialized).storageData).toBeDefined();
   // Keep the serialized save outside the page to prove it survives a fresh load.
   await page.reload();
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   expect((await probe(page)).inspected).toBe(false);
   await restore(page, serialized);
   expect(await probe(page)).toEqual({ inspected: true, scene: true });
@@ -88,6 +90,7 @@ test("inspected tally survives PixiVN export/restore and changes later dialogue"
 test("ignored tally restores the original answer even after inspection in the current run", async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   expect((await probe(page)).inspected).toBe(false);
   const serialized = await save(page);
   await inspectCargoTally(page);
@@ -102,6 +105,7 @@ test("ignored tally restores the original answer even after inspection in the cu
 test("Marlow returns to the saved world coordinates after moving elsewhere", async ({ page }) => {
   test.setTimeout(55_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await page.locator("canvas").focus();
   await page.keyboard.down("d");
   try { await expect.poll(async () => (await playerPosition(page)).x).toBeGreaterThan(850); }
@@ -126,6 +130,7 @@ test("Marlow returns to the saved world coordinates after moving elsewhere", asy
 test("restoring an earlier voyage phase restores its river progress and fog", async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await mountSpatial(page);
   await advanceVoyage(page, 1000);
   await expect.poll(async () => (await phase(page)).fogAlpha, { timeout: 20_000 }).toBeGreaterThan(.15);

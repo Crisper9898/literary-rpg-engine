@@ -1,11 +1,10 @@
-import { narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
+import { canvas, narration, newChoiceOption, newLabel } from "@drincs/pixi-vn";
 import { metamorphosisText as lines } from "../../story/metamorphosis/text";
 import { clerk, father, gregor, grete } from "../metamorphosis/character";
 import { clerkResponse, familyResponse, greteResponse, hasSeenWindow,
   markClerkArrivalHeard, markClerkLeaving, markFamilyActivityHeard, markFatherSpoken,
   markGreteReacted, setClerkResponse,
   setFamilyResponse, setGreteResponse } from "../metamorphosis/state";
-import { showMetamorphosisSpace } from "../metamorphosis/showRoom";
 
 const close = () => {
   narration.dialogue = undefined;
@@ -154,6 +153,13 @@ export const metamorphosisHallwayFatherAfter = newLabel("metamorphosis-hallway-f
 ]);
 
 export const metamorphosisStart = newLabel("metamorphosis-start", [
-  () => { showMetamorphosisSpace(); narration.dialogue = undefined; },
+  async () => {
+    // Dispose checkpoint writers before asynchronous scene loading on restart.
+    for (const id of ["metamorphosis-room", "metamorphosis-hallway"]) {
+      const previous = canvas.layers.get(id);
+      if (previous) { canvas.layers.remove(id); previous.destroy({ children: true }); }
+    }
+    const { showMetamorphosisSpace } = await import("../metamorphosis/showRoom");
+    showMetamorphosisSpace(); narration.dialogue = undefined; },
   () => { narration.dialogue = undefined; },
 ]);

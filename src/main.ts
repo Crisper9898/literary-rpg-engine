@@ -15,7 +15,9 @@ await Game.init(root, {
   width: 1920,
   height: 1080,
   backgroundColor: "#151a1c",
-  antialias: true,
+  // Journey's illustrated textures already carry antialiased contours. Avoid
+  // multisampling every covered pixel; retain the existing setting for other works.
+  antialias: selected.key !== "journey",
   resizeMode: "contain",
 });
 

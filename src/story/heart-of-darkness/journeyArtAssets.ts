@@ -12,7 +12,7 @@ export const journeyArtAssets = {
   deckFittings: { url: "/assets/art/journey-deck/illustrated/journey-deck-fittings.webp", width: 1400, height: 410, x: 255, y: 540 },
   cargo: { url: "/assets/art/journey-deck/illustrated/journey-cargo.webp", width: 1110, height: 170, x: 420, y: 540 },
   marlowSheet: {
-    url: "/assets/art/journey-deck/illustrated/marlow-sheet.webp",
+    url: "/assets/art/journey-deck/illustrated/marlow-motion-sheet.webp",
     width: 160, height: 160,
     frames: {
       idle: { x: 0, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
@@ -20,10 +20,12 @@ export const journeyArtAssets = {
       walkB: { x: 320, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
       concern: { x: 480, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
       alarm: { x: 640, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
+      ...Object.fromEntries(Array.from({ length: 6 }, (_, index) => [`walk${index}`,
+        { x: 800 + index * 160, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } }])),
     },
   },
   deckhandSheet: {
-    url: "/assets/art/journey-deck/illustrated/deckhand-sheet.webp",
+    url: "/assets/art/journey-deck/illustrated/deckhand-motion-sheet.webp",
     width: 160, height: 160,
     frames: {
       idle: { x: 0, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
@@ -35,6 +37,8 @@ export const journeyArtAssets = {
       lookout: { x: 960, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
       concern: { x: 1120, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
       alarm: { x: 1280, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } },
+      ...Object.fromEntries(Array.from({ length: 6 }, (_, index) => [`walk${index}`,
+        { x: 1440 + index * 160, y: 0, width: 160, height: 160, pivot: { x: 80, y: 142 } }])),
     },
   },
 } satisfies Record<string, VisualSource>;

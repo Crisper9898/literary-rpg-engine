@@ -34,6 +34,7 @@ async function askAboutCargo(page: Page) {
 test("examining the optional cargo mark changes the sailor's later answer", async ({ page }, info) => {
   test.setTimeout(90_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   expect(await observed(page)).toBe(false);
   await page.locator("canvas").focus();
   await page.keyboard.down("a");
@@ -57,6 +58,7 @@ test("examining the optional cargo mark changes the sailor's later answer", asyn
 test("ignoring the cargo mark keeps the ordinary answer", async ({ page }, info) => {
   test.setTimeout(60_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   expect(await observed(page)).toBe(false);
   await askAboutCargo(page);
   await expect(page.getByTestId("dialogue-text")).toContainText("Las cajas tienen destino escrito");

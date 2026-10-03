@@ -1,5 +1,11 @@
 # Journey Deck — authoritative illustrated pass
 
+This document records the approved visual pass at `1761bf2`. The subsequent
+[technical polish](TECHNICAL-POLISH.md) preserves these plates and poses but
+extends both actor sheets with six walk cells: runtime now uses
+`marlow-motion-sheet.webp` (1760×160) and `deckhand-motion-sheet.webp` (2400×160).
+Its measurements, current buffer policy and QA captures are documented separately.
+
 The user-provided dusk, night and burning-river images supersede the SVG drawing
 style for this scene. The earlier handoff and the eleven SVGs remain historical
 composition references. Runtime now uses independently replaceable WebP plates

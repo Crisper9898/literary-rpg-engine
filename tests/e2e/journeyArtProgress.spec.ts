@@ -8,6 +8,7 @@ const inspect = (page: Page) => page.evaluate(async () => {
 test("illustrated Journey deck progresses through dusk, jungle, darkness and fire at both viewports", async ({ page }, info) => {
   test.setTimeout(240_000);
   const errors: string[] = [];
+  const measurements: { stage: string; viewport: string; fps: number }[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect.poll(() => inspect(page)).not.toBeNull();
@@ -48,6 +49,18 @@ test("illustrated Journey deck progresses through dusk, jungle, darkness and fir
       .toBe(name === "dusk" ? 0 : name === "fire" ? 640 : 480);
     for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {
       await page.setViewportSize(viewport);
+      await expect.poll(async () => page.evaluate(async () => {
+        const url = "/tests/e2e/deckProbe.ts";
+        const size = (await import(url)).inspectJourneySurface();
+        return size.pixels.every((value: number, i: number) =>
+          Math.abs(value - size.display[i] * size.ratio) < 2);
+      })).toBe(true);
+      const sample = await page.evaluate(async () => {
+        const url = "/tests/e2e/weatherProbe.ts";
+        return (await import(url)).sampleWeather(24);
+      });
+      measurements.push({ stage: name, viewport: `${viewport.width}x${viewport.height}`,
+        fps: Math.round(sample.fps * 10) / 10 });
       await page.screenshot({ path: info.outputPath(`journey-${name}-${viewport.width}x${viewport.height}.png`) });
     }
   }
@@ -64,4 +77,6 @@ test("illustrated Journey deck progresses through dusk, jungle, darkness and fir
   }
   expect(errors).toEqual([]);
   expect(await page.evaluate(() => window.pixiVN.errors)).toEqual([]);
+  console.log("Journey stage FPS", JSON.stringify(measurements));
+  await info.attach("journey-stage-fps", { body: JSON.stringify(measurements, null, 2), contentType: "application/json" });
 });

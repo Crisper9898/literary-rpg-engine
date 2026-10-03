@@ -22,6 +22,7 @@ test("Journey layers blend by proximity, use Pixi'VN and survive restore without
     if (message.type() === "warning") warnings.push(message.text());
   });
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await expect.poll(() => page.locator("canvas").count()).toBe(1);
   await mount(page);
   await page.locator("canvas").click({ position: { x: 80, y: 80 } });

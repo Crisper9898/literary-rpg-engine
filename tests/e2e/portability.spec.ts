@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("a neutral scene moves, interacts and restores its PixiVN state without Journey content", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   const result = await page.evaluate(async () => {
     const url = "/tests/e2e/portabilityProbe.ts";
     return (await import(url)).exercisePortableScene();

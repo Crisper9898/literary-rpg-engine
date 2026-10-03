@@ -62,10 +62,39 @@ configuration.
 - [x] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-The authoritative illustrated Journey Deck milestone is validated. No further
-implementation task is scheduled in this milestone; do not automatically expand
-to another scene or narrative task.
+The approved Journey Deck technical polish is complete. No additional scene,
+redesign or narrative task is started by this milestone.
 The separate human listening review of environmental audio remains independent.
+
+## Technical polish of the approved Journey Deck — 2026-10-02
+
+- [x] Preserve the approved visual commit with a Git tag and checkpoint document.
+- [x] Profile software rendering by component, resolution and render work.
+- [x] Apply measured optimizations without visibly degrading approved art.
+- [x] Improve the short cartoon walk cycle without a complex animation system.
+- [x] Assess and reduce the initial bundle through bounded scene loading changes.
+- [x] Inspect four stages and dialogue at 1366×768 and 800×600.
+- [x] Run `agent:check` and full `agent:e2e`, document before/after results, commit and push.
+
+Checkpoint: `docs/art-handoff/journey-deck/APPROVED-CHECKPOINT.md`.
+
+Closed on 2026-10-03. The controlled SwiftShader night sample improved from
+4.3 to 13.2 FPS by disabling Journey MSAA and matching output pixels to display
+size. No effects were removed. Four-stage samples are 12.3–14.5 FPS at 1366×768
+and 33.4–39.5 at 800×600; hardware GPU performance is not inferred from these.
+Six distance-driven walking cells extend each actor's original sheet. Lazy
+scene entry and one shared dependency chunk reduce the largest bundle from
+602.12 to 463.99 kB without raising the warning limit. Restart cleanup prevents
+old checkpoint writers racing the asynchronous scene load; saved label indices
+remain unchanged. `src/engine/` is intact.
+
+`agent:check`: TypeScript, 102/102 unit tests in 24 files and build passed.
+Full `agent:e2e`: 61/61 tests in 18 files passed, about 12.9 minutes. All four
+stages and dialogue were inspected at both resolutions. Total coverage: 163
+tests. Measurements, ten retained captures, asset provenance and remaining
+software-renderer limits: `docs/art-handoff/journey-deck/TECHNICAL-POLISH.md`.
+SwiftShader still falls below 20 FPS at desktop size; the unchanged 50 ms
+simulation cap can slow travel there. No global timing/engine refactor was made.
 
 ## Authoritative illustrated Journey Deck — 2026-10-01
 
