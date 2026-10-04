@@ -15,3 +15,6 @@ RegisteredCharacters.add(journeyDeckhand);
 
 export const marlow = new CharacterBaseModel("marlow", { name: "Marlow", color: "#dfc495" });
 RegisteredCharacters.add(marlow);
+
+export const russianTrader = new CharacterBaseModel("russian-trader", { name: "El ruso", color: "#d0c09a" });
+RegisteredCharacters.add(russianTrader);

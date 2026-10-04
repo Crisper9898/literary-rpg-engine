@@ -129,7 +129,7 @@ export function showJourneyDeck(options: { progress?: () => number; displayResol
 
 /** Content scene composition after entry or Pixi'VN restore; no parallel save format. */
 export async function showJourneySpace() {
-  for (const id of [DECK_LAYER, "journey-wood-stop", "journey-approach"]) {
+  for (const id of [DECK_LAYER, "journey-wood-stop", "journey-approach", "journey-station-arrival", "journey-inner-station"]) {
     const old = canvas.layers.get(id);
     if (old) { canvas.layers.remove(id); old.destroy({ children: true }); }
   }
@@ -140,6 +140,14 @@ export async function showJourneySpace() {
   if (currentJourneySpace() === "approach") {
     const { showRiverApproach } = await import("./showRiverApproach");
     return showRiverApproach();
+  }
+  if (currentJourneySpace() === "station-arrival") {
+    const { showStationArrival } = await import("./showStationArrival");
+    return showStationArrival();
+  }
+  if (currentJourneySpace() === "inner-station") {
+    const { showInnerStation } = await import("./showInnerStation");
+    return showInnerStation();
   }
   return showJourneyDeck();
 }

@@ -1,0 +1,8 @@
+.station-conversation .journey-dialogue-panel { width: 32%; top: 6%; }
+.station-conversation .journey-dialogue-status { font-size: 12px; margin-top: .45em; }
+.station-conversation .journey-dialogue-panel { background: linear-gradient(130deg, #152a2cf2, #111d21ee); border-color: #a1b3a680; }
+@media (max-width: 850px) {
+  .station-conversation .journey-dialogue-panel { left: 3%; top: 3%; width: 39%; }
+  .station-conversation .journey-dialogue-text { font-size: 13px; }
+  .station-conversation .journey-dialogue-status { font-size: 10px; }
+}

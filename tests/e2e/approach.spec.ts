@@ -68,7 +68,9 @@ for (const decision of ["wait", "proceed"]) {
     await page.keyboard.press("Space");
     await expect.poll(async () => (await probe(page, "inspect")).navigation.whistle).toBe(true);
     await beat(page, 1, "Estación Interior");
-    await page.keyboard.press("e"); // Cannot replay an ended episode or enter another scene.
+    await probe(page, "moveAway"); // Entry to the next episode is spatial, not a global E shortcut.
+    await expect.poll(async () => (await probe(page, "inspect")).position.x).toBe(1400);
+    await page.keyboard.press("e"); // Outside the helm: no replay or accidental transition.
     const after = await probe(page, "save");
     await probe(page, "restore", before);
     expect((await probe(page, "inspect")).fate).toBe("alive");

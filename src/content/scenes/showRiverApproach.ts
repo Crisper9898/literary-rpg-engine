@@ -17,8 +17,9 @@ import { createVisualAssetSlot } from "../../ui/visualAssetSlot";
 import { attachDisplayResolution } from "../../ui/attachDisplayResolution";
 import { attachMarlowArt } from "../../story/heart-of-darkness/attachMarlowArt";
 import { approachCheckpoint, approachPosition, approachAtmosphere, approachProfile,
-  atApproachHelm, setApproachHelm, helmsmanFate } from "../state/approachState";
-import { approachDecision } from "../state/woodStopState";
+  atApproachHelm, setApproachHelm, helmsmanFate, seenApproachBeat } from "../state/approachState";
+import { approachDecision, setJourneySpace } from "../state/woodStopState";
+import { showJourneySpace } from "./journeyDeck";
 import { registerApproachAudio, createApproachAudioLayers } from "../../story/heart-of-darkness/approachAudio";
 import { attachApproachNarration } from "./attachApproachNarration";
 import { updateRiverApproach } from "./updateRiverApproach";
@@ -74,14 +75,23 @@ export function showRiverApproach() {
   const status = document.createElement("p"); status.className = "approach-navigation-status";
   status.dataset.testid = "navigation-status"; status.setAttribute("aria-live", "polite"); surface.parentElement!.append(status);
   const inRange = () => Math.hypot(player.x - approachHelm.x, player.y - approachHelm.y) <= 100;
-  const prompt = () => navigation.state.progress === 1 ? "El vapor sigue adelante. La estación aún no aparece." :
+  const prompt = () => navigation.state.progress === 1 ?
+    inRange() ? "E · Aproximarse a la Estación Interior" : "Acércate al timón para alcanzar la Estación Interior" :
     navigation.state.interruptionMS > 0 ? "El timonel ha caído. Recupera la rueda…" :
     atApproachHelm() ? "E · Soltar el timón · Espacio · Sirena" :
     inRange() ? "E · Tomar el timón y seguir el canal" : "Acércate a la rueda · WASD / flechas";
   const dialogue = attachApproachNarration(presentation, ticker, surface, () => interact(), prompt);
   const listeners = new AbortController();
-  function interact() {
+  let leaving = false;
+  async function interact() {
+    if (leaving) return;
     if (dialogue.active()) { void dialogue.advance(); return; }
+    if (navigation.state.progress === 1 && seenApproachBeat("after") && inRange()) {
+      leaving = true;
+      try { setJourneySpace("station-arrival"); await showJourneySpace(); }
+      catch (error) { leaving = false; console.error("Could not reach station", error); }
+      return;
+    }
     if (navigation.state.interruptionMS > 0 || navigation.state.progress === 1) return;
     if (atApproachHelm() || inRange()) {
       setApproachHelm(!atApproachHelm());

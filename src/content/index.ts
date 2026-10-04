@@ -3,4 +3,5 @@ import "./labels/start.label";
 import "./labels/journeyConversation.label";
 import "./labels/woodStop.label";
 import "./labels/riverApproach.label";
+import "./labels/innerStation.label";
 import "./labels/metamorphosis.label";

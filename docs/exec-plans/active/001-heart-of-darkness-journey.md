@@ -62,10 +62,10 @@ configuration.
 - [x] Run complete vertical-slice browser QA and polish pass.
 
 ## Next task
-The fog-bound approach and shore attack (part II) are implemented and validated;
-the approved Journey Deck is frozen. The next narrative milestone is the Inner
-Station and Russian trader, not another Deck redesign or software-renderer
-optimization. It is not started by this delivery.
+The Inner Station and Russian trader episode is implemented and validated.
+The approved Journey Deck remains frozen.
+The next narrative milestone is **Presentation of Kurtz**;
+Kurtz himself and his complete scene are not implemented here.
 The separate human listening review of environmental audio remains independent.
 
 ## Abandoned wood station — 2026-10-03
@@ -123,8 +123,43 @@ No engine, original Deck assets/animation, renderer, Metamorphosis source,
 approved checkpoint, Phaser stash or preexisting untracked file was modified.
 No Inner Station arrival is implemented by this episode.
 
-### Following narrative milestone (not started)
-- [ ] Implement arrival at the Inner Station and the Russian trader as a separately scoped playable episode.
+### Following narrative milestone
+- [x] Implement arrival at the Inner Station and the Russian trader as a separately scoped playable episode.
+
+## Inner Station and Russian trader — 2026-10-03
+
+Base: `a43b536f2738cefd6102f08d476a76b0fb8396f3`. This episode composes existing
+systems outside `src/engine/`; the approved Deck, other works and saved hut
+decisions remain intact.
+
+- [x] Add a spatial exit from completed attack, saved gradual docking, reduced engine gain and bow disembarkation.
+- [x] Compose a cold layered shore, independent mist, bounded walking, compatible Marlow art and four short remembered observations.
+- [x] Add a recognizable Russian with three expressive poses, a small independent routine and conversation camera framing.
+- [x] Register canonical Pixi labels with topic-order choices, prior hut/book evidence, persistent listen/question stance and different follow-up responses.
+- [x] Add a one-time wood-strain/silence event and a spatial endpoint preparing Kurtz without showing him.
+- [x] Preserve docking, separate spatial coordinates, smoothed atmosphere, observations, knowledge order, choices, active labels and event remaining time in Pixi saves.
+- [x] Complete full browser regression, inspect and retain all fourteen captures at both sizes, and document final validation results.
+- [x] Prepare the single authorized milestone commit/push scope; verify engine, approved tag, Phaser stash and two preexisting untracked files unchanged.
+
+Implementation, source/adaptation, play route, flag/save contract, production
+provenance, captures and limits: `docs/heart-of-darkness/INNER-STATION.md`.
+Final deterministic gate: TypeScript, 120/120 unit tests in 31 files and build
+passed (exit 0; largest shared chunk 463.99 kB, no >500 kB warning).
+Final complete `agent:e2e`: 73/73 tests in 23 files passed in 17.1 minutes,
+exit 0, including all existing Deck, attack, hut, Metamorphosis, movement,
+camera, NPC, parallax, weather, audio, production and save/restore coverage.
+Total: 193 automated tests (eight new unit tests and four new E2E).
+Closed validation on 2026-10-04: fourteen final captures retained and visually
+inspected at 1366×768 and 800×600. The visual test now waits for completed
+post-resize Pixi frames and rejects a black art sample; no renderer change.
+The inspected approved Deck fire dialogue/dusk/night captures remain intact.
+No engine, original Deck art/animation, renderer, Metamorphosis source, approved
+tag, Phaser stash or preexisting untracked file was changed.
+Readiness estimates: Heart of Darkness ~40%; bounded project ~53%, using the
+existing coarse rubric documented in the milestone; not completion of all novels.
+
+### Following milestone (not started)
+- [ ] Present Kurtz as a separately scoped narrative and visual milestone.
 
 ## Technical polish of the approved Journey Deck — 2026-10-02
 
