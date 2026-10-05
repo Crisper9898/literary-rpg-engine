@@ -30,8 +30,12 @@ import { stationEvidence, revelationsWalkable } from "../../story/heart-of-darkn
 import { revelationsAvailable, revelationsReady, discoveries } from "../state/stationRevelationsState";
 import { revelationLabels, revelationRussian, revelationKurtz } from "../labels/stationRevelations.label";
 import { attachStationRevelations } from "./attachStationRevelations";
+import { canBeginNight, nightState } from "../state/kurtzNightEscapeState";
+import { nightfall } from "../labels/kurtzNightEscape.label";
+import { showKurtzNightEscape } from "./showKurtzNightEscape";
 
 export function showInnerStation() {
+  if (nightState().phase !== "inactive") return showKurtzNightEscape();
   const { presentation, layers, actor, art, russian, russianVisual, background } = createInnerStation();
   canvas.layers.add("journey-inner-station", presentation);
   const surface = canvas.app.canvas as HTMLCanvasElement, ticker = canvas.app.ticker;
@@ -76,6 +80,8 @@ export function showInnerStation() {
     target: () => innerStation.anchors[id], range: 105,
     execute: () => narration.call(stationInspectLabels[id], {}),
   }));
+  actions.push({ id: "night-vigil", prompt: "E · Quedarse de guardia hasta la noche", target: () => innerStation.anchors.arrival,
+    range: 85, priority: 6, enabled: canBeginNight, execute: () => narration.call(nightfall, {}) });
   actions.push({ id: "russian", prompt: "E · Hablar con el ruso", target: () => russian.position, range: 105, priority: 2,
     enabled: () => canMeetRussian(), execute: () => narration.call(revelationsReady() ? revelationRussian : kurtzFirstResponse() ? kurtzRussianAfter :
       stationFlag("russianComplete") ? russianFollowup : russianConversation, {}) },

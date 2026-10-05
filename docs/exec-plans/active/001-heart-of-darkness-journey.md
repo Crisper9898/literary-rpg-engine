@@ -64,10 +64,10 @@ configuration.
 ## Next task
 The Inner Station and Russian trader episode is implemented and validated.
 The approved Journey Deck remains frozen.
-**Presentation of Kurtz** and **Revelations of the Station** are implemented
-and validated. The next scoped content milestone is Kurtz's worsening condition
-and preparation for evacuation, as a separately scoped episode; it is not
-implemented here.
+**Presentation of Kurtz**, **Revelations of the Station** and **Kurtz's night
+escape** are implemented and validated. Stop here for user review. Kurtz's
+later decline, evacuation, death and final journey require a separate scope;
+none is implemented by the night episode.
 The separate human listening review of environmental audio remains independent.
 
 ## Abandoned wood station — 2026-10-03
@@ -226,9 +226,41 @@ Protected-state verification: Phaser stash remains
 preexisting untracked-file hashes match the initial checkpoint. Only owned
 milestone files are included in its commit; the untracked files are preserved.
 
-### Next scoped episode (not started)
+### Kurtz's night escape — 2026-10-05
 
-- [ ] Implement Kurtz's worsening condition and preparation for evacuation as a separately scoped episode.
+Explicit scope supersedes the former evacuation proposal. Base: published
+`2dcbf62d6ab11c22f3da15275efed203e27068fc`. No engine/Deck/Metamorphosis change.
+
+- [x] Inspect existing station lifecycle, saves, spatial actions, art, atmosphere/audio and Conrad's night episode.
+- [x] Implement canonical dusk, absence, three physical clues, clearing encounter, both confrontation responses and supported return.
+- [x] Integrate matched night plates, four gaunt poses, empty bed, traces and discreet followers; preserve original assets.
+- [x] Test entry gates, both choices, prior decisions, movement, escort, active-label and tracking saves, cleanup and reset.
+- [x] Run `agent:check`, full `agent:e2e` (baseline 213 tests) and inspect all required captures at both sizes.
+- [x] Document final results and prepare the single authorized milestone commit/push scope with stash/untracked hashes verified; stop before later episodes.
+
+Documentation, literary adaptation, route, flags/save contract, asset provenance
+and limits: `docs/heart-of-darkness/KURTZ-NIGHT-ESCAPE.md`.
+Final deterministic gate: TypeScript, **140/140 unit tests in 34 files** and
+build, exit 0; largest shared chunk remains 463.99 kB without a >500 kB warning.
+Final full `agent:e2e`: **85/85 tests in 29 files**, **22.7 minutes**, exit 0.
+Total: **225 automated tests**, preserving all 213 baseline cases. New coverage
+is eight unit cases, three functional browser routes and one visual browser
+case. No previous tests/assertions were removed, weakened or modified.
+The added silence check uses the actual Pixi channel alias ending in `:channel`;
+it confirms zero canopy gain on both routes without an engine change.
+
+All 24 required captures (twelve moments at 1366×768 and 800×600) were reviewed;
+final suite captures are retained in `docs/heart-of-darkness/kurtz-night-escape-qa/`.
+Text/choices and full figures fit; feet are grounded, traces remain visible,
+followers stay behind the path and the night persists after returning. QA moved
+the middle trace to the near side of the report prop and removed the new atlas's
+transparent background halo. Original station/Deck art is unchanged.
+The only earlier production edit is station dispatch plus its gated vigil action.
+`src/engine/`, the approved Deck checkpoint and Metamorphosis remain intact.
+Limits: compact staged trail, bounded ground without global obstacle collision,
+supported pose/sway instead of paired skeletal animation, and the unchanged soft
+Marlow sprite. Final human audio listening and physical-GPU evaluation are not
+claimed. No death, final speech, final journey or European epilogue is implemented.
 
 ## Technical polish of the approved Journey Deck — 2026-10-02
 
