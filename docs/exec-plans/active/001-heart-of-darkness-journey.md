@@ -64,8 +64,10 @@ configuration.
 ## Next task
 The Inner Station and Russian trader episode is implemented and validated.
 The approved Journey Deck remains frozen.
-**Presentation of Kurtz** is implemented and validated. The next scoped content
-milestone is **Revelations of the Station**, which is not implemented here.
+**Presentation of Kurtz** and **Revelations of the Station** are implemented
+and validated. The next scoped content milestone is Kurtz's worsening condition
+and preparation for evacuation, as a separately scoped episode; it is not
+implemented here.
 The separate human listening review of environmental audio remains independent.
 
 ## Abandoned wood station — 2026-10-03
@@ -189,8 +191,44 @@ file was modified.
 Only the first meeting is implemented: full station revelations and all later
 Kurtz/return episodes remain pending. Human audio listening remains separate.
 
-### Next scoped narrative milestone (not started)
-- [ ] Implement Revelations of the Station without starting Kurtz's death or return to Europe.
+### Revelations of the Station — 2026-10-05
+
+Base: published `b502cfbfac6b1d83a4d0b652cb3995b91e14ae67`.
+
+- [x] Research the report, ivory, stakes and personal obedience in Conrad Parts II–III.
+- [x] Continue the same station after the first exchange, preserving coordinates and previous choices; bind a slightly wider walkable strip through the existing lifecycle.
+- [x] Integrate illustrated ivory, two readings of the palisade, meeting traces and a report; preserve all existing background/character assets.
+- [x] Allow four independent ordered discoveries; any two unlock a reactive Russian exchange and persistent interpretation.
+- [x] Add optional three/four-clue reactions, both interpretations and subsequent Kurtz responses through canonical Pixi labels.
+- [x] Compose smoothed discovery-driven cold shade, subtle reduced ambience, localized silence and restrained camera focus with existing systems.
+- [x] Verify saves before/after discoveries, active conversation/choices and immediately after selection; test different orders and continued movement.
+- [x] Pass deterministic gate: TypeScript, 132/132 unit tests in 33 files and build; largest shared chunk remains 463.99 kB.
+- [x] Retain and visually inspect all 28 final captures: 14 moments at 1366×768 and 800×600, including all clues, recognition, choices and both subsequent Kurtz responses.
+- [x] Finish full E2E regression: 81/81 tests in 27 files, 20.4 minutes, exit 0; preserve all previous tests and assertions.
+
+Documentation: `docs/heart-of-darkness/STATION-REVELATIONS.md`.
+No engine, original Deck/station art, renderer or Metamorphosis source is changed.
+No evacuation, final decline/death or European return is implemented.
+
+Final `agent:check`: TypeScript, 132/132 unit tests in 33 files and build,
+exit 0. Final full `agent:e2e`: 81/81 passed in 20.4 minutes, exit 0.
+Total: 213 automated tests (10 added: six unit, three functional E2E and one
+visual E2E). Two existing parallax tests now await the visible gameplay HUD
+before reading Pixi's initialized canvas; no assertions or timing thresholds
+are weakened. All new save/restore paths and prior Deck/Metamorphosis coverage
+pass. Captures remain in `docs/heart-of-darkness/station-revelations-qa/`.
+Text and both options fit at both sizes; evidence uses contact shadows and
+foot-depth ordering. The preexisting Marlow sprite remains softer than the
+station art. Props do not add obstacle navigation; human audio listening
+remains separate. No later narrative milestone is marked complete.
+Protected-state verification: Phaser stash remains
+`2017ff54dc07535fce1ca9c09dc49a912cf78d06`; the approved Deck tag and both
+preexisting untracked-file hashes match the initial checkpoint. Only owned
+milestone files are included in its commit; the untracked files are preserved.
+
+### Next scoped episode (not started)
+
+- [ ] Implement Kurtz's worsening condition and preparation for evacuation as a separately scoped episode.
 
 ## Technical polish of the approved Journey Deck — 2026-10-02
 

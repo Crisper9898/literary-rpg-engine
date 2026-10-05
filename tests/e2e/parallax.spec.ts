@@ -24,6 +24,7 @@ test("the river keeps traveling at five depths while idle, reading and choosing"
   // Keep every speed assertion/sample; allow the final choice-stage sample.
   test.setTimeout(90_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await expect.poll(() => inspect(page)).not.toBeNull();
   expect((await inspect(page))!.layers).toHaveLength(5);
   await page.screenshot({ path: info.outputPath("river-before.png") });
@@ -54,6 +55,7 @@ test("tiles cover pans, zooms and both resolutions, and scene re-entry disposes 
   // Preserve all live-frame samples and exact tile coverage assertions.
   test.setTimeout(120_000);
   await page.goto("/");
+  await expect(page.getByTestId("talk-prompt")).toBeVisible();
   await expect.poll(() => inspect(page)).not.toBeNull();
   for (const viewport of [{ width: 1366, height: 768 }, { width: 800, height: 600 }]) {
     await page.setViewportSize(viewport);

@@ -26,6 +26,10 @@ import { showJourneySpace } from "./journeyDeck";
 import { stationInspectLabels, russianConversation, russianFollowup, stationClosing, stationCreakLine } from "../labels/innerStation.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { stationEvidence, revelationsWalkable } from "../../story/heart-of-darkness/stationRevelations";
+import { revelationsAvailable, revelationsReady, discoveries } from "../state/stationRevelationsState";
+import { revelationLabels, revelationRussian, revelationKurtz } from "../labels/stationRevelations.label";
+import { attachStationRevelations } from "./attachStationRevelations";
 
 export function showInnerStation() {
   const { presentation, layers, actor, art, russian, russianVisual, background } = createInnerStation();
@@ -33,7 +37,8 @@ export function showInnerStation() {
   const surface = canvas.app.canvas as HTMLCanvasElement, ticker = canvas.app.ticker;
   surface.tabIndex = 0; surface.setAttribute("aria-label", "Estación Interior · WASD o flechas · E explorar · 1/2 conversar");
   attachDisplayResolution(presentation, canvas.app.renderer, surface);
-  attachPlayerMovement(actor, ticker, surface, { ...marlowMovement, bounds: innerStation.walkableArea,
+  const expanded = revelationsAvailable();
+  attachPlayerMovement(actor, ticker, surface, { ...marlowMovement, bounds: expanded ? revelationsWalkable : innerStation.walkableArea,
     position: innerStation.anchors.arrival }, stationPosition);
   attachMarlowArt(actor, ticker, art.setState, () => "concern");
   const camera = attachWorldCamera(layers.root, ticker, { world: innerStation.size, viewport: innerStation.size,
@@ -63,14 +68,16 @@ export function showInnerStation() {
     layers: createKurtzStationAudio(() => stationEvent().remainingMS > 0) });
   const kurtz = attachKurtzPresentation({ actors: layers.actors, environment: layers.environment,
     foreground: layers.foreground, texture, camera, audio, russian });
-  attachActorDepth(layers.actors, ticker, [actor, russian, kurtz.group]);
+  const revelations = attachStationRevelations(presentation, { actors: layers.actors, environment: layers.environment,
+    actor, ticker, camera, audio });
+  attachActorDepth(layers.actors, ticker, [actor, russian, kurtz.group, ...Object.values(revelations.props).map(item => item.group)]);
   const actions: SpatialAction[] = (Object.keys(stationInspectLabels) as (keyof typeof innerStation.anchors)[]).map(id => ({
     id, prompt: `E · Observar ${id === "planks" ? "los tablones" : id === "fence" ? "la cerca caída" : id === "grass" ? "las huellas en la hierba" : "la casa de la colina"}`,
     target: () => innerStation.anchors[id], range: 105,
     execute: () => narration.call(stationInspectLabels[id], {}),
   }));
   actions.push({ id: "russian", prompt: "E · Hablar con el ruso", target: () => russian.position, range: 105, priority: 2,
-    enabled: () => canMeetRussian(), execute: () => narration.call(kurtzFirstResponse() ? kurtzRussianAfter :
+    enabled: () => canMeetRussian(), execute: () => narration.call(revelationsReady() ? revelationRussian : kurtzFirstResponse() ? kurtzRussianAfter :
       stationFlag("russianComplete") ? russianFollowup : russianConversation, {}) },
     { id: "kurtz-path", prompt: "E · Prepararse para conocer a Kurtz", target: () => ({ x: 1520, y: 755 }), range: 85, priority: 3,
       enabled: () => stationReady() && !stationFlag("kurtzEncounterPrepared"), execute: () => narration.call(stationClosing, {}) },
@@ -80,17 +87,28 @@ export function showInnerStation() {
     range: 85, priority: 4, enabled: () => stationReady() && stationFlag("kurtzEncounterPrepared") && !kurtzIntroduction().activated,
     execute: () => narration.call(kurtzPreparation, {}) },
     { id: "kurtz", prompt: "E · Hablar con Kurtz", target: kurtzPosition, range: 110, priority: 4,
-      enabled: () => kurtzStage() === "present", execute: () => narration.call(kurtzFirstResponse() ? kurtzFollowup : kurtzFirstExchange, {}) });
+      enabled: () => kurtzStage() === "present", execute: () => narration.call(revelationsAvailable() && discoveries().length > 0 ? revelationKurtz : kurtzFirstResponse() ? kurtzFollowup : kurtzFirstExchange, {}) });
   for (const [id, item] of Object.entries(kurtzNearby)) actions.push({ id: `kurtz-${id}`, prompt: item.prompt,
     target: () => item.position, range: 75, priority: 3, enabled: () => kurtzStage() === "present",
     execute: () => narration.call(kurtzInspectLabels[id], {}) });
+  for (const [id, item] of Object.entries(stationEvidence)) actions.push({ id: `revelation-${id}`, prompt: item.prompt,
+    target: () => item.position, range: item.range, priority: 5, enabled: revelationsAvailable,
+    execute: () => narration.call(revelationLabels[id as keyof typeof revelationLabels], {}) });
   const conversation = attachStationInteractions(presentation, actor, ticker, surface, actions, "II / LA ESTACIÓN INTERIOR",
-    () => kurtzStage() === "present" ? "Kurtz está aquí · E conversar / observar · WASD caminar" :
+    () => revelationsAvailable() ? revelationsReady() ? "El ruso evita tu mirada · Puedes hablar con él o seguir explorando" :
+      "La estación guarda otras respuestas · Examina el marfil, la empalizada, las esteras o el informe" :
+      kurtzStage() === "present" ? "Kurtz está aquí · E conversar / observar · WASD caminar" :
       kurtzIntroduction().activated ? "Espera mirando el sendero · Puedes caminar y observar" :
       stationFlag("kurtzEncounterPrepared") ? "Acércate al sendero · E esperar a Kurtz" :
       canMeetRussian() ? "Una figura remendada espera junto al sendero · E" : "Explora la orilla: tablones, cerca, huellas y colina · E");
   let wasTalking = false;
+  let expanding = false;
   const update = (frame: Ticker) => {
+    // The existing lifecycle rebinds the wider movement rectangle only after the label
+    // closes; canonical coordinates and every narrative field survive this same-space mount.
+    if (!expanded && revelationsAvailable() && !conversation.active() && !expanding) {
+      expanding = true; void showJourneySpace(); return;
+    }
     if (canMeetRussian()) startStationEvent();
     updateStationEvent(frame.deltaMS);
     const visible = canMeetRussian() || stationFlag("russianMet");
@@ -101,11 +119,12 @@ export function showInnerStation() {
     if (!kurtzIntroduction().activated && talking !== wasTalking) {
       camera.setZoom(talking ? 1.12 : 1); camera.focus({ x: 1020, y: 540 }); wasTalking = talking; }
     kurtz.update(frame.elapsedMS ?? frame.deltaMS, conversation.active());
+    revelations.update(conversation.active());
     if (stationEvent().occurred && !stationFlag("stationCreakSeen") && !conversation.active()) void conversation.call(stationCreakLine);
     const pulse = stationEvent().remainingMS / 2400;
     fog[1].tint = pulse > 0 ? 0x607b79 : 0xffffff;
   };
   ticker.add(update, undefined, -2); update({ deltaMS: 0 } as Ticker);
   presentation.once("destroyed", () => { ticker.remove(update); texture.destroy(true); });
-  surface.focus({ preventScroll: true }); return { actor, russian, camera, npc, atmosphere, audio, background, kurtz };
+  surface.focus({ preventScroll: true }); return { actor, russian, camera, npc, atmosphere, audio, background, kurtz, revelations };
 }
