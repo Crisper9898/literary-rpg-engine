@@ -18,3 +18,5 @@ RegisteredCharacters.add(marlow);
 
 export const russianTrader = new CharacterBaseModel("russian-trader", { name: "El ruso", color: "#d0c09a" });
 RegisteredCharacters.add(russianTrader);
+export const kurtz = new CharacterBaseModel("kurtz", { name: "Kurtz", color: "#c8c4aa" });
+RegisteredCharacters.add(kurtz);

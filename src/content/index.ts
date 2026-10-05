@@ -4,4 +4,5 @@ import "./labels/journeyConversation.label";
 import "./labels/woodStop.label";
 import "./labels/riverApproach.label";
 import "./labels/innerStation.label";
+import "./labels/kurtzIntroduction.label";
 import "./labels/metamorphosis.label";

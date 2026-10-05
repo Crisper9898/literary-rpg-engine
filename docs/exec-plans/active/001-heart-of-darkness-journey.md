@@ -64,8 +64,8 @@ configuration.
 ## Next task
 The Inner Station and Russian trader episode is implemented and validated.
 The approved Journey Deck remains frozen.
-The next narrative milestone is **Presentation of Kurtz**;
-Kurtz himself and his complete scene are not implemented here.
+**Presentation of Kurtz** is implemented and validated. The next scoped content
+milestone is **Revelations of the Station**, which is not implemented here.
 The separate human listening review of environmental audio remains independent.
 
 ## Abandoned wood station — 2026-10-03
@@ -158,8 +158,39 @@ tag, Phaser stash or preexisting untracked file was changed.
 Readiness estimates: Heart of Darkness ~40%; bounded project ~53%, using the
 existing coarse rubric documented in the milestone; not completion of all novels.
 
-### Following milestone (not started)
-- [ ] Present Kurtz as a separately scoped narrative and visual milestone.
+### Following milestone
+- [x] Present Kurtz as a separately scoped narrative and visual milestone.
+
+## Presentation of Kurtz — 2026-10-04
+
+Base: published `16b149a25b614d7a0e3a9abf3e92aaf1eb0f8735`.
+
+- [x] Research Conrad Part III and stage an invalid carried on a stretcher.
+- [x] Gate preparation on the completed Russian investigation and spatial path interaction.
+- [x] Add 32 seconds of playable anticipation and staged silhouette/detail/authority/coughing up to 52 seconds.
+- [x] Integrate four new illustrated poses and two bearers; preserve existing station, Deck and other-work art.
+- [x] Compose moving local mist, deepening shade, arrested bearers, Russian reaction, eased camera and deliberate spatial-audio silence/return.
+- [x] Add two canonical first responses, accumulated memory variations, three nearby observations and Russian follow-up.
+- [x] Verify canonical saves before/during/after appearance and active choices; no duplicate introduction or dialogue parent.
+- [x] Inspect both target resolutions; revise oversized first art pass and retain twenty-two QA captures after the final suite.
+- [x] Complete full agent:e2e regression and prepare the single authorized milestone commit/push with protected state checked.
+
+Documentation: `docs/heart-of-darkness/KURTZ-INTRODUCTION.md`.
+Deterministic gate passed: TypeScript, 126/126 unit tests in 32 files and build
+(exit 0; largest shared chunk 463.99 kB). Four focused E2E passed in 1.2 minutes.
+Final complete `agent:e2e`: 77/77 tests in 25 files passed in 18.1 minutes,
+exit 0. Total: 203 automated tests (six new unit tests and four new E2E).
+Twenty-two final captures are retained in `docs/heart-of-darkness/kurtz-introduction-qa/`.
+All eleven moments were visually inspected at both sizes; choice UI remains
+complete, the silhouette has deliberate occlusion, and the revised invalid's
+scale, cool lighting, contact shadows and bearer overlap belong to the station.
+No engine, renderer, approved Deck, Metamorphosis, stash or protected untracked
+file was modified.
+Only the first meeting is implemented: full station revelations and all later
+Kurtz/return episodes remain pending. Human audio listening remains separate.
+
+### Next scoped narrative milestone (not started)
+- [ ] Implement Revelations of the Station without starting Kurtz's death or return to Europe.
 
 ## Technical polish of the approved Journey Deck — 2026-10-02
 
