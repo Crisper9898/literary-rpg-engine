@@ -17,6 +17,8 @@ import { attachActorDepth } from "../../ui/attachActorDepth";
 import { stationPosition, russianMood } from "../state/innerStationState";
 import { nightState, nightAtmosphere, nightForestBlend, updateNight, updateNightEscort } from "../state/kurtzNightEscapeState";
 import { nightAbsence, nightTraceLabels, nightEnterClearing, nightConfrontation, nightReturn, nightAfterReturn } from "../labels/kurtzNightEscape.label";
+import { canBeginEvacuation } from "../state/kurtzEvacuationState";
+import { evacuationMorning } from "../labels/kurtzEvacuation.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
 
@@ -48,6 +50,8 @@ export function showKurtzNightEscape() {
   const audio = attachSpatialAudio(presentation, ticker, surface, { namespace: "journey-kurtz-night", listener: () => actor.position,
     layers: nightAudioLayers(() => narration.labels.opened.some(({ label }) => String(label) === "journey-station-night-confrontation")) });
   const actions: SpatialAction[] = [
+    { id: "evacuation-start", prompt: "E · Preparar la salida al amanecer", target: () => ({ x: 420, y: 745 }), range: 85,
+      enabled: canBeginEvacuation, execute: () => narration.call(evacuationMorning, {}) },
     { id: "night-absence", prompt: "E · Examinar el descanso vacío", target: () => nightRest, range: 110,
       enabled: () => nightState().phase === "search", execute: () => narration.call(nightAbsence, {}) },
     ...Object.entries(nightTracePoints).map(([id, item]) => ({ id: `night-trace-${id}`, prompt: item.prompt,

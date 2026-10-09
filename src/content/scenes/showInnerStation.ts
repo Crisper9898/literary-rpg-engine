@@ -33,8 +33,11 @@ import { attachStationRevelations } from "./attachStationRevelations";
 import { canBeginNight, nightState } from "../state/kurtzNightEscapeState";
 import { nightfall } from "../labels/kurtzNightEscape.label";
 import { showKurtzNightEscape } from "./showKurtzNightEscape";
+import { evacuationState } from "../state/kurtzEvacuationState";
+import { showKurtzEvacuation } from "./showKurtzEvacuation";
 
 export function showInnerStation() {
+  if (evacuationState().phase !== "inactive") return showKurtzEvacuation();
   if (nightState().phase !== "inactive") return showKurtzNightEscape();
   const { presentation, layers, actor, art, russian, russianVisual, background } = createInnerStation();
   canvas.layers.add("journey-inner-station", presentation);

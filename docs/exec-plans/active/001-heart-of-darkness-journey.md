@@ -65,10 +65,70 @@ configuration.
 The Inner Station and Russian trader episode is implemented and validated.
 The approved Journey Deck remains frozen.
 **Presentation of Kurtz**, **Revelations of the Station** and **Kurtz's night
-escape** are implemented and validated. Stop here for user review. Kurtz's
-later decline, evacuation, death and final journey require a separate scope;
-none is implemented by the night episode.
+escape** are implemented and validated. The user approved the next bounded
+episode: Kurtz's decline and preparation for evacuation, now implemented and
+validated. The next bounded milestone is the steamer's departure under pressure
+from the bank; it is not started. Death, final speech and the return voyage are
+later milestones. Stop after publishing the preparation episode; a subsequent
+authorized continuation can begin the pending departure task below.
 The separate human listening review of environmental audio remains independent.
+
+## Kurtz — deterioration and evacuation preparation — 2026-10-09
+
+Base: published `99b4012ccd07bed334f3c8c224187c1ebf58b40b`.
+Entry is optional at the landing after the night return exchange has closed.
+Reuse the station, existing Kurtz/bearer art and engine attachments. Keep the
+approved Deck, engine, Metamorphosis, Phaser stash and original untracked files
+intact. The patient/cargo priority and short preparation route are adaptations
+of the next day's departure and the company's pressure over ivory in Part III.
+
+- [x] Inspect current state, existing resources and the novel; obtain the user's episode scope.
+- [x] Add a saved morning transition and spatial examination of Kurtz's condition.
+- [x] Add patient/cargo priority, actual preparation points and a supported cot transfer to the landing.
+- [x] Preserve prior night response, new decision, preparations, exact positions and active dialogue through Pixi'VN saves.
+- [x] Add state-flow and browser tests for both priorities, prerequisites, restore, movement and cleanup.
+- [x] Inspect captures at 1366×768 and 800×600; pass `agent:check` and complete `agent:e2e`.
+- [x] Document the playable route and limitations.
+
+Release step: publish only this validated episode as one commit on
+`journey-vertical-slice`; report the resulting hash and remote confirmation,
+then stop. Do not begin the subsequent milestone in this release.
+
+Implemented: optional dawn after the completed night exchange, spatial body
+observation, patient/cargo priority, cot bindings, landing clearance and a short
+two-bearer transfer that stops when Marlow is too far away or behind. The cargo
+priority adds the first bundle as a prerequisite; the patient priority leaves it
+behind. Both final responses remember that order and the preceding night choice.
+Pixi'VN stores exact Marlow/cot points, preparations, priority, pose, phase,
+smoothed dawn and active labels. There is no new UI or parallel save format.
+
+Route, canonical-state contract and literary adaptation:
+`docs/heart-of-darkness/KURTZ-EVACUATION.md`.
+26 reviewed captures (13 beats × 2 resolutions):
+`docs/heart-of-darkness/kurtz-evacuation-qa/README.md`.
+The small cargo remainder stays opaque and grounded; an earlier transparent
+representation was rejected during QA and caught by a regression assertion.
+No engine, approved Deck, runtime image/audio asset or Metamorphosis source was
+changed. Existing bearer poses with restrained sway are a deliberate limitation.
+Departure/crowd confrontation, the downstream decline, death and epilogue remain
+pending; reaching this landing does not mark any of them complete.
+
+Final `agent:check`: exit 0; TypeScript, 147/147 unit tests in 35 files and
+build passed (2.50s). Largest shared chunk remains 463.99 kB; no >500 kB warning.
+Final full `agent:e2e`: exit 0; 89/89 browser tests in 31 files passed in
+28.7 minutes. All 85 preexisting E2E cases remain unchanged and pass, including
+Metamorphosis, all four approved Deck stages, movement, audio, camera, station,
+Kurtz introduction, revelations, night escape, saved coordinates/progress and fog.
+New coverage: 7 unit cases and 4 E2E cases; updated total: 236 tests.
+The focused four-case run also passed in 3.8 minutes after the cargo correction.
+The sandbox's initial Vitest temporary-file rename failure was environmental;
+the same command passed with normal temporary-directory access, without changing
+the application or validation configuration. Existing browser audio-unlock and
+unconfigured navigation warnings remain nonfatal; no new application errors.
+
+## Subsequent bounded milestone — not started
+
+- [ ] Represent the steamer's departure from the Inner Station under pressure from the people on the bank; defer the downstream voyage, Kurtz's death and the epilogue.
 
 ## Abandoned wood station — 2026-10-03
 
