@@ -35,8 +35,11 @@ import { nightfall } from "../labels/kurtzNightEscape.label";
 import { showKurtzNightEscape } from "./showKurtzNightEscape";
 import { evacuationState } from "../state/kurtzEvacuationState";
 import { showKurtzEvacuation } from "./showKurtzEvacuation";
+import { departureState } from "../state/kurtzDepartureState";
+import { showKurtzDeparture } from "./showKurtzDeparture";
 
 export function showInnerStation() {
+  if (departureState().phase !== "inactive") return showKurtzDeparture();
   if (evacuationState().phase !== "inactive") return showKurtzEvacuation();
   if (nightState().phase !== "inactive") return showKurtzNightEscape();
   const { presentation, layers, actor, art, russian, russianVisual, background } = createInnerStation();

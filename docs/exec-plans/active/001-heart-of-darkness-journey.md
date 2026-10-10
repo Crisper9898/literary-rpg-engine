@@ -67,10 +67,11 @@ The approved Journey Deck remains frozen.
 **Presentation of Kurtz**, **Revelations of the Station** and **Kurtz's night
 escape** are implemented and validated. The user approved the next bounded
 episode: Kurtz's decline and preparation for evacuation, now implemented and
-validated. The next bounded milestone is the steamer's departure under pressure
-from the bank; it is not started. Death, final speech and the return voyage are
-later milestones. Stop after publishing the preparation episode; a subsequent
-authorized continuation can begin the pending departure task below.
+validated. The steamer's departure under pressure from the bank is now
+implemented and validated. The next bounded milestone is the downstream
+breakdown and Kurtz entrusting his papers; it is not started. Death, final
+speech and the European epilogue remain later milestones. Stop after publishing
+the validated departure; a subsequent continuation can begin the next task below.
 The separate human listening review of environmental audio remains independent.
 
 ## Kurtz — deterioration and evacuation preparation — 2026-10-09
@@ -126,9 +127,59 @@ the same command passed with normal temporary-directory access, without changing
 the application or validation configuration. Existing browser audio-unlock and
 unconfigured navigation warnings remain nonfatal; no new application errors.
 
+## Steamer departure — 2026-10-09 — validated
+
+Base: published `0e4ff98bcb8f37946dc98b12f94b7c3b0a6228ba`.
+Represent only Part III's departure: optional boarding after the evacuation
+exchange, spatial mooring/whistle/crew/helm interactions, people on the bank,
+Kurtz looking out, and a short controlled manoeuvre. The intervention-before-
+whistle branch is an adaptation, not a claim that Conrad offered a choice.
+Reuse existing illustrated plates and figures; do not alter the approved Deck,
+engine, Metamorphosis, Phaser stash or original untracked files. Do not depict
+downstream decline, final words, death, papers or the European epilogue here.
+
+- [x] Inspect the published state, existing composition/assets and canonical departure passage.
+- [x] Implement saved spatial preparations, two responses to armed pressure and a controlled departure.
+- [x] Compose the departure with existing assets, movement, camera, audio and world attachments.
+- [x] Validate prerequisites, both routes, remembered evacuation priority, exact progress/position restore and cleanup.
+- [x] Inspect 1366×768 and 800×600 captures and pass `agent:check` plus full `agent:e2e`.
+- [x] Document the route, adaptation and limits; prepare one validated release.
+
+Implemented entry after the closed evacuation exchange, optional Kurtz/bank
+observations, spatial mooring release, whistle-first/intervene-first response,
+mandatory crew/whistle steps for the latter, physical helm signal and a saved
+short manoeuvre. The closing dialogue remembers the response; patient lines
+reuse the canonical earlier evacuation priority. Existing Deck/cast resources,
+parallax, audio, NPC, movement, camera and Pixi'VN lifecycle are composed without
+engine changes. A first rectangular scenic inset was rejected during visual QA;
+the corrected station plane uses a small static feather mask and existing
+bearer silhouettes at distant scale. The woman/rifles remain offscreen narration.
+Six unit cases and four E2E cases added; focused E2E: 4/4 in 3.7 minutes.
+22 corrected captures (11 beats × 2 sizes) visually reviewed:
+`docs/heart-of-darkness/kurtz-departure-qa/README.md`.
+Route, state contract, literary adaptation and limitations:
+`docs/heart-of-darkness/KURTZ-DEPARTURE.md`.
+Farewell figure brief: `docs/art-briefs/kurtz-departure-bank.md`; it is a
+presentation limitation, not a blocker for the completed playable route.
+
+Final `agent:check`: exit 0; TypeScript, 153/153 unit tests in 36 files and
+build passed (2.95s). Largest shared chunk: 463.99 kB; no >500 kB warning.
+Final full `agent:e2e`: exit 0; 93/93 tests passed in 31.4 minutes. All 89
+preexisting browser tests remain unchanged and pass, including Metamorphosis,
+the four approved Deck stages, walking, camera, NPC, audio, parallax, fog,
+station, revelations, night return, evacuation and canonical saves.
+New coverage: 6 unit cases and 4 E2E cases; updated total: 246 tests.
+All 22 retained screenshots have verified dimensions and were visually inspected.
+Existing audio-unlock, navigation and approach rendering warnings
+remain nonfatal; no new application error or test failure was detected.
+No engine, approved Deck, runtime art/audio asset or Metamorphosis source changed.
+
+Release step: publish only this validated departure as one commit and stop.
+Do not begin the subsequent episode in this release.
+
 ## Subsequent bounded milestone — not started
 
-- [ ] Represent the steamer's departure from the Inner Station under pressure from the people on the bank; defer the downstream voyage, Kurtz's death and the epilogue.
+- [ ] Represent the downstream breakdown and Kurtz entrusting his papers; defer his final words, death and the European epilogue.
 
 ## Abandoned wood station — 2026-10-03
 

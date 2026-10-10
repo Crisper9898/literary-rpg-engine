@@ -21,6 +21,9 @@ import { evacuationPatient, evacuationDecision, evacuationBindings, evacuationLa
   evacuationLift, evacuationReady, evacuationAfter } from "../labels/kurtzEvacuation.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginDeparture } from "../state/kurtzDepartureState";
+import { departureBoard } from "../labels/kurtzDeparture.label";
+import { departurePoints } from "../../story/heart-of-darkness/kurtzDeparture";
 
 export function showKurtzEvacuation() {
   const scene = createKurtzEvacuation(), { presentation, layers, actor, art, cot } = scene;
@@ -52,6 +55,8 @@ export function showKurtzEvacuation() {
     label: Parameters<typeof narration.call>[0]): SpatialAction => ({ id: `evacuation-${id}`, prompt,
     target: () => evacuationPoints[id], range, enabled, execute: () => narration.call(label, {}) });
   const actions: SpatialAction[] = [
+    { id: "departure-board", prompt: "E · Embarcar y preparar la partida", range: 65, priority: 4,
+      target: () => departurePoints.board, enabled: canBeginDeparture, execute: () => narration.call(departureBoard, {}) },
     action("patient", "E · Comprobar cómo está Kurtz", 120, () => preparing() && !evacuationState().patientSeen, evacuationPatient),
     action("priority", "E · Decidir qué debe pasar primero", 95, () => preparing() && evacuationState().patientSeen && !evacuationState().priority, evacuationDecision),
     action("bindings", "E · Asegurar las ligaduras de la camilla", 75, () => preparing() && !!evacuationState().priority && !evacuationState().cotSecured, evacuationBindings),
