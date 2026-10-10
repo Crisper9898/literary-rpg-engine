@@ -20,6 +20,8 @@ import { breakdownFailure, breakdownEngine, breakdownForge, breakdownFit, breakd
   breakdownPatientAfter, breakdownResume, breakdownAfter } from "../labels/kurtzBreakdown.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginFinalNight } from "../state/kurtzFinalNightState";
+import { finalNightEntry } from "../labels/kurtzFinalNight.label";
 
 export function showKurtzBreakdown() {
   const scene = createKurtzBreakdown(), { presentation, layers, player, marlowVisual, deckhand } = scene;
@@ -56,6 +58,7 @@ export function showKurtzBreakdown() {
     target: () => breakdownPoints[id], range, enabled, execute: () => narration.call(label, {}) });
   const stopped = () => breakdownState().phase === "stopped" && breakdownState().breakdownSeen;
   const conversation = attachStationInteractions(presentation, player, ticker, surface, [
+    { ...action("helm", "E · Continuar hasta la última noche", canBeginFinalNight, finalNightEntry), priority: 2 },
     action("engine", "E · Examinar la pérdida y la biela", () => stopped() && !breakdownState().engineExamined, breakdownEngine),
     action("forge", "E · Avivar la fragua y trabajar la biela", () => stopped() && breakdownState().engineExamined && !breakdownState().repairStarted, breakdownForge),
     action("engine", "E · Volver a montar la biela", () => stopped() && breakdownState().repairProgress === 1 && !breakdownState().rodFitted, breakdownFit),

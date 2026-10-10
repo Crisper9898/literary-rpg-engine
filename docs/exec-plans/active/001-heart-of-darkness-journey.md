@@ -70,12 +70,91 @@ episode: Kurtz's decline and preparation for evacuation, now implemented and
 validated. The steamer's departure under pressure from the bank is now
 implemented and validated. The downstream island breakdown, spatial repair
 and Kurtz entrusting his papers are now implemented and validated.
-Publish only this validated episode, then stop this release.
+The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`.
 
-- [ ] Represent Kurtz's final evening, final words and death as the next bounded episode; do not begin it in this release.
+- [x] Represent Kurtz's final evening, final words and death.
+- [ ] Represent the aftermath of Kurtz's death and Marlow's illness as the next bounded episode; do not begin it in this release.
 
 Burial, Marlow's illness and the European epilogue remain later milestones.
 The separate human listening review of environmental audio remains independent.
+
+## Kurtz's final evening — 2026-10-10 — validated
+
+Base: published `723e12e8542652c8616a9fa7bfedca257ae3229c`.
+Scope: optional helm entry only after the resumed-voyage exchange closes. Take
+a candle, bring it to the patient, reassure him or listen, hear the same final
+words on both paths, extinguish the candle and physically approach the crew to
+hear the death announcement. Remember the papers response. No burial, illness,
+European epilogue, new scene interior or survival-changing choice.
+
+Architecture: existing scene dispatch, `createKurtzBreakdown` composition,
+movement/camera/parallax/audio/NPC attachments and `attachStationInteractions`.
+New content state/labels and story-owned staging only; protected Deck, engine,
+Metamorphosis, Phaser stash and original untracked files remain read-only.
+Use existing patient atlas frames; do not invent a death illustration. Patient
+is offscreen once Marlow leaves, and the announcement is heard from outside.
+
+- [x] Write failing state-flow tests for prerequisites, spatial sequence guards, both responses, irreversible words/death, invalid saves and progress.
+- [x] Add `kurtzFinalNightState.ts`: `finalNightState`, `beginFinalNight`, `takeCandle`, `placeCandle`, `chooseVigilResponse`, `finishVigil`, `hearFinalWords`, `finishFinalWords`, `leavePatient`, `confirmKurtzDeath`, `finishFinalNight`, `updateFinalNight`; canonical checkpoint and bounded position.
+- [x] Add `kurtzFinalNight.label.ts`, `showKurtzFinalNight.ts` and story staging/configuration. Add only entry and dispatch hooks to existing scenes.
+- [x] Add E2E tests: physical entry/candle/patient/crew, both responses, exact coordinates/progress, active choice/words and post-death saves, no replay/duplicate sources, earlier episode restore and restart.
+- [x] Capture and inspect 1366×768 and 800×600, including evening, candle, both options/responses, final words, extinguishing, announcement and restore. Check actual atlas crop and UI bounds.
+- [x] Pass `agent:check` and full `agent:e2e`; document literary adaptation and presentation limits; prepare one validated release.
+
+`journey.kurtzFinalNight` owns phase (inactive/evening/vigil/words/left/confirmed),
+unwrapped travel, smoothed evening darkness, candle (rack/held/bedside/out),
+vigil response (reassure/listen), closed exchanges and the final-word flag.
+The `confirmed` phase is the death confirmation, without a duplicate flag.
+`journey.finalNightPosition` owns actual Marlow coordinates. Choice and last
+words are separate; scene construction never reissues labels or announces death.
+No scene time alone triggers the words or announcement. Ticker updates only
+travel and gradual darkness; Pixi'VN owns every saved value and open label.
+
+Validation: first `npm test -- tests/kurtzFinalNight.test.ts` (red/green), then
+focused browser cases, `npm run agent:check`, `npm run agent:e2e`. No older tests
+are weakened. Inspect restored rendering and multiple open-label stages before
+the final gate. One validated commit plus push, no follow-on milestone.
+
+Implemented route: collect and carry the candle, set it beside Kurtz, reassure
+him or listen without promising, hear his unchanged final words, extinguish the
+light and leave, then physically approach the crew to hear the announcement.
+Prior packet/photograph custody changes a bedside line and the final response.
+Waiting only darkens the existing night art and moves the river; it never
+chooses, speaks the words or announces death. Existing walking/NPC/audio remain
+live. The new scene composes the earlier boat/cot factory, removes repair props
+from this instance and hides the patient after leaving the caseta threshold.
+
+QA rejected the first approach: Marlow obscured Kurtz and the candle was too
+low. The revised anchor keeps the full cot readable; a narrow grounded stand
+supports the bedside light, and carried light draws in front of its bearer.
+Both final atlas crop and restored carried-light movement are asserted.
+24 corrected captures (12 moments × 2 sizes) were individually inspected;
+text/options/controls fit at 800×600 as well as 1366×768.
+`docs/heart-of-darkness/kurtz-final-night-qa/README.md` retains them.
+Route, canonical state and literary adaptation:
+`docs/heart-of-darkness/KURTZ-FINAL-NIGHT.md`.
+Prop-art contract: `docs/art-briefs/kurtz-final-night-candle.md`.
+The candle/stand are technical art. No new interior, death pose, messenger figure,
+recorded final voice or dinner animation is claimed. No engine, approved Deck,
+runtime image/audio asset or Metamorphosis source changed. Burial, illness and
+European return remain pending; neither choice changes the canonical death.
+
+Final `agent:check`: exit 0; TypeScript, 168/168 unit tests in 38 files and
+build passed (3.58s). Final full `agent:e2e`: exit 0; 101/101 cases in 37 files
+passed in 35.8 minutes. All 97 preexisting E2E cases remain unchanged and pass,
+including both works, all four approved Deck stages, walking, camera, NPC,
+audio, parallax, weather, the station, revelations, night return, evacuation,
+departure, island repair and canonical saves. Focused final E2E: 4/4 in 2.8m.
+New coverage: 8 unit cases and 4 E2E cases; updated total: 269 automated tests.
+An initial browser test used a locator comparison instead of a text matcher;
+that test error was corrected before the visual revision and final gates.
+Existing audio-unlock/navigation/approach warnings remain nonfatal; no new
+application error or test failure was detected. No validation configuration
+or preexisting test was weakened.
+
+Release step: publish only this validated episode as one commit on
+`journey-vertical-slice`, confirm the remote, preserve the Phaser stash/original
+untracked files, and stop. The aftermath milestone is future work.
 
 ## Kurtz — deterioration and evacuation preparation — 2026-10-09
 

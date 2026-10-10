@@ -39,8 +39,11 @@ import { departureState } from "../state/kurtzDepartureState";
 import { showKurtzDeparture } from "./showKurtzDeparture";
 import { breakdownState } from "../state/kurtzBreakdownState";
 import { showKurtzBreakdown } from "./showKurtzBreakdown";
+import { finalNightState } from "../state/kurtzFinalNightState";
+import { showKurtzFinalNight } from "./showKurtzFinalNight";
 
 export function showInnerStation() {
+  if (finalNightState().phase !== "inactive") return showKurtzFinalNight();
   if (breakdownState().phase !== "inactive") return showKurtzBreakdown();
   if (departureState().phase !== "inactive") return showKurtzDeparture();
   if (evacuationState().phase !== "inactive") return showKurtzEvacuation();
