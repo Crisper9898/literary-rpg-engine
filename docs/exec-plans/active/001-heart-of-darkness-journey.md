@@ -68,10 +68,13 @@ The approved Journey Deck remains frozen.
 escape** are implemented and validated. The user approved the next bounded
 episode: Kurtz's decline and preparation for evacuation, now implemented and
 validated. The steamer's departure under pressure from the bank is now
-implemented and validated. The next bounded milestone is the downstream
-breakdown and Kurtz entrusting his papers; it is not started. Death, final
-speech and the European epilogue remain later milestones. Stop after publishing
-the validated departure; a subsequent continuation can begin the next task below.
+implemented and validated. The downstream island breakdown, spatial repair
+and Kurtz entrusting his papers are now implemented and validated.
+Publish only this validated episode, then stop this release.
+
+- [ ] Represent Kurtz's final evening, final words and death as the next bounded episode; do not begin it in this release.
+
+Burial, Marlow's illness and the European epilogue remain later milestones.
 The separate human listening review of environmental audio remains independent.
 
 ## Kurtz — deterioration and evacuation preparation — 2026-10-09
@@ -177,9 +180,67 @@ No engine, approved Deck, runtime art/audio asset or Metamorphosis source change
 Release step: publish only this validated departure as one commit and stop.
 Do not begin the subsequent episode in this release.
 
-## Subsequent bounded milestone — not started
+## Downstream breakdown and custody of papers — 2026-10-10 — validated
 
-- [ ] Represent the downstream breakdown and Kurtz entrusting his papers; defer his final words, death and the European epilogue.
+Base: published `ae9e813601466d27a05ae84f67ce6a7c778280bd`.
+Optional entry from the helm after the completed departure exchange. Represent
+Part III's island repair stop, leaky cylinders/bent rod, small onboard forge,
+and Kurtz handing Marlow papers with a photograph to keep from the manager.
+The short proximity-based repair route and sealed/ask response are adaptations.
+Reuse current boat/river/cast and report art. No death/final words, European
+epilogue, inventory UI, new engine infrastructure or approved Deck changes.
+
+- [x] Inspect published state, existing resources and the canonical passage.
+- [x] Add bounded downstream travel, spatial engine/forge/rod actions and the papers exchange.
+- [x] Preserve custody, exact positions, travel/work progress and active labels through Pixi'VN.
+- [x] Test both responses, prerequisites, proximity, restore and lifecycle; keep earlier tests intact.
+- [x] Inspect 1366×768 and 800×600 captures; pass `agent:check` and full `agent:e2e`.
+- [x] Document the playable route and limits; prepare one validated release.
+
+Implemented: optional helm entry after the departure exchange, a short downstream
+journey and an island stop. Marlow inspects the leaking machine, tends a small
+forge by proximity, then returns to fit the rod. Walking away pauses work.
+The engine fades out while stopped; current and mist remain live, and the bank
+resumes traveling only after the repair and papers exchange close. Kurtz entrusts
+papers and a photograph; keeping the packet closed or asking about the photograph
+changes his later response and the resumed-voyage line. The exchange reuses the
+earlier report discovery and remembers the departure response.
+
+Pixi'VN owns exact Marlow coordinates, travel and work progress, phase, immutable
+custody choice and active labels. Existing zero-speed parallax checkpoints read
+a projection of canonical distance at creation, so restoring the island does not
+briefly show the bank's origin. A wrong `cough` pose initially displayed the full
+Kurtz atlas after restore; the correct existing `coughing` frame and assertions
+on real texture crop/sprite dimensions now protect that case. No engine change.
+
+Route, canonical-state contract and literary adaptation:
+`docs/heart-of-darkness/KURTZ-BREAKDOWN.md`.
+22 corrected captures (11 moments × 2 resolutions) visually inspected:
+`docs/heart-of-darkness/kurtz-breakdown-qa/README.md`.
+The initial large machinery block was rejected; a low hatch now places the
+machine below deck. Hatch and forge are small procedural props, with future art
+requirements in `docs/art-briefs/kurtz-breakdown-tools.md`. No new photograph
+portrait, repair animation, forge sound or engine-room interior is claimed.
+Kurtz remains alive; final words, death and the epilogue are not implemented.
+No engine, approved Deck, runtime image/audio asset, Metamorphosis source,
+Phaser stash or original untracked file was modified.
+
+Final `agent:check`: exit 0; TypeScript, 160/160 unit tests in 37 files and
+build passed (2.46s). Largest shared chunk: 463.99 kB; no >500 kB warning.
+Final full `agent:e2e`: exit 0; 97/97 tests in 35 files passed in 34.5 minutes.
+All 93 preexisting browser cases remain unchanged and pass, including both
+works, all four approved Deck stages, walking, camera, NPC, audio, parallax,
+weather, the station, revelations, night return, evacuation, departure and saves.
+New coverage: 7 unit cases and 4 E2E cases; updated total: 257 automated tests.
+Focused E2E: 4/4 in 3.6 minutes after the atlas correction. Existing audio-unlock,
+navigation and approach rendering warnings remain nonfatal; no new application
+error or test failure was detected. The earlier full-run start rejected by an
+approval-review usage limit did not execute; this final run completed after the
+limit reset, without changing validation configuration.
+
+Release step: publish only this validated episode as one commit on
+`journey-vertical-slice`, confirm the remote and stop. The final-evening milestone
+above is future work.
 
 ## Abandoned wood station — 2026-10-03
 

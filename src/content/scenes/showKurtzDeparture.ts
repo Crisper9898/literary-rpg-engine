@@ -20,6 +20,8 @@ import { departurePatient, departureMooring, departureBank, departureDecision, d
   departureHelm, departureClosing, departureAfter } from "../labels/kurtzDeparture.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginBreakdown } from "../state/kurtzBreakdownState";
+import { breakdownEntry } from "../labels/kurtzBreakdown.label";
 
 export function showKurtzDeparture() {
   const scene = createKurtzDeparture(), { presentation, layers, player, marlowVisual, deckhand } = scene;
@@ -60,6 +62,7 @@ export function showKurtzDeparture() {
     action("whistle", "E · Tirar de la cuerda del silbato", () => phase() === "pressure" && departureState().crewWarned && !departureState().whistleUsed, departureWhistle, 65),
     action("helm", "E · Dar la señal y abrir el giro", () => phase() === "pressure" && departureState().whistleUsed, departureHelm, 65),
     action("helm", "E · Mirar la estación que queda atrás", () => phase() === "departed" && departureState().finalSeen, departureAfter, 65),
+    { ...action("helm", "E · Continuar río abajo", canBeginBreakdown, breakdownEntry, 65), priority: 2 },
   ];
   const conversation = attachStationInteractions(presentation, player, ticker, surface, actions, "III / LA ORILLA SE ALEJA", () => {
     const s = departureState();
