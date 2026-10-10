@@ -21,6 +21,8 @@ import { finalNightCandle, finalNightVigil, finalNightWords, finalNightLeave,
   finalNightAnnouncement, finalNightRiver, finalNightAfter } from "../labels/kurtzFinalNight.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginAftermath } from "../state/kurtzAftermathState";
+import { aftermathEntry } from "../labels/kurtzAftermath.label";
 
 export function showKurtzFinalNight() {
   const scene = createKurtzFinalNight(), { presentation, layers, player, marlowVisual, deckhand } = scene;
@@ -52,6 +54,7 @@ export function showKurtzFinalNight() {
     label: Parameters<typeof narration.call>[0], range = 65): SpatialAction => ({ id: `final-night-${id}`, prompt,
     target: () => finalNightPoints[id], range, enabled, execute: () => narration.call(label, {}) });
   attachStationInteractions(presentation, player, ticker, surface, [
+    { ...action("crew", "E · Esperar el amanecer", canBeginAftermath, aftermathEntry), priority: 2 },
     action("candle", "E · Tomar una vela", () => finalNightState().phase === "evening" && finalNightState().candle === "rack", finalNightCandle),
     action("patient", "E · Acercar la vela a Kurtz", () => finalNightState().candle === "held", finalNightVigil, 95),
     action("patient", "E · Quedarte a escuchar", () => finalNightState().phase === "vigil" && finalNightState().vigilSeen, finalNightWords, 95),

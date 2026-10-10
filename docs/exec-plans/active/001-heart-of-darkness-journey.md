@@ -73,10 +73,75 @@ and Kurtz entrusting his papers are now implemented and validated.
 The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`.
 
 - [x] Represent Kurtz's final evening, final words and death.
-- [ ] Represent the aftermath of Kurtz's death and Marlow's illness as the next bounded episode; do not begin it in this release.
+- [x] Represent the aftermath of Kurtz's death and Marlow's illness.
+- [ ] Represent Marlow's convalescent return to Europe and the Company's claim to Kurtz's papers as the next bounded episode; do not begin it in this release.
 
-Burial, Marlow's illness and the European epilogue remain later milestones.
+The European epilogue remains a later milestone.
 The separate human listening review of environmental audio remains independent.
+
+## Aftermath and Marlow's illness — 2026-10-10 — validated
+
+Base: published `c979bef07bfbe155384ca309f174319c74bbbea9`.
+Scope: optional crew entry after the death announcement closes. Hear the next
+morning's burial report from the railing (offscreen burial, no new shore scene),
+secure the existing papers, brace at the railing and choose to accept help or
+manage alone. Help delivers water in the exchange; alone requires reaching the
+caseta for water. Both require sheltered rest and a final river observation.
+Survival is canonical; the choice changes the care route and later memory.
+Remember the prior vigil and papers responses. End before European return.
+
+Architecture: Pixi'VN labels/choices and `createPixiStorageCheckpoint` for
+`journey.kurtzAftermath` and actual `journey.aftermathPosition`. Compose the
+existing boat/papers; remove the patient and repair props from this instance.
+Use existing movement/camera/NPC/parallax/audio/interaction attachments. No
+engine change, health system, inventory, new save format or generated artwork.
+
+- [x] State tests first: entry gate, ordered actions, both care routes, immutable response, invalid saves, progress and no timed narrative events.
+- [x] Add focused state/labels/scene and story staging; entry/dispatch hooks only in existing scenes.
+- [x] E2E: real E/1/2, spatial gates, both routes, remembered choices, exact save/restore and active labels, no duplicate sources/entities, earlier restore and restart.
+- [x] Capture/review 1366×768 and 800×600: burial report, papers, choices, care routes, rest, recovery and restored states.
+- [x] Pass agent:check/full agent:e2e; document literary adaptation/limits and update this plan. Release only this validated episode; stop before Europe.
+
+Implemented route: optional crew entry after the death announcement closes;
+hear the burial report at the railing, secure the existing packet, choose care,
+reach water if managing alone, seek shelter and return to the river for a
+conditioned reflection. Prior vigil/papers choices remain in their original
+checkpoints. Time drives only unwrapped travel and gradual atmosphere, never
+the burial, selection or recovery. Both care routes preserve canonical survival.
+
+`journey.kurtzAftermath` owns phase, distance/progress, papersSecured, immutable
+help/alone response, closed care exchange and waterReceived. Actual coordinates
+are in `journey.aftermathPosition`. Pixi'VN owns open labels/options and exports.
+Scene dispatch reconstructs these without replaying events. The factory removes
+the patient and repair props from this boat instance, leaving the approved
+art/composition intact. Existing attachments own movement, camera, NPC, audio,
+keys and cleanup. Two mist depths share one owned texture; illness haze eases
+in/out during play and initializes from phase after restore. No engine change,
+new runtime asset, diagnosis, health system, inventory or save format.
+
+Validation: eight new units and four new E2E cases, all 101 preexisting E2E cases
+unchanged. Final `agent:check`: exit 0; TypeScript, 176/176 unit tests in 39 files
+and build (4.28s) passed. Final full `agent:e2e`: exit 0; 105/105 in 39 spec files
+passed in 42.6 minutes. Final focused E2E: 4/4 in 3.3m. Total coverage: 281 tests.
+The first browser probe failed on the missing dawn entry as intended. Vitest's
+Windows sandbox temp-cache EPERM was avoided by running the same command outside
+the sandbox; no project workaround or weaker test was added.
+
+24 final PNGs (12 moments × 2 sizes) were dimension-checked and individually
+inspected. Text, both choices and controls fit, including restored rest. The
+boat/actors/shadows/river remain legible beneath the subtle world-only haze.
+Captures: `docs/heart-of-darkness/kurtz-aftermath-qa/README.md`.
+State, route, canonical basis and adaptations:
+`docs/heart-of-darkness/KURTZ-AFTERMATH.md`.
+Limits: offscreen burial, narrated water delivery and days of illness, existing
+standing/walking art rather than a new reclining atlas, no simulated escort.
+Europe, document disputes and the Intended are not implemented in this release.
+Human listening remains separate. Existing audio-unlock/navigation warnings
+are nonfatal; no new Pixi'VN error or regression was detected. Engine, approved
+Deck, Metamorphosis, Phaser stash and original untracked files remain untouched.
+
+Publish one validated commit plus push to `journey-vertical-slice`, confirm
+the remote and stop before the European episode.
 
 ## Kurtz's final evening — 2026-10-10 — validated
 
