@@ -45,8 +45,11 @@ import { aftermathState } from "../state/kurtzAftermathState";
 import { showKurtzAftermath } from "./showKurtzAftermath";
 import { europeState } from "../state/europeReturnState";
 import { showEuropeReturn } from "./showEuropeReturn";
+import { legacyState } from "../state/kurtzLegacyState";
+import { showKurtzLegacy } from "./showKurtzLegacy";
 
 export function showInnerStation() {
+  if (legacyState().phase !== "inactive") return showKurtzLegacy();
   if (europeState().phase !== "inactive") return showEuropeReturn();
   if (aftermathState().phase !== "inactive") return showKurtzAftermath();
   if (finalNightState().phase !== "inactive") return showKurtzFinalNight();

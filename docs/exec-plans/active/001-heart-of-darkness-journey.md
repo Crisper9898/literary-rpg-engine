@@ -75,10 +75,48 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Represent Kurtz's final evening, final words and death.
 - [x] Represent the aftermath of Kurtz's death and Marlow's illness.
 - [x] Represent Marlow's convalescent return to Europe and the Company's claim to Kurtz's papers.
-- [ ] Represent the cousin's and journalist's visits and their different claims to Kurtz's legacy as the next bounded episode; stop before the Intended.
+- [x] Represent the cousin's and journalist's visits and their different claims to Kurtz's legacy as the next bounded episode; stop before the Intended.
+- [ ] Represent Marlow's visit to Kurtz's Intended as the next bounded episode; leave the Thames framing conclusion for afterward.
 
-The cousin, journalist and Intended encounters remain later milestones.
+The cousin and journalist episode is implemented and validated. The Intended
+is the next milestone; it is not implemented by this release.
 The separate human listening review of environmental audio remains independent.
+
+## Claims to Kurtz's legacy — 2026-10-10–11 — validated
+
+Base: published `77359b97ea6525d35c52cb8dc303089a0af66c81`.
+Scope: after the Company leaves, receive the cousin at the door, answer his
+musical claim, collect family letters/memoranda at the desk and hand them over.
+Then receive the journalist, question party or motive, carry the prepared report
+to the door and retain the Intended's letters/portrait. Choices alter replies
+and final reflection; custody and visitor order remain canonical. No Intended
+visit, inventory, new engine infrastructure or room redesign.
+
+- [x] State tests first; guard entry, both immutable responses, ordered handoffs and partial saves.
+- [x] Reuse the European room/attachments; add story-local family bundle, focused labels and entry/dispatch hooks.
+- [x] Browser coverage for real E/1/2, proximity, live movement, previous memory, exact save/restore, props and deduplication.
+- [x] Capture and inspect both resolutions; document source, adaptation, route and limits.
+- [x] Pass agent:check and full agent:e2e; prepare one validated commit/push and stop before the Intended.
+
+Route/state/source: `docs/heart-of-darkness/KURTZ-LEGACY.md`. Eight new unit
+cases passed. Final code agent:check: exit 0; TypeScript, 192/192 units in
+41 files and build (2.69s). Focused browser gate: 4/4 in 2.3m.
+28 dimension-checked PNGs, individually reviewed at 1366×768 and 800×600,
+are retained in `docs/heart-of-darkness/kurtz-legacy-qa/README.md`.
+The first focused run exposed a helper pressing E before its checkpoint
+position reached the rendered actor. The test now waits for actual coordinates;
+no runtime guard, range or old test was weakened. Both routes, live movement,
+active room audio, partial labels, handoff saves and earlier restore pass.
+Final full agent:e2e: exit 0; 113/113 in 43 spec files passed in 44.4m,
+including all 109 unchanged preexisting cases. Total coverage: 305 tests.
+The existing audio-unlock/navigation warnings remain nonfatal; no new
+Pixi'VN error was detected. The room remains graphic theatre; visitors stay
+offscreen and the future room illustration remains separate. No new actor,
+engine system, inventory, save UI or runtime asset was introduced. Previous
+European state and position are reused, not copied. Engine, approved Deck,
+Metamorphosis, Phaser stash and original untracked files remain untouched.
+Publish only this validated episode. The Intended and Thames conclusion remain
+unimplemented here.
 
 ## European return and Company papers — 2026-10-10 — validated
 

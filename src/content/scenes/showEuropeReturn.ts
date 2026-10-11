@@ -13,6 +13,8 @@ import { europeWindow, europePacket, europeReport, europeLetters, europePrepare,
   europeCollect, europeOffer, europeMemory } from "../labels/europeReturn.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginLegacy } from "../state/kurtzLegacyState";
+import { legacyEntry } from "../labels/kurtzLegacy.label";
 
 export function showEuropeReturn() {
   const scene = createEuropeReturn(), { presentation, layers, player, art } = scene;
@@ -38,6 +40,7 @@ export function showEuropeReturn() {
     action("door", "E · Responder al funcionario", () => europeState().phase === "prepared", europeCompany),
     action("report", "E · Recoger sólo el informe", () => europeState().phase === "challenged" && europeState().exchangeSeen, europeCollect),
     action("door", "E · Ofrecer el informe a la Compañía", () => europeState().phase === "carrying", europeOffer),
+    action("door", "E · Recibir al primo de Kurtz", canBeginLegacy, legacyEntry),
     action("letters", "E · Recordar lo que queda", () => europeState().phase === "resolved", europeMemory),
   ].map((a, i) => ({ ...a, id: `${a.id}-${i}` })), "III / LA CIUDAD SEPULCRAL", () => {
     const s = europeState();
