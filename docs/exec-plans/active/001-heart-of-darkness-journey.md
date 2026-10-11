@@ -76,11 +76,49 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Represent the aftermath of Kurtz's death and Marlow's illness.
 - [x] Represent Marlow's convalescent return to Europe and the Company's claim to Kurtz's papers.
 - [x] Represent the cousin's and journalist's visits and their different claims to Kurtz's legacy as the next bounded episode; stop before the Intended.
-- [ ] Represent Marlow's visit to Kurtz's Intended as the next bounded episode; leave the Thames framing conclusion for afterward.
+- [x] Represent Marlow's visit to Kurtz's Intended as the next bounded episode; leave the Thames framing conclusion for afterward.
+- [ ] Return to the Thames framing conclusion as the next bounded episode; do not expand into a general art or engine refactor.
 
-The cousin and journalist episode is implemented and validated. The Intended
-is the next milestone; it is not implemented by this release.
+The cousin, journalist and Intended episodes are implemented and validated.
+The Thames framing conclusion is the next milestone; it is not implemented
+by this release.
 The separate human listening review of environmental audio remains independent.
+
+## Visit to the Intended — 2026-10-11 — validated
+
+Base: published `d1ca74d8a4562510205c3b87d289b603c01d3c41`.
+Scope: optional departure from the completed legacy episode, explore a dusk
+drawing room, physically deliver the packet, speak as a witness or listen to
+her memory, face the last-words request and leave after Marlow's canonical lie.
+No alternate ending, Thames conclusion, engine changes or approved Deck edits.
+
+- [x] State tests first: ordered custody, two immutable approaches, optional observations and bounded position checkpoints.
+- [x] Story-local room staging and Pixi'VN labels using existing movement, interactions, camera, audio and canonical storage.
+- [x] Verify real E/1/2, live movement, both memories, partial saves, earlier restore and deduplication in browser.
+- [x] Capture and inspect both resolutions; document the source, route and missing Intended illustration.
+- [x] Pass agent:check and full agent:e2e; prepare one scoped release and stop before the Thames.
+
+The Intended speaks from the right wing until approved actor art exists.
+The room is episode-local graphic theatre; see `docs/art-briefs/intended-drawing-room.md`.
+Do not mark the Thames conclusion implemented by this release.
+
+Route/state/source: `docs/heart-of-darkness/KURTZ-INTENDED.md`. Six new unit
+cases and four new browser cases passed. Final agent:check: exit 0;
+TypeScript, 198/198 units in 42 files, build (2.80s). Focused browser gate:
+4/4 in 2.7m. All 26 dimension-checked PNGs were individually inspected at
+1366×768 and 800×600; retained in `docs/heart-of-darkness/kurtz-intended-qa/README.md`.
+Both choices fit; no text overflow, accidental crop or duplicate entry/UI.
+Final full agent:e2e: exit 0; 117/117 in 45 spec files, 49.2m, including all
+113 unchanged preexisting cases. Total coverage: 315 tests. Live movement,
+custody, optional observations, partial choices, active last-words saves,
+exact actor positions, earlier restoration and audio deduplication passed.
+The 12 code/test files were hash-checked unchanged after the final gates.
+Existing suspended-audio/navigation warnings remain nonfatal. The salon is
+not finished illustration and the Intended has no approved visible sprite;
+the art brief records that debt without stopping the playable episode.
+Engine, approved Deck, Metamorphosis, runtime assets, Phaser stash and original
+untracked files remain untouched. Publish only this validated visit; the
+Thames conclusion and a later human audio listening review remain separate.
 
 ## Claims to Kurtz's legacy — 2026-10-10–11 — validated
 

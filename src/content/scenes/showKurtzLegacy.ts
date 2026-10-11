@@ -14,6 +14,8 @@ import { legacyCousin, legacyCollectFamily, legacyGiveFamily, legacyJournalist, 
   legacyGiveReport, legacyRemaining, legacyMemory } from "../labels/kurtzLegacy.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginIntended } from "../state/kurtzIntendedState";
+import { intendedEntry } from "../labels/kurtzIntended.label";
 
 export function showKurtzLegacy() {
   const scene = createKurtzLegacy(), { presentation, layers, player, art } = scene;
@@ -39,6 +41,8 @@ export function showKurtzLegacy() {
     action("door", "E · Entregar el informe al periodista", "reportCarrying", legacyGiveReport),
     action("letters", "E · Examinar el último paquete", "remaining", legacyRemaining),
     action("letters", "E · Recordar las dos visitas", "complete", legacyMemory),
+    { id: "intended-visit", prompt: "E · Visitar a la Prometida con el último paquete", target: () => legacyPoints.door,
+      range: 65, enabled: canBeginIntended, execute: () => narration.call(intendedEntry, {}) },
   ], "III / LOS DUEÑOS DEL RECUERDO", () => {
     const s = legacyState();
     if (s.phase === "cousin") return "El primo espera junto a la puerta, a la derecha · E";
@@ -47,7 +51,8 @@ export function showKurtzLegacy() {
     if (s.phase === "journalist") return "Un periodista aguarda junto a la puerta · E";
     if (["journalistAnswered", "reportReady"].includes(s.phase)) return "Recoge el informe a la izquierda de la mesa · E";
     if (s.phase === "reportCarrying") return "Regresa a la puerta con el informe · E";
-    return "Las cartas y la fotografía permanecen a la derecha de la mesa · E";
+    return s.phase === "complete" ? "Lleva el último paquete a la Prometida desde la puerta de la derecha · E" :
+      "Las cartas y la fotografía permanecen a la derecha de la mesa · E";
   });
   const update = (_frame: Ticker) => {
     const s = legacyState();
