@@ -180,6 +180,9 @@ portraits. The two helmsman poses are illustrations, not skeletal animation.
 Human listening and physical-GPU performance still need separate evaluation.
 No performance/engine refactor or new Save/Load UI was attempted.
 
+The following progress/next-milestone text is a historical snapshot for this
+approach release. See [COVERAGE-AUDIT.md](COVERAGE-AUDIT.md) for current coverage.
+
 Next milestone: arrival at the Inner Station and the Russian trader, separately
 scoped. The pre-voyage framing/stations, Kurtz's compound, night recapture,
 departure, illness/death downstream, return and the Intended remain unfinished.

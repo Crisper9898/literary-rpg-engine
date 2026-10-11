@@ -7,6 +7,10 @@ The project uses **Pixi'VN** as the narrative/game-state foundation and **PixiJS
 
 The first vertical slice is **Heart of Darkness — “The Journey”**.
 
+Current narrative coverage and remaining production work are recorded in
+[the Heart of Darkness audit](docs/heart-of-darkness/COVERAGE-AUDIT.md).
+Playable later episodes do not yet constitute a complete adaptation of the novel.
+
 ## Codex startup
 For a fresh Codex session, the repository already contains the context it needs.
 

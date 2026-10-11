@@ -129,6 +129,10 @@ attempted. No user save menu or additional engine infrastructure was added.
 
 ## Remaining narrative milestones and approximate progress
 
+Historical snapshot for this hut release, not today's completion estimate.
+See [COVERAGE-AUDIT.md](COVERAGE-AUDIT.md) for the current narrative matrix
+and remaining production debt.
+
 Heart of Darkness has a validated voyage encounter and now this playable stop,
 but it does not yet cover the complete novella. A planning breakdown of ten
 substantial narrative blocks gives **approximately 20%** complete:

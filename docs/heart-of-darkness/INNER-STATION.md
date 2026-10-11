@@ -189,6 +189,9 @@ theatrical transition rather than physically modeled travel along the bank.
 Faces remain small in the wide 800×600 view; short dialogue and mild camera
 focus retain readable choices without hiding the house or ground contacts.
 
+The following progress/next-milestone text is a historical snapshot for this
+station release. See [COVERAGE-AUDIT.md](COVERAGE-AUDIT.md) for current coverage.
+
 Next: **Presentation of Kurtz**. Later coverage still includes Kurtz's emergence,
 station revelations, departure, river return/death and the closing frame. Earlier
 novel material is also compressed; a finished vertical slice is not a complete

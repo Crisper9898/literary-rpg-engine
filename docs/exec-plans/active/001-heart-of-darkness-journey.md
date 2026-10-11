@@ -78,13 +78,41 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Represent the cousin's and journalist's visits and their different claims to Kurtz's legacy as the next bounded episode; stop before the Intended.
 - [x] Represent Marlow's visit to Kurtz's Intended as the next bounded episode; leave the Thames framing conclusion for afterward.
 - [x] Return to the Thames framing conclusion as the next bounded episode; do not expand into a general art or engine refactor.
-- [ ] Audit remaining Heart of Darkness novel coverage and documented production debt; define the next bounded milestone without declaring the whole adaptation complete.
+- [x] Audit remaining Heart of Darkness novel coverage and documented production debt; define the next bounded milestone without declaring the whole adaptation complete.
+- [ ] Implement only the opening Nellie/Thames frame through an explicit optional entry, reusing existing staging; preserve the default Deck entry and stop before recruitment/early stations. Follow `docs/heart-of-darkness/COVERAGE-AUDIT.md` acceptance criteria.
 
 The cousin, journalist and Intended episodes are implemented and validated.
-The Thames framing conclusion is implemented and validated. The next task is
-a coverage/debt review of the whole adaptation, not another automatic episode
-or a redesign of the frozen Journey Deck.
+The Thames framing conclusion is implemented and validated. The coverage/debt
+review is complete; next is only the optional opening Nellie frame. The commission,
+Outer/Central Stations and wider crew experience remain later tasks. The frozen
+Journey Deck and reusable engine remain unchanged.
 The separate human listening review of environmental audio remains independent.
+
+## Coverage review — 2026-10-11 — documentation only
+
+Base: published `46e6ec2843947fac6f33bef5dfd5c40ec6e4ff81`.
+Current matrix and next bounded scope: `docs/heart-of-darkness/COVERAGE-AUDIT.md`.
+The 21 unequal rows comprise 15 bounded playable episodes, one partial voyage/
+crew row and five absent early events. This is not a completion percentage.
+The current `/` entry starts on the Deck, not at the beginning of the novel.
+Earlier Thames recruitment/Company events and Outer/Central Stations were not
+implemented by later convalescence, station or downstream-repair episodes.
+
+- [x] Verify current entry/dispatch and existing story/checkpoint/test evidence against the primary text and episode records.
+- [x] Separate narrative absence, compressed adaptation, illustration/audio/UX debt and frozen approved work.
+- [x] Mark the three old progress estimates historical without rewriting release records.
+- [x] Define one opening-frame milestone with explicit access, spatial observation, Pixi'VN persistence, regression gates and scope exclusions.
+- [x] Validate document references/counts, agent resumption and Git scope; prepare only the documentation audit for publication.
+
+No prologue, new URL, runtime/engine change, scene capture or audio listening
+assessment is implemented by this audit. Opening acceptance criteria are for
+the next session; do not mark that next task complete or start it automatically.
+
+Validation: 20 local links and 88 evidence filenames verified; matrix counts
+match. `agent:context` resumes at the optional opening frame. Fresh agent:check
+passed TypeScript, 203/203 units in 43 files and build 3.69s, exit 0. No E2E
+rerun or new capture was needed for this documentation-only diff; the untouched
+runtime retains the published 121/121 browser result at `46e6ec2`.
 
 ## Return to the Thames — 2026-10-11 — validated
 
