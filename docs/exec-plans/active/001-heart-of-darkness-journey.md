@@ -77,12 +77,47 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Represent Marlow's convalescent return to Europe and the Company's claim to Kurtz's papers.
 - [x] Represent the cousin's and journalist's visits and their different claims to Kurtz's legacy as the next bounded episode; stop before the Intended.
 - [x] Represent Marlow's visit to Kurtz's Intended as the next bounded episode; leave the Thames framing conclusion for afterward.
-- [ ] Return to the Thames framing conclusion as the next bounded episode; do not expand into a general art or engine refactor.
+- [x] Return to the Thames framing conclusion as the next bounded episode; do not expand into a general art or engine refactor.
+- [ ] Audit remaining Heart of Darkness novel coverage and documented production debt; define the next bounded milestone without declaring the whole adaptation complete.
 
 The cousin, journalist and Intended episodes are implemented and validated.
-The Thames framing conclusion is the next milestone; it is not implemented
-by this release.
+The Thames framing conclusion is implemented and validated. The next task is
+a coverage/debt review of the whole adaptation, not another automatic episode
+or a redesign of the frozen Journey Deck.
 The separate human listening review of environmental audio remains independent.
+
+## Return to the Thames — 2026-10-11 — validated
+
+Base: published `40f89b37a38f456e713e34604d51b51b4276bbb4`.
+Scope: explicit return from the completed Intended, optional mooring observation,
+listen to the Director about the ebb, then lift the narrator's gaze at the rail.
+Both observation paths retain the final image. This is a separate Nellie frame,
+not a reskin of the approved steamer. No engine changes or alternate ending.
+
+- [x] State tests first: prerequisite, one-shot entry, ordered close steps, optional observation and exact bounded coordinates.
+- [x] Compose story-local Nellie staging and labels using existing movement, gait, camera, parallax, audio and Pixi'VN checkpoints.
+- [x] Verify actual E/proximity, prior approach, partial save/restore, live movement and cleanup in browser.
+- [x] Capture and inspect both resolutions; document source, route and illustration debt.
+- [x] Pass final agent:check and full agent:e2e; prepare one scoped release and stop.
+
+Route/state/source: `docs/heart-of-darkness/THAMES-CONCLUSION.md`.
+Missing final illustration: `docs/art-briefs/thames-nellie-frame.md`.
+The opening frame and earlier adaptation gaps need a separate coverage review;
+do not mark the whole novel or project complete from this final episode.
+
+Five new unit cases and four new browser cases passed. agent:check: exit 0;
+TypeScript, 203/203 units in 43 files, build 2.63s. Focused browser gate:
+4/4 in 2.0m. Full agent:e2e: exit 0; 121/121 in 47.0m, including all 117
+preexisting cases. Total coverage: 324 tests, without counting focused reruns.
+All 20 dimension-checked PNGs were individually inspected at 1366×768 and
+800×600 and retained in `docs/heart-of-darkness/thames-conclusion-qa/README.md`.
+No text overflow or unintended crop. Optional observation, previous approach,
+active entry/ebb/final-line saves, fractional actor coordinates, earlier restore,
+restart and audio/UI deduplication passed. The 12 code/test files were hash-checked
+unchanged after the full gates. Existing suspended-audio/navigation warnings are
+nonfatal. This new Nellie stage is graphic theatre, not finished illustration;
+approved Deck, engine, Metamorphosis, runtime assets, stash and original untracked
+files remain intact. Publish only the verified frame, then stop.
 
 ## Visit to the Intended — 2026-10-11 — validated
 

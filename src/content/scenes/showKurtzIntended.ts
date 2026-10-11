@@ -10,6 +10,8 @@ import { attachWorldCamera } from "../../engine/camera/attachWorldCamera";
 import { attachSpatialAudio } from "../../engine/audio/attachSpatialAudio";
 import { attachDisplayResolution } from "../../ui/attachDisplayResolution";
 import { intendedPosition, intendedState } from "../state/kurtzIntendedState";
+import { canBeginThames } from "../state/thamesConclusionState";
+import { thamesEntry } from "../labels/thamesConclusion.label";
 import { intendedWindow, intendedPiano, intendedDelivery, intendedConversation, intendedLastWords,
   intendedDeparture, intendedMemory } from "../labels/kurtzIntended.label";
 import { attachStationInteractions } from "./attachStationInteractions";
@@ -40,12 +42,13 @@ export function showKurtzIntended() {
     action("intended", "E · Afrontar la pregunta de las últimas palabras", phase("heard"), intendedLastWords),
     action("door", "E · Despedirse y salir del salón", phase("departure"), intendedDeparture),
     action("door", "E · Recordar lo que no dije", phase("complete"), intendedMemory),
+    action("window", "E · Regresar al relato en el Támesis", canBeginThames, thamesEntry),
   ], "III / LA ÚLTIMA PALABRA", () => {
     const s = intendedState();
     if (s.phase === "arrived") return "Lleva el paquete a la mesa pequeña, bajo la ventana derecha · E";
     if (["delivered", "speaking"].includes(s.phase)) return "La Prometida espera a la derecha, junto a la chimenea · E";
     if (["heard", "lastWords"].includes(s.phase)) return "Regresa a la Prometida para escuchar su pregunta · E";
-    return "La puerta está a la derecha · E para despedirse o recordar";
+    return s.phase === "complete" ? "La puerta: recordar · Las ventanas: volver al Támesis · E" : "La puerta está a la derecha · E para despedirse";
   });
   const update = (_frame: Ticker) => {
     const p = intendedState().phase;

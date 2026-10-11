@@ -49,8 +49,11 @@ import { legacyState } from "../state/kurtzLegacyState";
 import { showKurtzLegacy } from "./showKurtzLegacy";
 import { intendedState } from "../state/kurtzIntendedState";
 import { showKurtzIntended } from "./showKurtzIntended";
+import { thamesState } from "../state/thamesConclusionState";
+import { showThamesConclusion } from "./showThamesConclusion";
 
 export function showInnerStation() {
+  if (thamesState().phase !== "inactive") return showThamesConclusion();
   if (intendedState().phase !== "inactive") return showKurtzIntended();
   if (legacyState().phase !== "inactive") return showKurtzLegacy();
   if (europeState().phase !== "inactive") return showEuropeReturn();
