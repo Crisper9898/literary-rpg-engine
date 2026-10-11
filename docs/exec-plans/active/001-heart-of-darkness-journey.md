@@ -74,10 +74,50 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 
 - [x] Represent Kurtz's final evening, final words and death.
 - [x] Represent the aftermath of Kurtz's death and Marlow's illness.
-- [ ] Represent Marlow's convalescent return to Europe and the Company's claim to Kurtz's papers as the next bounded episode; do not begin it in this release.
+- [x] Represent Marlow's convalescent return to Europe and the Company's claim to Kurtz's papers.
+- [ ] Represent the cousin's and journalist's visits and their different claims to Kurtz's legacy as the next bounded episode; stop before the Intended.
 
-The European epilogue remains a later milestone.
+The cousin, journalist and Intended encounters remain later milestones.
 The separate human listening review of environmental audio remains independent.
+
+## European return and Company papers — 2026-10-10 — validated
+
+Base: published `c8f957ddea6b9bf1980bea022b0939fc3188e056`.
+Scope: optional entry after survival; convalescent return, optional window,
+distinguish report/private letters, remove report postscript, answer the Company
+visitor, physically collect the report and offer it without surrendering letters.
+Two responses preserve the canonical refusal and change the immediate/final
+exchange. Read care and packet choices directly from existing checkpoints.
+Stop before cousin, journalist and Intended. No new engine system or save UI.
+
+- [x] Write failing state tests, then implement guarded canonical checkpoint and exact position.
+- [x] Compose a separate theatrical room, existing approved actor/report, motivated light/contact shade and offscreen visitor; add focused labels and entry/dispatch hooks.
+- [x] Validate both spatial routes, optional memory, active choices, exact save/restore, lifecycle deduplication and earlier aftermath/restart in focused browser tests.
+- [x] Capture and inspect 1366×768/800×600; document staging limits and future room-art brief.
+- [x] Pass agent:check and full agent:e2e; prepare one validated commit/push and stop at this episode.
+
+State/route/canonical basis: `docs/heart-of-darkness/EUROPE-RETURN.md`.
+The room is graphic theatre, not an illustration of Brussels. The existing
+actor/report remain; no unrelated image, visible official, copied room, new
+runtime asset or generated art. Engine, approved Deck, Metamorphosis, Phaser
+stash and original untracked files remain untouched.
+
+Focused browser gate: 4/4 in 2.3m. Final code agent:check: TypeScript,
+184/184 units in 40 files and build (2.70s), exit 0. 28 final screenshots
+(fourteen moments × two sizes) are retained and individually inspected in
+`docs/heart-of-darkness/europe-return-qa/README.md`. Visual review replaced
+only this episode's crate/grass report crop with the existing paper-only crop.
+Final full agent:e2e: exit 0; 109/109 in 41 spec files passed in 43.4m,
+including all 105 unchanged preexisting cases. Total coverage: 293 tests.
+The first focused run exposed a helper using the European far coordinate on
+the previous boat; the helper now uses that boat's valid coordinate. No bounds
+were expanded and no test was weakened. All four focused cases passed on rerun.
+Existing audio-unlock/navigation console warnings remain nonfatal; no new
+Pixi'VN error or regression was detected. The room is restrained graphic theatre,
+not a claim of finished European illustration. Caller/aunt/city crowd remain
+offscreen; there is no new sick/carry pose or detailed photograph.
+Document lifecycle, route and limitations in EUROPE-RETURN.md. Publish this
+episode only; cousin, journalist and Intended remain unimplemented here.
 
 ## Aftermath and Marlow's illness — 2026-10-10 — validated
 

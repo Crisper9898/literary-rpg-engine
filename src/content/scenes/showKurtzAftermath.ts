@@ -21,6 +21,8 @@ import { aftermathBurial, aftermathPapers, aftermathCare, aftermathWater,
   aftermathRest, aftermathRecovery, aftermathRiver } from "../labels/kurtzAftermath.label";
 import { attachStationInteractions } from "./attachStationInteractions";
 import type { SpatialAction } from "../../engine/interaction/SpatialInteractions";
+import { canBeginEurope } from "../state/europeReturnState";
+import { europeEntry } from "../labels/europeReturn.label";
 
 export function showKurtzAftermath() {
   const scene = createKurtzAftermath(), { presentation, layers, player, marlowVisual, deckhand } = scene;
@@ -54,6 +56,7 @@ export function showKurtzAftermath() {
     label: Parameters<typeof narration.call>[0], range = 65): SpatialAction => ({ id: `aftermath-${id}`, prompt,
     target: () => aftermathPoints[id], range, enabled, execute: () => narration.call(label, {}) });
   attachStationInteractions(presentation, player, ticker, surface, [
+    { ...action("shelter", "E · Regresar a Europa con los papeles", canBeginEurope, europeEntry), id: "europe-entry", priority: 2 },
     action("burial", "E · Escuchar la noticia del entierro", () => aftermathState().phase === "morning", aftermathBurial),
     action("papers", "E · Resguardar los papeles", () => aftermathState().phase === "bereaved", aftermathPapers),
     action("care", "E · Buscar apoyo en la barandilla", () => aftermathState().phase === "fever" && !aftermathState().response, aftermathCare),
