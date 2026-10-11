@@ -51,8 +51,11 @@ import { intendedState } from "../state/kurtzIntendedState";
 import { showKurtzIntended } from "./showKurtzIntended";
 import { thamesState } from "../state/thamesConclusionState";
 import { showThamesConclusion } from "./showThamesConclusion";
+import { prologueState } from "../state/thamesPrologueState";
+import { showThamesPrologue } from "./showThamesPrologue";
 
 export function showInnerStation() {
+  if (["anchored", "telling", "ready"].includes(prologueState().phase)) return showThamesPrologue();
   if (thamesState().phase !== "inactive") return showThamesConclusion();
   if (intendedState().phase !== "inactive") return showKurtzIntended();
   if (legacyState().phase !== "inactive") return showKurtzLegacy();

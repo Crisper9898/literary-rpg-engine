@@ -79,16 +79,21 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Represent Marlow's visit to Kurtz's Intended as the next bounded episode; leave the Thames framing conclusion for afterward.
 - [x] Return to the Thames framing conclusion as the next bounded episode; do not expand into a general art or engine refactor.
 - [x] Audit remaining Heart of Darkness novel coverage and documented production debt; define the next bounded milestone without declaring the whole adaptation complete.
-- [ ] Implement only the opening Nellie/Thames frame through an explicit optional entry, reusing existing staging; preserve the default Deck entry and stop before recruitment/early stations. Follow `docs/heart-of-darkness/COVERAGE-AUDIT.md` acceptance criteria.
+- [x] Implement only the opening Nellie/Thames frame through an explicit optional entry, reusing existing staging; preserve the default Deck entry and stop before recruitment/early stations. Follow `docs/heart-of-darkness/COVERAGE-AUDIT.md` acceptance criteria.
+- [ ] Scope and implement the appointment and Company visit (N02) as a separate bounded episode, preserving the optional prologue/default Deck and stopping before coastal travel or the Outer Station. Recheck the primary text and coverage audit before implementation.
 
 The cousin, journalist and Intended episodes are implemented and validated.
 The Thames framing conclusion is implemented and validated. The coverage/debt
-review is complete; next is only the optional opening Nellie frame. The commission,
-Outer/Central Stations and wider crew experience remain later tasks. The frozen
+review and optional opening Nellie frame are complete; next is only the
+appointment/Company episode. Outer/Central Stations and wider crew experience
+remain later tasks. The frozen
 Journey Deck and reusable engine remain unchanged.
 The separate human listening review of environmental audio remains independent.
 
 ## Coverage review — 2026-10-11 — documentation only
+
+This section records the audit release before the optional opening was built.
+Current coverage includes N01; see the later prologue section below.
 
 Base: published `46e6ec2843947fac6f33bef5dfd5c40ec6e4ff81`.
 Current matrix and next bounded scope: `docs/heart-of-darkness/COVERAGE-AUDIT.md`.
@@ -113,6 +118,40 @@ match. `agent:context` resumes at the optional opening frame. Fresh agent:check
 passed TypeScript, 203/203 units in 43 files and build 3.69s, exit 0. No E2E
 rerun or new capture was needed for this documentation-only diff; the untouched
 runtime retains the published 121/121 browser result at `46e6ec2`.
+
+## Opening Nellie frame — 2026-10-11 — validated
+
+Base: published coverage audit `e9022224ba02a8158e119ecbab9dd9c0b2b347be`.
+Scope: only N01, optional `/?story=journey&episode=prologue`; no recruitment,
+coast, early stations, engine or approved Deck/art modifications.
+Episode and manual route: `docs/heart-of-darkness/THAMES-PROLOGUE.md`.
+
+- [x] Add optional content entry preserving default Deck and Metamorphosis.
+- [x] Reuse the existing Nellie composition, atlas, movement/camera/current/audio/UI.
+- [x] Add optional spatial anchorage observation, opening tale and deliberate Deck continuation with an explicit early-episode ellipsis.
+- [x] Keep opening phase/position/observation in distinct Pixi'VN checkpoints; preserve the closing-frame state and canonical ending.
+- [x] Add five state units and observe/ignore browser coverage including proximity, active text/position restoration, earlier saves, restart and single UI/audio ownership.
+- [x] Capture and individually inspect 18 images at 1366×768 and 800×600; retain them in `docs/heart-of-darkness/prologue-qa/`.
+- [x] Complete full regression validation and prepare one bounded opening-frame release.
+
+Fresh `agent:check`: exit 0; TypeScript, 208/208 units in 44 files; build 2.65s.
+Initial focused browser run: 4/4 passed in 1.7m, including visual QA.
+Exact restored dialogue-text assertions subsequently passed the three focused
+gameplay cases in 1.2m. Independent read-only review found no blocking code
+issue; that suggested assertion was added before final regression validation.
+Full `agent:e2e`: exit 0; 125/125 tests in 49 spec files, 49.0m. Total: 333
+tests (208 units + 125 E2E), covering both works and generic fixtures; this is
+not a narrative coverage percentage. The ten runtime/test files retained
+their validated hashes throughout the full run. Documentation links and the
+updated 21-row matrix (16 playable / one partial / four absent) were checked.
+One coherent local commit is prepared for normal publication to
+`origin/journey-vertical-slice`; no expansion into N02 is part of this release.
+
+Known limits: reused graphic-theatre Nellie, listeners offscreen, standing
+Marlow as a spatial-attention adaptation, provisional water audio with human
+listening still pending. N02–N05 and full crew experience remain absent/partial;
+16 playable rows / one partial / four absent are an index, not a completion
+percentage. No new random illustration or approved-scene refinement.
 
 ## Return to the Thames — 2026-10-11 — validated
 

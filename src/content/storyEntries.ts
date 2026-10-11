@@ -1,5 +1,6 @@
 import { startLabel } from "./labels/start.label";
 import { metamorphosisStart } from "./labels/metamorphosis.label";
+import { prologueStart } from "./labels/thamesPrologue.label";
 
 /** Application entry selection; each work still owns its scene and content. */
 export const storyEntries = [
@@ -9,6 +10,9 @@ export const storyEntries = [
 ] as const;
 
 export function selectedStory(search: string) {
-  const requested = new URLSearchParams(search).get("story");
+  const params = new URLSearchParams(search), requested = params.get("story");
+  if (requested === "journey" && params.get("episode") === "prologue") {
+    return { ...storyEntries[0], label: prologueStart };
+  }
   return storyEntries.find((entry) => entry.key === requested) ?? storyEntries[0];
 }

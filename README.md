@@ -42,6 +42,12 @@ entrar en **La metamorfosis**; también puedes abrir directamente
 pulsa `E` cerca de la ventana o la puerta y responde a Grete con `1`/`2`.
 Sus tres ambientes son provisionales.
 
+El prólogo opcional de la Nellie está en `/?story=journey&episode=prologue`.
+Explora la amarra, comienza el relato con `E` junto al centro de la baranda y
+continúa hacia el vapor desde el extremo derecho. Conserva la entrada habitual
+en la cubierta y hace explícita la elipsis de las primeras estaciones todavía
+pendientes. Véase [la ruta y sus límites](docs/heart-of-darkness/THAMES-PROLOGUE.md).
+
 Quality checks:
 
 ```bash

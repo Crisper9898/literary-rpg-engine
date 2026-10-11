@@ -2,20 +2,24 @@
 
 Audit date: 2026-10-11. Runtime baseline:
 `46e6ec2843947fac6f33bef5dfd5c40ec6e4ff81`, `journey-vertical-slice`.
-This is a documentation audit, not a new episode, visual pass or engine change.
+The original audit was documentation-only. The matrix now also records the
+subsequent bounded opening-frame implementation; its release evidence is in
+[THAMES-PROLOGUE.md](THAMES-PROLOGUE.md) and the active plan.
 
 ## Conclusion
 
 The current route represents the upstream encounter through the final Thames
-frame. It does **not** yet provide the novel's beginning or its earlier stations.
+frame, plus an optional opening Nellie frame. It does **not** yet provide the
+appointment, coastal voyage or earlier stations.
 Completing the final scene therefore does not complete the adaptation.
-Of the 21 deliberately unequal coverage rows below, 15 have bounded playable
-episodes, one has partial coverage, and five have no playable episode.
+Of the 21 deliberately unequal coverage rows below, 16 have bounded playable
+episodes, one has partial coverage, and four have no playable episode.
 These counts are an index, not a shipping percentage or an effort estimate.
 
-Next bounded milestone: **the opening Nellie frame only**. Keep the current
-Deck entry available, reuse the existing Nellie staging, and stop before the
-commission, coastal journey or Outer Station. Those require later milestones.
+The opening is accessed explicitly through `/?story=journey&episode=prologue`;
+the current Deck entry remains available. The next missing narrative row is
+the **appointment and Company visit (N02)**; scope it separately and stop before
+the coastal journey and Outer Station. The opening does not fill those gaps.
 
 ## Evidence and method
 
@@ -48,7 +52,7 @@ Evidence paths in this table are relative to the repository root.
 
 | ID | Novel event / coverage unit | Status | Runtime / validation evidence and boundary |
 |---|---|---|---|
-| N01 | Opening Nellie frame, Thames memories and Marlow beginning his tale | Absent | `src/content/labels/start.label.ts` starts the Deck; `src/content/storyEntries.ts` selects that label. `thamesConclusion.label.ts` is the ending, not this opening. |
+| N01 | Opening Nellie frame, Thames memories and Marlow beginning his tale | Playable | `thamesPrologue.label.ts` / `thamesPrologueState.ts`; `prologue.spec.ts`, `prologueVisual.spec.ts`; [THAMES-PROLOGUE.md](THAMES-PROLOGUE.md). Optional URL, spatial amarra observation, opening tale and deliberate ellipsis to the Deck. Separate from the closing frame; seated Marlow/listeners remain unillustrated. |
 | N02 | Appointment, predecessor Fresleven, aunt, Company office, black-wool knitters and doctor | Absent | No corresponding story episode/labels/checkpoint. The later aunt mention in `europeReturn.label.ts` is convalescence, not recruitment. |
 | N03 | Coastal voyage, Outer Station, forced labour/dying workers and accountant's first account of Kurtz | Absent | No Outer Station episode. The existing `innerStation` is Kurtz's station much later. |
 | N04 | Overland caravan, arrival at Central Station and sunken steamer | Absent | No Central Station arrival/salvage episode. The island breakdown is downstream and cannot substitute for this wreck. |
@@ -116,12 +120,13 @@ Use this matrix for current missing content and the active plan for the next tas
 Do not publish a whole-book or whole-project percentage until scope, acceptance
 criteria and weighting for content/art/audio/delivery have been explicitly fixed.
 
-## Next bounded milestone — opening Nellie frame
+## Opening Nellie frame — original acceptance record
 
 Purpose: establish who is telling the story, who listens and why the Thames is
 part of its darkness before entering the existing mid-voyage slice.
 
-Acceptance criteria for the **next implementation**, not features of this audit:
+Acceptance criteria defined by the original audit and implemented in the
+subsequent bounded episode (not features of the documentation-only baseline):
 
 1. Explicit optional access to the prologue through content-level entry selection,
    e.g. `/?story=journey&episode=prologue`. Keep `/`, `/?story=journey` and the
@@ -148,11 +153,26 @@ Acceptance criteria for the **next implementation**, not features of this audit:
 
 Out of scope: N02–N05, fuller crew episode, general art/audio production,
 save menu, accessibility/settings implementation, engine refactor or SwiftShader
-optimization. The audit does not implement this prologue or its access URL.
+optimization. The documentation-only audit baseline did not implement the
+prologue or its URL; the subsequent episode does, with the above exclusions.
 
-## Validation provenance
+## Opening release validation
 
-Latest runtime release evidence, **not a new run by this documentation audit**:
+The subsequent N01 implementation passed `agent:check` (exit 0; TypeScript,
+208/208 units in 44 files, build 2.65s) and full `agent:e2e` (exit 0;
+125/125 in 49 spec files, 49.0m). Total: 333 tests; no literary percentage.
+The initial focused run passed 4/4 in 1.7m; strengthened exact dialogue-text
+restore assertions passed the three focused gameplay cases again in 1.2m.
+All 18 new [prologue captures](prologue-qa/README.md) were dimension-checked
+and individually inspected at 1366×768 and 800×600. The ten code/test files
+retained their verified hashes through the full browser run. Local links and
+the current 16 playable / one partial / four absent matrix were checked.
+Engine, approved Deck, Metamorphosis, runtime assets, stash and original
+untracked files remain untouched. N02–N05 are still absent.
+
+## Historical validation provenance — documentation-only audit
+
+Runtime release preceding the audit, **not a new run by that documentation audit**:
 `46e6ec2` passed TypeScript, 203/203 units in 43 files, build 2.63s and
 121/121 E2E in 47 spec files (47.0m). The total 324 tests includes both works
 and neutral/generic fixtures; it is not 324 literary events or a coverage score.
