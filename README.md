@@ -48,6 +48,11 @@ continúa hacia el vapor desde el extremo derecho. Conserva la entrada habitual
 en la cubierta y hace explícita la elipsis de las primeras estaciones todavía
 pendientes. Véase [la ruta y sus límites](docs/heart-of-darkness/THAMES-PROLOGUE.md).
 
+El encargo y la visita a la Compañía están en `/?story=journey&episode=commission`.
+Explora el mapa, lee la recomendación, firma el contrato y responde al médico
+con `1`/`2`. La despedida recuerda esa respuesta y la observación opcional del
+mapa. [Ruta y adaptación](docs/heart-of-darkness/COMPANY-COMMISSION.md).
+
 Quality checks:
 
 ```bash

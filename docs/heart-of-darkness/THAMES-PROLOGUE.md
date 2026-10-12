@@ -18,8 +18,8 @@ the novel presents him seated. No new listener sprites or Roman scene.
 The player can inspect the amarra at the left before starting the tale near
 the centre of the rear rail. That optional observation changes the narrator's
 later line. After the opening account, walk to the right and press E to
-continue. An explicit ellipsis explains that the appointment, Company and
-early stations are still missing. The following scene is the existing Deck,
+continue. An explicit ellipsis identifies the appointment/Company as a separate
+optional episode and the early stations as still missing. The following scene is the existing Deck,
 not a newly implemented chronological connection.
 
 ## Manual route

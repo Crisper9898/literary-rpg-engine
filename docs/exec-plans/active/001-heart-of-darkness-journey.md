@@ -80,13 +80,14 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Return to the Thames framing conclusion as the next bounded episode; do not expand into a general art or engine refactor.
 - [x] Audit remaining Heart of Darkness novel coverage and documented production debt; define the next bounded milestone without declaring the whole adaptation complete.
 - [x] Implement only the opening Nellie/Thames frame through an explicit optional entry, reusing existing staging; preserve the default Deck entry and stop before recruitment/early stations. Follow `docs/heart-of-darkness/COVERAGE-AUDIT.md` acceptance criteria.
-- [ ] Scope and implement the appointment and Company visit (N02) as a separate bounded episode, preserving the optional prologue/default Deck and stopping before coastal travel or the Outer Station. Recheck the primary text and coverage audit before implementation.
+- [x] Scope and implement the appointment and Company visit (N02) as a separate bounded episode, preserving the optional prologue/default Deck and stopping before coastal travel or the Outer Station. Recheck the primary text and coverage audit before implementation.
+- [ ] Scope and implement the coastal voyage and Outer Station (N03) as one bounded episode, preserving optional Nellie/Company and default Deck entries; recheck the primary text and coverage audit, and stop before the overland caravan or Central Station.
 
 The cousin, journalist and Intended episodes are implemented and validated.
 The Thames framing conclusion is implemented and validated. The coverage/debt
-review and optional opening Nellie frame are complete; next is only the
-appointment/Company episode. Outer/Central Stations and wider crew experience
-remain later tasks. The frozen
+review, optional opening Nellie frame and appointment/Company visit are complete.
+Next is only the coastal voyage/Outer Station episode (N03). The overland
+caravan, Central Station and wider crew experience remain later tasks. The frozen
 Journey Deck and reusable engine remain unchanged.
 The separate human listening review of environmental audio remains independent.
 
@@ -118,6 +119,38 @@ match. `agent:context` resumes at the optional opening frame. Fresh agent:check
 passed TypeScript, 203/203 units in 43 files and build 3.69s, exit 0. No E2E
 rerun or new capture was needed for this documentation-only diff; the untouched
 runtime retains the published 121/121 browser result at `46e6ec2`.
+
+## Appointment and Company visit — 2026-10-11 — validated
+
+Base: published opening frame `88ad892895c608ed57d33b65b0877155950ef7df`.
+Scope: N02 only, optional `/?story=journey&episode=commission`.
+Manual route/source/ownership: `docs/heart-of-darkness/COMPANY-COMMISSION.md`.
+No coast, Outer/Central Station, new engine capability or approved Deck change.
+
+- [x] Recheck Part I and the coverage audit; distinguish Fresleven's later-known violence, appointment, contract, examination and recalled farewell.
+- [x] Compose the existing European room/actor/paper/audio with office-local map, wool and medical props; keep all content out of engine.
+- [x] Add spatial recommendation/admission/signature/examination, optional map, two medical questions and subsequent conditioned aunt reply.
+- [x] Keep phase/choice/map/position in Pixi'VN checkpoints; prove exact line/options/position restoration, earlier saves, restart and owner cleanup in focused browser tests.
+- [x] Capture and individually inspect 26 PNGs at 1366×768 and 800×600; document the reused room/offscreen visitor illustration debt.
+- [x] Complete full agent:e2e regression, verify unchanged runtime hashes/protected files, update current coverage and prepare one bounded episode for publication.
+
+Final agent:check: exit 0, TypeScript, 214/214 units in 45 files, build 3.89s.
+Focused browser: 7/7 passed in 3.7m, including prologue regression and visual QA.
+Independent read-only code review found no blocking issue.
+Full `agent:e2e -- --retries=1`: exit 0, 129/129 in 51 spec files, 55.7m;
+no reattempt was needed. The initial full run was interrupted after Chromium
+reported `page.goto: net::ERR_NO_BUFFER_SPACE` before loading the Intended;
+that unchanged case passed alone in a fresh browser (1/1, 42.1s, exit 0).
+No test assertion/config or game code changed to mask that transport failure.
+All 13 runtime/test files retained their validated hashes through the final run.
+Total: 343 tests (214 units + 129 E2E), including both works and neutral fixtures;
+not a narrative coverage percentage. Current matrix: 17 playable / one partial /
+three absent, with N03 next. 54 local links and all 26 PNG dimensions were checked.
+One coherent release is prepared for normal `origin/journey-vertical-slice` publication.
+Known limits: reused graphic-theatre room, symbolic map/wool and offscreen
+visitors; Company-office illustration brief records the specific art debt.
+No coast/Outer/Central Station is implemented by this release. No new random raster art,
+dependency, persistence format, menu or change to the approved Journey Deck.
 
 ## Opening Nellie frame — 2026-10-11 — validated
 

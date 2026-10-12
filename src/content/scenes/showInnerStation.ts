@@ -53,8 +53,11 @@ import { thamesState } from "../state/thamesConclusionState";
 import { showThamesConclusion } from "./showThamesConclusion";
 import { prologueState } from "../state/thamesPrologueState";
 import { showThamesPrologue } from "./showThamesPrologue";
+import { commissionState } from "../state/companyCommissionState";
+import { showCompanyCommission } from "./showCompanyCommission";
 
 export function showInnerStation() {
+  if (!["inactive", "complete"].includes(commissionState().phase)) return showCompanyCommission();
   if (["anchored", "telling", "ready"].includes(prologueState().phase)) return showThamesPrologue();
   if (thamesState().phase !== "inactive") return showThamesConclusion();
   if (intendedState().phase !== "inactive") return showKurtzIntended();

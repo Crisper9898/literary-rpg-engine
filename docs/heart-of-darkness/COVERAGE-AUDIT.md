@@ -3,23 +3,25 @@
 Audit date: 2026-10-11. Runtime baseline:
 `46e6ec2843947fac6f33bef5dfd5c40ec6e4ff81`, `journey-vertical-slice`.
 The original audit was documentation-only. The matrix now also records the
-subsequent bounded opening-frame implementation; its release evidence is in
-[THAMES-PROLOGUE.md](THAMES-PROLOGUE.md) and the active plan.
+subsequent bounded opening-frame and Company-appointment implementations;
+release evidence is in [THAMES-PROLOGUE.md](THAMES-PROLOGUE.md),
+[COMPANY-COMMISSION.md](COMPANY-COMMISSION.md) and the active plan.
 
 ## Conclusion
 
 The current route represents the upstream encounter through the final Thames
-frame, plus an optional opening Nellie frame. It does **not** yet provide the
-appointment, coastal voyage or earlier stations.
+frame, plus optional opening Nellie and appointment/Company episodes. It does
+**not** yet provide the coastal voyage or earlier stations.
 Completing the final scene therefore does not complete the adaptation.
-Of the 21 deliberately unequal coverage rows below, 16 have bounded playable
-episodes, one has partial coverage, and four have no playable episode.
+Of the 21 deliberately unequal coverage rows below, 17 have bounded playable
+episodes, one has partial coverage, and three have no playable episode.
 These counts are an index, not a shipping percentage or an effort estimate.
 
 The opening is accessed explicitly through `/?story=journey&episode=prologue`;
-the current Deck entry remains available. The next missing narrative row is
-the **appointment and Company visit (N02)**; scope it separately and stop before
-the coastal journey and Outer Station. The opening does not fill those gaps.
+the appointment is at `/?story=journey&episode=commission`, and the current Deck
+entry remains available. The next missing row is the **coastal voyage and Outer
+Station (N03)**; scope it separately and stop before the overland caravan and
+Central Station. The optional opening and appointment do not fill those gaps.
 
 ## Evidence and method
 
@@ -53,7 +55,7 @@ Evidence paths in this table are relative to the repository root.
 | ID | Novel event / coverage unit | Status | Runtime / validation evidence and boundary |
 |---|---|---|---|
 | N01 | Opening Nellie frame, Thames memories and Marlow beginning his tale | Playable | `thamesPrologue.label.ts` / `thamesPrologueState.ts`; `prologue.spec.ts`, `prologueVisual.spec.ts`; [THAMES-PROLOGUE.md](THAMES-PROLOGUE.md). Optional URL, spatial amarra observation, opening tale and deliberate ellipsis to the Deck. Separate from the closing frame; seated Marlow/listeners remain unillustrated. |
-| N02 | Appointment, predecessor Fresleven, aunt, Company office, black-wool knitters and doctor | Absent | No corresponding story episode/labels/checkpoint. The later aunt mention in `europeReturn.label.ts` is convalescence, not recruitment. |
+| N02 | Appointment, predecessor Fresleven, aunt, Company office, black-wool knitters and doctor | Playable | `companyCommission.label.ts` / `companyCommissionState.ts`; `commission.spec.ts`, `commissionVisual.spec.ts`; [COMPANY-COMMISSION.md](COMPANY-COMMISSION.md). Spatial recommendation/admission/signature/examination, optional map and medical question affecting the farewell. Fresleven is later knowledge recalled; visitors remain offscreen. Separate from convalescence and the later papers demand; explicit ellipsis before coast/early stations. |
 | N03 | Coastal voyage, Outer Station, forced labour/dying workers and accountant's first account of Kurtz | Absent | No Outer Station episode. The existing `innerStation` is Kurtz's station much later. |
 | N04 | Overland caravan, arrival at Central Station and sunken steamer | Absent | No Central Station arrival/salvage episode. The island breakdown is downstream and cannot substitute for this wreck. |
 | N05 | Central Station manager/brickmaker, fire, missing rivets, repairs, Eldorado expedition and overheard ambitions | Absent | No corresponding episode. The approved Deck's fire stage is atmospheric art, not proof that the Central Station fire or politics are playable. |
@@ -81,8 +83,8 @@ Deck conversation → hut/fuel → helm/fog/attack → docking/Russian → Kurtz
 → revelations → night pursuit → evacuation → departure → island repair/papers
 → final night → aftermath → Europe/Company → cousin/journalist → Intended →
 closing Nellie frame. Individual continuations are explicit spatial interactions;
-there is no newly implemented opening, recruitment or early station hidden in
-the dispatcher. `showJourneySpace()` and `showInnerStation()` reconstruct the
+the optional opening and Company appointment use their explicit URL entries;
+early stations are still absent. `showJourneySpace()` and `showInnerStation()` reconstruct the
 current bounded episode from Pixi'VN state after restoration.
 
 The late route is connected, but its initial context is still in medias res.
@@ -98,6 +100,7 @@ This is a content gap, not a reason to retrofit new engine infrastructure.
 |---|---|---|
 | Approved Journey Deck | Four stages, depth, fog/smoke/embers/reflections/shadows and walking are approved/frozen. | Preserve tag `journey-deck-visual-approved-2026-10-02`; do not open another art/performance pass. |
 | European room and legacy | Playable graphic theatre, abstract paper props and offscreen visitors. [europe-return-room brief](../art-briefs/europe-return-room.md). | Finished illustration, official/cousin/journalist representation and convalescent gait are not claimed complete. |
+| Company appointment | Reused neutral European room, approved actor/paper, symbolic map/wool/calipers and offscreen aunt/staff. [Company-office brief](../art-briefs/company-office.md). | N02 is playable; finished office/staff illustration and physical departure into the coast are not claimed complete. |
 | Intended | Playable salon; Intended speaks from the wing; sitting is narrated. [drawing-room brief](../art-briefs/intended-drawing-room.md). | Needs final compatible room/actor art, not random replacement imagery. |
 | Closing Nellie | Graphic theatre; flat cloud/deck shapes, existing Marlow gait and offscreen listeners. [Nellie brief](../art-briefs/thames-nellie-frame.md). | Does not yet equal the illustrated Deck/Metamorphosis benchmark; no approved meditation pose. Reuse staging for the opening, not a second general art pass. |
 | Other episode staging | Short shore, trail, ship and navigation adaptations; small figures, bounded strips and existing atlas poses. | Capture readability is evidence, not proof of exhaustive illustration, obstacle navigation or crowd simulation. Consult each linked episode's limits before expansion. |
