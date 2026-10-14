@@ -58,7 +58,7 @@ export const commissionFarewell = newLabel("journey-station-commission-farewell"
   "Le recuerdo que la Compañía existe para obtener ganancias. Ella sonríe: el trabajador merece su paga. Su entusiasmo no disipa mi inquietud."),
 () => { recallFarewell(); close(); }]);
 export const commissionContinue = newLabel("journey-station-commission-continue", [() => say(marlow,
-  "El encargo está firmado. Esta versión salta todavía el viaje costero y las estaciones Exterior y Central; el relato se reanuda en el vapor, río arriba."),
+  "El encargo está firmado. El viaje costero y la Estación Exterior están disponibles en su entrada opcional. Esta ruta hace una elipsis hasta el vapor río arriba; la caravana y la Estación Central todavía no son jugables."),
 async () => {
   close(); if (!leaveCompany()) return;
   setJourneySpace("deck"); const { showJourneySpace } = await import("../scenes/journeyDeck"); await showJourneySpace();

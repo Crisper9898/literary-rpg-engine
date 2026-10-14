@@ -53,6 +53,12 @@ Explora el mapa, lee la recomendación, firma el contrato y responde al médico
 con `1`/`2`. La despedida recuerda esa respuesta y la observación opcional del
 mapa. [Ruta y adaptación](docs/heart-of-darkness/COMPANY-COMMISSION.md).
 
+El viaje costero y la Estación Exterior están en
+`/?story=journey&episode=outer-station`. Observa el buque, desembarca, explora el
+camino y la arboleda, responde con `1`/`2` y escucha al contable. La decisión
+deja memoria; el episodio termina antes de la caravana y la Estación Central.
+[Ruta y límites](docs/heart-of-darkness/OUTER-STATION.md).
+
 Quality checks:
 
 ```bash

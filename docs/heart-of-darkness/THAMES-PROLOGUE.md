@@ -18,8 +18,9 @@ the novel presents him seated. No new listener sprites or Roman scene.
 The player can inspect the amarra at the left before starting the tale near
 the centre of the rear rail. That optional observation changes the narrator's
 later line. After the opening account, walk to the right and press E to
-continue. An explicit ellipsis identifies the appointment/Company as a separate
-optional episode and the early stations as still missing. The following scene is the existing Deck,
+continue. An explicit ellipsis identifies the appointment/Company and coast/Outer
+Station as separate optional episodes, with the caravan and Central Station
+still missing. The following scene is the existing Deck,
 not a newly implemented chronological connection.
 
 ## Manual route
@@ -78,5 +79,6 @@ This reuses the established graphic-theatre Nellie, not a new illustrated
 scene at the Deck's art level. The specific illustration debt remains in
 `docs/art-briefs/thames-nellie-frame.md`; no random replacement art was added.
 The water loop remains provisional and still needs human listening review.
-No commission, coast, early station, complete chronological entry, save menu
-or general art/engine refinement is claimed here.
+This opening itself includes no commission, coast, station, complete
+chronological entry or save menu. The Company and Outer Station now have their
+own optional entries; no general art/engine refinement is claimed here.

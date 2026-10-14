@@ -30,7 +30,7 @@ export const prologueTale = newLabel("journey-station-prologue-tale", [() => {
 () => say("Recordaréis que fui marinero de agua dulce durante un tiempo. Para entender lo que aquel viaje hizo conmigo, tendré que contaros cómo remonté ese otro río."),
 () => { finishOpeningTale(); close(); }]);
 export const prologueContinue = newLabel("journey-station-prologue-continue", [() => narrate(
-  "El relato continúa en el vapor, río arriba. Esta entrada salta el encargo de la Compañía, disponible como episodio opcional, y las primeras estaciones: esos episodios todavía no son jugables."),
+  "El relato continúa en el vapor, río arriba. El encargo de la Compañía, el viaje costero y la Estación Exterior tienen entradas opcionales. Esta ruta aún salta la caravana y la Estación Central: esos episodios todavía no son jugables."),
 async () => {
   close(); if (!leavePrologue()) return;
   setJourneySpace("deck"); const { showJourneySpace } = await import("../scenes/journeyDeck"); await showJourneySpace();

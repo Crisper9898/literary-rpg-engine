@@ -81,15 +81,50 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Audit remaining Heart of Darkness novel coverage and documented production debt; define the next bounded milestone without declaring the whole adaptation complete.
 - [x] Implement only the opening Nellie/Thames frame through an explicit optional entry, reusing existing staging; preserve the default Deck entry and stop before recruitment/early stations. Follow `docs/heart-of-darkness/COVERAGE-AUDIT.md` acceptance criteria.
 - [x] Scope and implement the appointment and Company visit (N02) as a separate bounded episode, preserving the optional prologue/default Deck and stopping before coastal travel or the Outer Station. Recheck the primary text and coverage audit before implementation.
-- [ ] Scope and implement the coastal voyage and Outer Station (N03) as one bounded episode, preserving optional Nellie/Company and default Deck entries; recheck the primary text and coverage audit, and stop before the overland caravan or Central Station.
+- [x] Scope and implement the coastal voyage and Outer Station (N03) as one bounded episode, preserving optional Nellie/Company and default Deck entries; recheck the primary text and coverage audit, and stop before the overland caravan or Central Station.
+- [ ] Scope and implement the overland caravan and arrival at Central Station with the sunken steamer (N04) as the next bounded episode; recheck Part I and the coverage audit, preserve existing entries and stop before manager/brickmaker politics, rivets and the Eldorado expedition (N05).
 
 The cousin, journalist and Intended episodes are implemented and validated.
 The Thames framing conclusion is implemented and validated. The coverage/debt
-review, optional opening Nellie frame and appointment/Company visit are complete.
-Next is only the coastal voyage/Outer Station episode (N03). The overland
-caravan, Central Station and wider crew experience remain later tasks. The frozen
+review, optional opening Nellie frame, appointment/Company visit and coastal
+voyage/Outer Station are complete as bounded playable episodes.
+Next is only the overland caravan and Central Station arrival/wreck (N04).
+Central Station politics/repairs and wider crew experience remain later tasks. The frozen
 Journey Deck and reusable engine remain unchanged.
 The separate human listening review of environmental audio remains independent.
+
+## Coast and Outer Station — 2026-10-13 — validated
+
+Base: published Company appointment `146cbe5e41bf12c5740ca5a5d897063f59b11065`.
+Scope: N03 only, optional `/?story=journey&episode=outer-station`.
+Manual route/source/ownership: `docs/heart-of-darkness/OUTER-STATION.md`.
+No caravan, Central Station, engine capability or approved Deck change.
+
+- [x] Recheck Part I: coastal surf/paddlers, French warship, Swedish captain, discarded machinery, forced labour, dying workers and the accountant's first account of Kurtz.
+- [x] Compose separate coastal and station graphic-theatre stages with existing world layers, approved actor/vegetation, movement, camera, interactions, walking and spatial audio.
+- [x] Add ordered spatial exploration, optional surf observation, offer-biscuit/stay choices and the accountant's later line remembering that choice; no cure, reward, inventory or invented worker speech.
+- [x] Store phase, observation, choice and exact position through Pixi'VN checkpoints; cover both routes, 13 snapshots per route, active labels/options/text, earlier restores, opposite choice after restore, restart and duplicate-owner cleanup.
+- [x] Capture and individually inspect 32 PNGs at 1366×768 and 800×600; correct office occlusion and guard its ground-layer order. Record offscreen encounter/final illustration debt in the scoped brief.
+- [x] Complete the full regression suite, verify unchanged runtime/test hashes and protected files, update current coverage and prepare one coherent episode for publication.
+
+Final `agent:check`: exit 0; TypeScript, 220/220 units in 46 files, build 4.49s.
+Focused browser: 10/10 passed in 5.6m, including Company/prologue regression.
+Independent read-only review confirmed the office correction and no remaining
+blocking or important issue. Full `agent:e2e -- --retries=1`: exit 0,
+133/133 in 53 spec files, 56.9m; all passed on the first attempt.
+All 14 runtime/test files retained their validated hashes through that run.
+Total: 353 tests (220 units + 133 E2E), including both works and neutral fixtures;
+not a narrative completion percentage. Current matrix: 18 playable / one partial /
+two absent, with N04 next. Captures and exact release evidence:
+`docs/heart-of-darkness/outer-station-qa/README.md`.
+
+Limits: separate graphic-theatre staging and offscreen captain/workers/accountant,
+not final Outer Station illustration. The optional stay choice is adaptation,
+not a claim about Conrad's action. No caravan/Central Station is implemented here.
+No new dependency, sound-save format, menu, raster asset or engine refactor.
+Approved Deck, Metamorphosis, runtime assets, Phaser stash and original untracked
+files remain unchanged. One normal branch commit/push follows these release gates;
+do not start N04 automatically as part of this episode.
 
 ## Coverage review — 2026-10-11 — documentation only
 

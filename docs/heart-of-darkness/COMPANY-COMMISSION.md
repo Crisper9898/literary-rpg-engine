@@ -20,8 +20,10 @@ and examination have separate positions. The aunt's farewell is recalled at
 the threshold, not a claim that she visited this office. The aunt, two knitters,
 secretary, chief and doctor remain offscreen. The chief's brief handshake and
 French check are compressed into the admission. The drinking clerk is omitted.
-The final E action explicitly skips the coastal voyage and Outer/Central
-Stations, returning to the existing Deck; those episodes are not implemented.
+The final E action identifies the coastal voyage/Outer Station's separate
+optional entry, then explicitly skips the caravan and Central Station to return
+to the existing Deck. Those latter events are not implemented; this appointment
+episode itself does not enact the voyage or station.
 
 ## Manual route
 
