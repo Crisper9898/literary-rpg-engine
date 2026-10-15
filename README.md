@@ -1,5 +1,10 @@
 # Literary RPG Engine
 
+Versión jugable: **https://literary-rpg-engine.cristiantt.chatgpt.site**.
+WASD/flechas para moverse, E para interactuar y 1/2 para responder.
+Incluye acceso a La metamorfosis desde el selector de obra.
+Detalles y alcance: [publicación web](docs/WEB-RELEASE.md).
+
 Motor reutilizable para videojuegos literarios educativos en navegador.
 
 ## Foundation
@@ -45,8 +50,8 @@ Sus tres ambientes son provisionales.
 El prólogo opcional de la Nellie está en `/?story=journey&episode=prologue`.
 Explora la amarra, comienza el relato con `E` junto al centro de la baranda y
 continúa hacia el vapor desde el extremo derecho. Conserva la entrada habitual
-en la cubierta y hace explícita la elipsis de las primeras estaciones todavía
-pendientes. Véase [la ruta y sus límites](docs/heart-of-darkness/THAMES-PROLOGUE.md).
+en la cubierta y hace explícita la elipsis hacia el viaje río arriba.
+Véase [la ruta y sus límites](docs/heart-of-darkness/THAMES-PROLOGUE.md).
 
 El encargo y la visita a la Compañía están en `/?story=journey&episode=commission`.
 Explora el mapa, lee la recomendación, firma el contrato y responde al médico
@@ -58,6 +63,13 @@ El viaje costero y la Estación Exterior están en
 camino y la arboleda, responde con `1`/`2` y escucha al contable. La decisión
 deja memoria; el episodio termina antes de la caravana y la Estación Central.
 [Ruta y límites](docs/heart-of-darkness/OUTER-STATION.md).
+
+La caravana y la llegada a la Estación Central están en
+`/?story=journey&episode=central-station`. Explora la aldea y el barranco,
+detente en el campamento y elige con `1`/`2` cómo atender al descanso. Al llegar,
+escucha la noticia e inspecciona el vapor hundido: la reflexión recuerda tu
+decisión. Termina antes de la entrevista con el gerente y las reparaciones.
+[Ruta y límites](docs/heart-of-darkness/CENTRAL-STATION.md).
 
 Quality checks:
 

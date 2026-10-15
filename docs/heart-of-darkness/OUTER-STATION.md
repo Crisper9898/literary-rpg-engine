@@ -3,8 +3,10 @@
 Entry: `/?story=journey&episode=outer-station`.
 Default `/` still opens the approved Deck. The optional Nellie and Company
 entries and La metamorfosis remain available. This episode ends **before** the
-overland caravan and Central Station; its final line explicitly skips those
-unimplemented events if the player continues to the Deck.
+overland caravan and Central Station; its final line identifies their separate
+optional entry and skips them if the player continues directly to the Deck.
+See [the caravan and arrival route](CENTRAL-STATION.md). The subsequent manager
+interview, salvage/repairs and Central Station politics still remain absent.
 
 ## Playable route
 

@@ -9,3 +9,4 @@ test-results/
 .DS_Store
 *.log
 src/pixi-vn.keys.gen.ts
+.release/

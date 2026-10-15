@@ -82,16 +82,68 @@ The breakdown release is published as `723e12e8542652c8616a9fa7bfedca257ae3229c`
 - [x] Implement only the opening Nellie/Thames frame through an explicit optional entry, reusing existing staging; preserve the default Deck entry and stop before recruitment/early stations. Follow `docs/heart-of-darkness/COVERAGE-AUDIT.md` acceptance criteria.
 - [x] Scope and implement the appointment and Company visit (N02) as a separate bounded episode, preserving the optional prologue/default Deck and stopping before coastal travel or the Outer Station. Recheck the primary text and coverage audit before implementation.
 - [x] Scope and implement the coastal voyage and Outer Station (N03) as one bounded episode, preserving optional Nellie/Company and default Deck entries; recheck the primary text and coverage audit, and stop before the overland caravan or Central Station.
-- [ ] Scope and implement the overland caravan and arrival at Central Station with the sunken steamer (N04) as the next bounded episode; recheck Part I and the coverage audit, preserve existing entries and stop before manager/brickmaker politics, rivets and the Eldorado expedition (N05).
+- [x] Scope and implement the overland caravan and arrival at Central Station with the sunken steamer (N04) as the next bounded episode; recheck Part I and the coverage audit, preserve existing entries and stop before manager/brickmaker politics, rivets and the Eldorado expedition (N05).
+- [ ] Scope the first Central Station manager interview (N05), respecting the wreck already observed by the player; stop before brickmaker/fire/rivets/Eldorado content.
 
 The cousin, journalist and Intended episodes are implemented and validated.
 The Thames framing conclusion is implemented and validated. The coverage/debt
 review, optional opening Nellie frame, appointment/Company visit and coastal
 voyage/Outer Station are complete as bounded playable episodes.
-Next is only the overland caravan and Central Station arrival/wreck (N04).
-Central Station politics/repairs and wider crew experience remain later tasks. The frozen
+The overland caravan and Central Station arrival/wreck (N04) are validated.
+The next content task is the bounded manager interview; publication requested
+on 2026-10-14 takes precedence over further content. Politics/repairs and wider crew experience remain later tasks. The frozen
 Journey Deck and reusable engine remain unchanged.
 The separate human listening review of environmental audio remains independent.
+
+## Caravan and Central Station arrival — 2026-10-14 — validated
+
+Base: published `4dc3667628b071c68635bafe0832eb239cbc7cf1`.
+Bounded content change (N04): `/?story=journey&episode=central-station`.
+Rechecked Conrad Part I: sixty carriers/two hundred miles; abandoned villages,
+ravines and heat; sick companion/hammock; arrival on the fifteenth day; news of
+the steamer sunk two days earlier and its damaged bottom. Stop before the first
+manager interview, salvage/repairs, fire, rivets and Eldorado (N05).
+
+Design: explore the village optionally, cross a ravine, reach camp, attend to
+the companion through a shade/load choice, then enter the station, hear the
+arrival agent and inspect the wreck. Choice changes Marlow's later reflection,
+not illness or the canonical wreck. Compress days through spatial actions,
+without a stamina/inventory/combat system or invented carrier speech.
+Two scene-local compositions reuse the existing atlas, vegetation, world layers,
+movement, camera, spatial actions, dialogue view and Pixi'VN audio/checkpoints.
+Keep default/earlier entries, engine, Deck, Metamorphosis and runtime assets intact.
+
+Execution decision: the shore observation condenses the retrospective wreck
+account before the manager interview. It does not inspect underwater damage or
+raise the boat. N05 must respect the player's view rather than claim Marlow has
+never seen the wreck; the cost of this reordered agency is that later dialogue
+needs this small content adjustment. This order differs from Conrad's first
+manager interview and is documented explicitly, not presented as exact chronology.
+
+- [x] Write and run state tests for ordered prerequisites, both decisions, optional observation, earlier/pending checkpoints and exact bounded coordinates; then implement `centralStationState.ts`.
+- [x] Compose `centralStation.ts` / `createCentralStation.ts`, `centralStation.label.ts` / `showCentralStation.ts`; add only content-level entry and dispatch. Final human/environment illustration requires a scoped brief, not unrelated portraits.
+- [x] Add canonical browser probes and route tests for E/proximity, both choices/memories, movement during choices, earlier saves, active labels/options, scene transition, exact position and duplicate audio/UI cleanup. Preserve all previous behavioral assertions; update only the Outer Station's availability-text assertion to describe the new optional episode.
+- [x] Capture and inspect exploration/choice/arrival/wreck/dialogue/restoration at 1366×768 and 800×600; compare with the protected benchmark and document illustration debt honestly.
+- [x] Run `agent:check`, focused browser tests and the full `agent:e2e` suite; obtain an independent read-only review and fix important findings before publication.
+- [x] Update current coverage and release evidence; prepare one normal branch commit/push after all gates pass, then stop before N05.
+
+Progress evidence: fresh `agent:check` exit 0; TypeScript, 227/227 units in 47
+files, build 2.91s. Fresh focused browsers: 13/13 in 7.4m, exit 0. Both decisions,
+fourteen snapshots per route and previous entries pass. All 28 retained captures
+were dimension-checked and individually inspected. First timing failures were
+corrected in the new driver; a later Windows EBUSY during PNG copying killed
+Vite, so final validation freezes all repository files while servers run.
+The independent read-only review found no Critical/Important/Minor issue.
+Root owns actual tests and visual verification; final illustration and human
+sound balance stay pending by scope. The 16 source/test hashes are recorded in
+the ignored `central-verified-hashes.log`; all 16 hashes still match after the
+full regression: 137/137 E2E in 55 files, 1.0h, no retries/failures recorded.
+Total: 364 automated tests (227 unit + 137 E2E). The user requested immediate
+web publication instead of further episodes. Sites project
+`appgprj_6ad04bed6b208191beb274fb941b6bab` is recorded in `.openai/hosting.json`;
+the static `dist/` build is published separately without exporting repository
+backups, tests or the Phaser stash. Vercel's Git integration was unavailable
+without a GitHub login connection. See `docs/WEB-RELEASE.md` for delivery details.
 
 ## Coast and Outer Station — 2026-10-13 — validated
 

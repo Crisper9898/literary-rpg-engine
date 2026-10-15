@@ -60,7 +60,7 @@ export const outerAccountant = newLabel("journey-station-outer-accountant", [() 
   "Kurtz: oigo su nombre por primera vez. Pienso en aquel momento sin palabras bajo los árboles. A unos pasos de la arboleda, los libros registran transacciones perfectamente correctas."),
 () => { hearAccountant(); close(); }]);
 export const outerContinue = newLabel("journey-station-outer-continue", [() => say(marlow,
-  "Termina mi espera en la Estación Exterior. El siguiente tramo sería la caravana y la Estación Central: todavía no son jugables. Esta entrada hace una elipsis hasta el vapor río arriba; no representa aquella marcha ni el naufragio previo."),
+  "Termina mi espera en la Estación Exterior. La caravana y la llegada a la Estación Central están disponibles en su entrada opcional. Esta entrada hace una elipsis hasta el vapor río arriba; no representa aquella marcha ni el naufragio previo."),
 async () => {
   close(); if (!finishOuterStation()) return;
   setJourneySpace("deck"); const { showJourneySpace } = await import("../scenes/journeyDeck"); await showJourneySpace();

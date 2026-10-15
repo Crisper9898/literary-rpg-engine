@@ -44,7 +44,7 @@ for (const response of ["give", "stay"]) test(`Outer Station ${response}: spatia
   await probe(page, "place", JSON.stringify({ x: 1234.75, y: 812.5 }));
   await expect.poll(async () => (await probe(page, "inspect")).player).toEqual({ x: 1234.75, y: 812.5 });
   const ready = await probe(page, "save"); expect(ready.state).toEqual({ phase: "ready", surfObserved: observed, groveResponse: response });
-  await interact(page, "exit", "una elipsis"); await expect(page.getByTestId("dialogue-text")).toContainText("caravana y la Estación Central: todavía no son jugables");
+  await interact(page, "exit", "una elipsis"); await expect(page.getByTestId("dialogue-text")).toContainText("caravana y la llegada a la Estación Central están disponibles en su entrada opcional");
   const ellipsis = await probe(page, "save"); await close(page);
   await expect.poll(async () => (await probe(page, "inspect")).deck).toBe(true);
   const deck = await probe(page, "save"); expect(deck.state.phase).toBe("complete"); expect(deck.playerCount).toBe(0);

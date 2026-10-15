@@ -57,8 +57,11 @@ import { commissionState } from "../state/companyCommissionState";
 import { showCompanyCommission } from "./showCompanyCommission";
 import { outerState } from "../state/outerStationState";
 import { showOuterStation } from "./showOuterStation";
+import { centralState } from "../state/centralStationState";
+import { showCentralStation } from "./showCentralStation";
 
 export function showInnerStation() {
+  if (!["inactive", "complete"].includes(centralState().phase)) return showCentralStation();
   if (!["inactive", "complete"].includes(outerState().phase)) return showOuterStation();
   if (!["inactive", "complete"].includes(commissionState().phase)) return showCompanyCommission();
   if (["anchored", "telling", "ready"].includes(prologueState().phase)) return showThamesPrologue();
